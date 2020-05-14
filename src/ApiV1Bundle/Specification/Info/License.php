@@ -5,6 +5,11 @@ namespace App\ApiV1Bundle\Specification\Info;
 use App\ApiV1Bundle\Specification\Info\License\LicenseName;
 use App\ApiV1Bundle\Specification\Info\License\LicenseUrl;
 
+/**
+ * The license information for the exposed API.
+ * https://swagger.io/specification/#info-object
+ */
+
 final class License
 {
     private LicenseName $name;

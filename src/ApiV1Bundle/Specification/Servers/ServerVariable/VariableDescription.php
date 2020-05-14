@@ -2,6 +2,11 @@
 
 namespace App\ApiV1Bundle\Specification\Servers\ServerVariable;
 
+/**
+ * An optional description for the server variable.
+ * https://swagger.io/specification/#server-variable-object
+ */
+
 final class VariableDescription
 {
     private string $description;

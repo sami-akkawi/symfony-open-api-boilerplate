@@ -4,6 +4,11 @@ namespace App\ApiV1Bundle\Specification\Info;
 
 use App\ApiV1Bundle\Specification\Exception\SpecificException;
 
+/**
+ * A URL to the Terms of Service for the API. MUST be in the format of a URL.
+ * https://swagger.io/specification/#info-object
+ */
+
 final class TermsOfService
 {
     private string $termsOfService;

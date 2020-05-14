@@ -4,6 +4,13 @@ namespace App\ApiV1Bundle\Specification\Servers;
 
 use App\ApiV1Bundle\Specification\Exception\SpecificException;
 
+/**
+ * REQUIRED. A URL to the target host. This URL supports Server Variables and MAY be relative, to indicate that the
+ * host location is relative to the location where the OpenAPI document is being served. Variable substitutions will
+ * be made when a variable is named in {brackets}.
+ * https://swagger.io/specification/#server-object
+ */
+
 final class ServerUrl
 {
     private string $url;

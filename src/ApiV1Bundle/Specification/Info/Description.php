@@ -2,6 +2,11 @@
 
 namespace App\ApiV1Bundle\Specification\Info;
 
+/**
+ * A short description of the API.
+ * https://swagger.io/specification/#info-object
+ */
+
 final class Description
 {
     private string $description;

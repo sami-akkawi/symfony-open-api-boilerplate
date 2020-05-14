@@ -4,6 +4,11 @@ namespace App\ApiV1Bundle\Specification\Info\Contact;
 
 use App\ApiV1Bundle\Specification\Exception\SpecificException;
 
+/**
+ * The email address of the contact person/organization. MUST be in the format of an email address.
+ * https://swagger.io/specification/#contact-object
+ */
+
 final class ContactEmail
 {
     private string $email;

@@ -2,6 +2,11 @@
 
 namespace App\ApiV1Bundle\Specification\Servers;
 
+/**
+ * An optional string describing the host designated by the URL.
+ * https://swagger.io/specification/#server-object
+ */
+
 final class ServerDescription
 {
     private string $description;

@@ -4,6 +4,11 @@ namespace App\ApiV1Bundle\Specification\Info\License;
 
 use App\ApiV1Bundle\Specification\Exception\SpecificException;
 
+/**
+ * REQUIRED. The license name used for the API.
+ * https://swagger.io/specification/#license-object
+ */
+
 final class LicenseName
 {
     private string $name;

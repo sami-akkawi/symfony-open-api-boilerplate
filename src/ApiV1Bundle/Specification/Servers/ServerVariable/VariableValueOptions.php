@@ -4,6 +4,12 @@ namespace App\ApiV1Bundle\Specification\Servers\ServerVariable;
 
 use App\ApiV1Bundle\Specification\Exception\SpecificException;
 
+/**
+ * An enumeration of string values to be used if the substitution options are from a limited set. The array SHOULD
+ * NOT be empty.
+ * https://swagger.io/specification/#server-variable-object
+ */
+
 final class VariableValueOptions
 {
     private array $options;

@@ -7,6 +7,11 @@ use App\ApiV1Bundle\Specification\Servers\ServerUrl;
 use App\ApiV1Bundle\Specification\Servers\ServerVariable;
 use App\ApiV1Bundle\Specification\Servers\ServerVariables;
 
+/**
+ * An object representing a Server.
+ * https://swagger.io/specification/#server-object
+ */
+
 final class Server
 {
     private ServerUrl $url;

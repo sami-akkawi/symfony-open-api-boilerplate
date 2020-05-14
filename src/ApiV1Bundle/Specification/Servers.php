@@ -5,6 +5,13 @@ namespace App\ApiV1Bundle\Specification;
 use App\ApiV1Bundle\Specification\Exception\SpecificException;
 use App\ApiV1Bundle\Specification\Servers\ServerUrl;
 
+/**
+ * An array of Server Objects, which provide connectivity information to a target server.
+ * If the servers property is not provided, or is an empty array, the default value would be a Server
+ * Object with a url value of /.
+ * https://swagger.io/specification/#fixed-fields
+ */
+
 final class Servers
 {
     /** @var Server[] */

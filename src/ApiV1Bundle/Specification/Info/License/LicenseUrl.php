@@ -4,6 +4,11 @@ namespace App\ApiV1Bundle\Specification\Info\License;
 
 use App\ApiV1Bundle\Specification\Exception\SpecificException;
 
+/**
+ * A URL to the license used for the API. MUST be in the format of a URL.
+ * https://swagger.io/specification/#license-object
+ */
+
 final class LicenseUrl
 {
     private string $url;

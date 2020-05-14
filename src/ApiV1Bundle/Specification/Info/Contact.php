@@ -6,6 +6,11 @@ use App\ApiV1Bundle\Specification\Info\Contact\ContactEmail;
 use App\ApiV1Bundle\Specification\Info\Contact\ContactName;
 use App\ApiV1Bundle\Specification\Info\Contact\ContactUrl;
 
+/**
+ * The contact information for the exposed API.
+ * https://swagger.io/specification/#info-object
+ */
+
 final class Contact
 {
     private ?ContactName $name;

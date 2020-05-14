@@ -4,6 +4,11 @@ namespace App\ApiV1Bundle\Specification\Info\Contact;
 
 use App\ApiV1Bundle\Specification\Exception\SpecificException;
 
+/**
+ * The identifying name of the contact person/organization.
+ * https://swagger.io/specification/#contact-object
+ */
+
 final class ContactName
 {
     private string $name;

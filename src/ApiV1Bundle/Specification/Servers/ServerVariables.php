@@ -5,6 +5,11 @@ namespace App\ApiV1Bundle\Specification\Servers;
 use App\ApiV1Bundle\Specification\Exception\SpecificException;
 use App\ApiV1Bundle\Specification\Servers\ServerVariable\VariableName;
 
+/**
+ * A map between a variable name and its value. The value is used for substitution in the server's URL template.
+ * https://swagger.io/specification/#server-object
+ */
+
 final class ServerVariables
 {
     /** @var ServerVariable[] */

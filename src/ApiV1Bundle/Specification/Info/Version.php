@@ -2,6 +2,12 @@
 
 namespace App\ApiV1Bundle\Specification\Info;
 
+/**
+ * REQUIRED. The version of the OpenAPI document (which is distinct from the OpenAPI Specification
+ * version or the API implementation version).
+ * https://swagger.io/specification/#info-object
+ */
+
 final class Version
 {
     protected const MAJOR_VERSION = 1;

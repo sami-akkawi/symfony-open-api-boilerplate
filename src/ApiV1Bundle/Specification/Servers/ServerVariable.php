@@ -8,6 +8,11 @@ use App\ApiV1Bundle\Specification\Servers\ServerVariable\VariableDescription;
 use App\ApiV1Bundle\Specification\Servers\ServerVariable\VariableName;
 use App\ApiV1Bundle\Specification\Servers\ServerVariable\VariableValueOptions;
 
+/**
+ * An object representing a Server Variable for server URL template substitution.
+ * https://swagger.io/specification/#server-variable-object
+ */
+
 final class ServerVariable
 {
     private VariableName $name;

@@ -4,6 +4,11 @@ namespace App\ApiV1Bundle\Specification\Info\Contact;
 
 use App\ApiV1Bundle\Specification\Exception\SpecificException;
 
+/**
+ * The URL pointing to the contact information. MUST be in the format of a URL.
+ * https://swagger.io/specification/#contact-object
+ */
+
 final class ContactUrl
 {
     private string $url;

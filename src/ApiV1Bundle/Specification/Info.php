@@ -9,6 +9,11 @@ use App\ApiV1Bundle\Specification\Info\TermsOfService;
 use App\ApiV1Bundle\Specification\Info\Title;
 use App\ApiV1Bundle\Specification\Info\Version;
 
+/**
+ * REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
+ * https://swagger.io/specification/#fixed-fields
+ */
+
 final class Info
 {
     private Title $title;
