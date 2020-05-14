@@ -1,0 +1,7 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+api-specification:
+  path: /api/v1
+  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController::show' }
