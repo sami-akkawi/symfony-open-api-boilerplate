@@ -9,6 +9,8 @@ final class SpecificationController
     public function show(): Response
     {
         $specification = new Specification();
+        // todo: insert json into swagger/openApi UI
+        // todo: cache file
         return new Response('<pre>' . $specification->toJson() . '</pre>');
     }
 }

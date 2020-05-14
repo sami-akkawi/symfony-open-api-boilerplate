@@ -29,4 +29,29 @@ final class SpecificException extends LogicException
     {
         return self::generate("$field cannot have an empty value.");
     }
+
+    public static function generateEmptyEnumException(): self
+    {
+        return self::generate("Empty Enum.");
+    }
+
+    public static function generateEnumNotValidException(string $missingValue): self
+    {
+        return self::generate("$missingValue is missing in your enum.");
+    }
+
+    public static function generateDuplicateDefinitionException(string $key): self
+    {
+        return self::generate("$key is already defined.");
+    }
+
+    public static function generateTagNotValidException(string $tagName): self
+    {
+        return self::generate("$tagName was not found in the endpoint declarations.");
+    }
+
+    public static function cannotSetFormatToNonBearerHttpScheme(): self
+    {
+        return new self('Cannot set a bearer format to a non-bearer http scheme');
+    }
 }
