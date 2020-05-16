@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification\Info\Contact;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 
 /**
  * The URL pointing to the contact information. MUST be in the format of a URL.
@@ -16,7 +16,7 @@ final class ContactUrl
     private function __construct(string $url)
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw SpecificException::generateInvalidUrlException($url);
+            throw SpecificationException::generateInvalidUrlException($url);
         }
         $this->url = $url;
     }

@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification\Servers;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 
 /**
  * REQUIRED. A URL to the target host. This URL supports Server Variables and MAY be relative, to indicate that the
@@ -18,7 +18,7 @@ final class ServerUrl
     private function __construct(string $url)
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw SpecificException::generateInvalidUrlException($url);
+            throw SpecificationException::generateInvalidUrlException($url);
         }
         $this->url = $url;
     }

@@ -4,7 +4,7 @@ namespace App\ApiV1Bundle\Specification\Exception;
 
 use LogicException;
 
-final class SpecificException extends LogicException
+final class SpecificationException extends LogicException
 {
     private static function generate(string $message): self
     {

@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 use App\ApiV1Bundle\Specification\Servers\ServerUrl;
 
 /**
@@ -40,7 +40,7 @@ final class Servers
     public function addServer(Server $server): self
     {
         if ($this->hasServer($server->getUrl())) {
-            throw SpecificException::generateDuplicateDefinitionException($server->getUrl()->toString());
+            throw SpecificationException::generateDuplicateDefinitionException($server->getUrl()->toString());
         }
 
         return new self(array_merge($this->servers, [$server]));

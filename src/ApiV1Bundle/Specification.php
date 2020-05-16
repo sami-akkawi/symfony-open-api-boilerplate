@@ -10,6 +10,8 @@ use App\ApiV1Bundle\Specification\OpenApiVersion;
 use App\ApiV1Bundle\Specification\Server;
 use App\ApiV1Bundle\Specification\Servers;
 use App\ApiV1Bundle\Specification\Servers\ServerVariable;
+use App\ApiV1Bundle\Specification\Tag;
+use App\ApiV1Bundle\Specification\Tags;
 
 final class Specification
 {
@@ -19,12 +21,13 @@ final class Specification
     // todo: paths
     // todo: components
     // todo: securityRequirements
-    // todo: tags
+    private Tags $tags;
 
     public function __construct() {
         $this->openApiVersion = OpenApiVersion::generate();
         $this->info = $this->getInfo();
         $this->servers = $this->getServers();
+        $this->tags = $this->getTags();
     }
 
     public function toArray(): array
@@ -33,6 +36,7 @@ final class Specification
             'openapi' => $this->openApiVersion->toString(),
             'info' => $this->info->toOpenApiSpecification(),
             'servers' => $this->servers->toOpenApiSpecification(),
+            'tags' => $this->tags->toOpenApiSpecification()
         ];
     }
 
@@ -61,6 +65,15 @@ final class Specification
             ->addServer(
                 Server::generate('https://platform-api.your-website.ch/v' . Version::getMajorVersion())
                     ->setDescription('Live Server')
+            );
+    }
+
+    private function getTags(): Tags
+    {
+        return Tags::generate()
+            ->addTag(
+                Tag::generate('Security')
+                    ->setDescription('Operations related to authentication and authorisation.')
             );
     }
 

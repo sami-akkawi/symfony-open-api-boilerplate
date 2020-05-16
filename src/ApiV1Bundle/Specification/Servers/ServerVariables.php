@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification\Servers;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 use App\ApiV1Bundle\Specification\Servers\ServerVariable\VariableName;
 
 /**
@@ -39,7 +39,7 @@ final class ServerVariables
     public function add(ServerVariable $variable): self
     {
         if ($this->hasVariable($variable->getName())) {
-            throw SpecificException::generateDuplicateDefinitionException($variable->getName()->toString());
+            throw SpecificationException::generateDuplicateDefinitionException($variable->getName()->toString());
         }
 
         return new self(array_merge($this->variables, [$variable]));

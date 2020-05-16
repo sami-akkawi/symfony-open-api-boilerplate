@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification\Servers\ServerVariable;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 
 /**
  * REQUIRED. The default value to use for substitution, which SHALL be sent if an alternate value is not supplied.
@@ -18,7 +18,7 @@ final class VariableDefaultValue
     private function __construct(string $default)
     {
         if (empty($default)) {
-            throw SpecificException::generateEmptyStringException(self::class);
+            throw SpecificationException::generateEmptyStringException(self::class);
         }
         $this->default = $default;
     }

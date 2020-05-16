@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification\Info\License;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 
 /**
  * A URL to the license used for the API. MUST be in the format of a URL.
@@ -16,7 +16,7 @@ final class LicenseUrl
     private function __construct(string $url)
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw SpecificException::generateInvalidUrlException($url);
+            throw SpecificationException::generateInvalidUrlException($url);
         }
         $this->url = $url;
     }

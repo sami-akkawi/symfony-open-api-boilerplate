@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification\Info\Contact;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 
 /**
  * The email address of the contact person/organization. MUST be in the format of an email address.
@@ -16,7 +16,7 @@ final class ContactEmail
     private function __construct(string $email)
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL, FILTER_FLAG_EMAIL_UNICODE)) {
-            throw SpecificException::generateInvalidEmailException($email);
+            throw SpecificationException::generateInvalidEmailException($email);
         }
         $this->email = $email;
     }

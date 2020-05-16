@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification\Info\License;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 
 /**
  * REQUIRED. The license name used for the API.
@@ -16,7 +16,7 @@ final class LicenseName
     private function __construct(string $name)
     {
         if (empty($name)) {
-            throw SpecificException::generateEmptyStringException(self::class);
+            throw SpecificationException::generateEmptyStringException(self::class);
         }
         $this->name = $name;
     }

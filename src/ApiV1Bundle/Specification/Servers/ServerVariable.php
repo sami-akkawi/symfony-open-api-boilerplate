@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification\Servers;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 use App\ApiV1Bundle\Specification\Servers\ServerVariable\VariableDefaultValue;
 use App\ApiV1Bundle\Specification\Servers\ServerVariable\VariableDescription;
 use App\ApiV1Bundle\Specification\Servers\ServerVariable\VariableName;
@@ -58,7 +58,7 @@ final class ServerVariable
     public function setOptions(array $options): self
     {
         if (!in_array($this->defaultValue->toString(), $options)) {
-            throw SpecificException::generateEnumNotValidException($this->defaultValue->toString());
+            throw SpecificationException::generateEnumNotValidException($this->defaultValue->toString());
         }
 
         return new self(

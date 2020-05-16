@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification\Info\Contact;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 
 /**
  * The identifying name of the contact person/organization.
@@ -16,7 +16,7 @@ final class ContactName
     private function __construct(string $name)
     {
         if (empty($name)) {
-            throw SpecificException::generateEmptyStringException(self::class);
+            throw SpecificationException::generateEmptyStringException(self::class);
         }
         $this->name = $name;
     }

@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification\Info;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 
 /**
  * A URL to the Terms of Service for the API. MUST be in the format of a URL.
@@ -16,7 +16,7 @@ final class TermsOfService
     private function __construct(string $termsOfService)
     {
         if (!filter_var($termsOfService, FILTER_VALIDATE_URL)) {
-            throw SpecificException::generateInvalidUrlException($termsOfService);
+            throw SpecificationException::generateInvalidUrlException($termsOfService);
         }
         $this->termsOfService = $termsOfService;
     }

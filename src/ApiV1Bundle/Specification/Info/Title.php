@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Specification\Info;
 
-use App\ApiV1Bundle\Specification\Exception\SpecificException;
+use App\ApiV1Bundle\Specification\Exception\SpecificationException;
 
 /**
  * REQUIRED. The title of the API.
@@ -16,7 +16,7 @@ final class Title
     private function __construct(string $title)
     {
         if (empty($title)) {
-            throw SpecificException::generateEmptyStringException(self::class);
+            throw SpecificationException::generateEmptyStringException(self::class);
         }
         $this->title = $title;
     }
