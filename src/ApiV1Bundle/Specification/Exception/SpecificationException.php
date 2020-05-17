@@ -54,4 +54,9 @@ final class SpecificationException extends LogicException
     {
         return new self('Cannot set a bearer format to a non-bearer http scheme');
     }
+
+    public static function generateDuplicateSecurityRequirementsException(): self
+    {
+        return self::generate("Duplicate security requirements.");
+    }
 }

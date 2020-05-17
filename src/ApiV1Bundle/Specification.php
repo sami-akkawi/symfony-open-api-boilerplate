@@ -7,6 +7,8 @@ use App\ApiV1Bundle\Specification\Info\Contact;
 use App\ApiV1Bundle\Specification\Info\License;
 use App\ApiV1Bundle\Specification\Info\Version;
 use App\ApiV1Bundle\Specification\OpenApiVersion;
+use App\ApiV1Bundle\Specification\SecurityRequirement;
+use App\ApiV1Bundle\Specification\SecurityRequirements;
 use App\ApiV1Bundle\Specification\Server;
 use App\ApiV1Bundle\Specification\Servers;
 use App\ApiV1Bundle\Specification\Servers\ServerVariable;
@@ -20,13 +22,14 @@ final class Specification
     private Servers $servers;
     // todo: paths
     // todo: components
-    // todo: securityRequirements
+    private SecurityRequirements $securityRequirements;
     private Tags $tags;
 
     public function __construct() {
         $this->openApiVersion = OpenApiVersion::generate();
         $this->info = $this->getInfo();
         $this->servers = $this->getServers();
+        $this->securityRequirements = $this->getSecurityRequirements();
         $this->tags = $this->getTags();
     }
 
@@ -35,8 +38,10 @@ final class Specification
         return [
             'openapi' => $this->openApiVersion->toString(),
             'info' => $this->info->toOpenApiSpecification(),
+            'paths' => [],
             'servers' => $this->servers->toOpenApiSpecification(),
-            'tags' => $this->tags->toOpenApiSpecification()
+            'security' => $this->securityRequirements->toOpenApiSpecification(),
+            'tags' => $this->tags->toOpenApiSpecification(),
         ];
     }
 
@@ -47,6 +52,13 @@ final class Specification
             ->setContact(Contact::generate()->setEmail('something@your-website.ch'))
             ->setLicense(License::generate('Apache 2.0'))
             ->setTermsOfService('https://www.your-website.ch/api-terms-of-service');
+    }
+
+    private function getSecurityRequirements(): SecurityRequirements
+    {
+        return SecurityRequirements::generate()
+            ->addRequirement(SecurityRequirement::generate('ApiKey'))
+            ->addRequirement(SecurityRequirement::generate('JWT'));
     }
 
     private function getServers(): Servers
