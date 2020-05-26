@@ -13,19 +13,19 @@ final class ApiSpecification
 {
     private OpenApiVersion $openApiVersion;
     private ApiInfo $info;
-    private ApiServers $servers;
     // todo: paths
-    private ApiComponents $components;
-    private ApiSecurityRequirements $securityRequirements;
-    private ApiTags $tags;
+    private ?ApiServers $servers;
+    private ?ApiComponents $components;
+    private ?ApiSecurityRequirements $securityRequirements;
+    private ?ApiTags $tags;
 
     public function __construct(
         OpenApiVersion $openApiVersion,
         ApiInfo $info,
-        ApiServers $servers,
-        ApiComponents $components,
-        ApiSecurityRequirements $securityRequirements,
-        ApiTags $tags
+        ?ApiServers $servers = null,
+        ?ApiComponents $components = null,
+        ?ApiSecurityRequirements $securityRequirements = null,
+        ?ApiTags $tags = null
     ) {
         $this->openApiVersion = $openApiVersion;
         $this->info = $info;
@@ -37,15 +37,29 @@ final class ApiSpecification
 
     public function toOpenApiSpecification(): array
     {
-        return [
+        $specifications = [
             'openapi' => $this->openApiVersion->toString(),
             'info' => $this->info->toOpenApiSpecification(),
-            'paths' => [],
-            'components' => $this->components->toOpenApiSpecification(),
-            'servers' => $this->servers->toOpenApiSpecification(),
-            'security' => $this->securityRequirements->toOpenApiSpecification(),
-            'tags' => $this->tags->toOpenApiSpecification(),
+            'paths' => []
         ];
+
+        if ($this->components && $this->components->isDefined()) {
+            $specifications['components'] = $this->components->toOpenApiSpecification();
+        }
+
+        if ($this->servers && $this->servers->isDefined()) {
+            $specifications['servers'] = $this->servers->toOpenApiSpecification();
+        }
+
+        if ($this->securityRequirements) {
+            $specifications['security'] = $this->securityRequirements->toOpenApiSpecification();
+        }
+
+        if ($this->tags) {
+            $specifications['tags'] = $this->tags->toOpenApiSpecification();
+        }
+
+        return $specifications;
     }
 
     public function toJson(): string
