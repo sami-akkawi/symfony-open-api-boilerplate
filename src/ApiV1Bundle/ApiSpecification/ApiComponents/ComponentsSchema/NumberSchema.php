@@ -32,7 +32,7 @@ final class NumberSchema extends PrimitiveSchema
         $this->description = $description;
         $this->example = $example;
         if ($minimum && $maximum && ($minimum->toFloat() > $maximum->toFloat())) {
-            throw SpecificationException::generateMinimumSchouldBeLessThanMaximum();
+            throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
         }
         $this->minimum = $minimum;
         $this->maximum = $maximum;

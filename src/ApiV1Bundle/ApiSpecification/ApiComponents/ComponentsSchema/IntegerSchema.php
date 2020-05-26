@@ -32,7 +32,7 @@ final class IntegerSchema extends PrimitiveSchema
         $this->description = $description;
         $this->example = $example;
         if ($minimum && $maximum && ($minimum->toInt() > $maximum->toInt())) {
-            throw SpecificationException::generateMinimumSchouldBeLessThanMaximum();
+            throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
         }
         $this->minimum = $minimum;
         $this->maximum = $maximum;

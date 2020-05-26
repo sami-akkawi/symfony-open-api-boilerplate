@@ -29,7 +29,7 @@ final class SpecificationException extends LogicException
         return self::generate("Invalid URL: $invalidUrl.");
     }
 
-    public static function generateMinimumSchouldBeLessThanMaximum(): self
+    public static function generateMinimumShouldBeLessThanMaximum(): self
     {
         return self::generate("The minimum value should be less than the maximum value.");
     }
