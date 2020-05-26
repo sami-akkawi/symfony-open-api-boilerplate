@@ -1,5 +1,4 @@
 <?php declare(strict=1);
-// Created by sami-akkawi on 10.05.20
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme;
 
