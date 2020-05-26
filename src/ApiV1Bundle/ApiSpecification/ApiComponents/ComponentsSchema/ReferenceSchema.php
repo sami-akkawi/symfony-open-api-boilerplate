@@ -8,7 +8,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\Schem
 
 /**
  * The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.
- * https://swagger.io/specification/#reference-object
+ * http://spec.openapis.org/oas/v3.0.3#reference-object
  */
 
 final class ReferenceSchema extends Schema

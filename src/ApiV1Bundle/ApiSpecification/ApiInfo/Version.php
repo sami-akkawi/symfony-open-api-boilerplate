@@ -5,7 +5,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiInfo;
 /**
  * REQUIRED. The version of the OpenAPI document (which is distinct from the OpenAPI Specification
  * version or the API implementation version).
- * https://swagger.io/specification/#info-object
+ * http://spec.openapis.org/oas/v3.0.3#info-object
  */
 
 final class Version

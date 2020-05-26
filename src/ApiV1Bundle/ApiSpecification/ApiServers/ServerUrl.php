@@ -8,7 +8,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
  * REQUIRED. A URL to the target host. This URL supports Server Variables and MAY be relative, to indicate that the
  * host location is relative to the location where the OpenAPI document is being served. Variable substitutions will
  * be made when a variable is named in {brackets}.
- * https://swagger.io/specification/#server-object
+ * http://spec.openapis.org/oas/v3.0.3#server-object
  */
 
 final class ServerUrl

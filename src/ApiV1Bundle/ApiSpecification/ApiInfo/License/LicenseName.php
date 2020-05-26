@@ -6,7 +6,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 /**
  * REQUIRED. The license name used for the API.
- * https://swagger.io/specification/#license-object
+ * http://spec.openapis.org/oas/v3.0.3#license-object
  */
 
 final class LicenseName

@@ -7,7 +7,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsReference\Reference
 
 /**
  * A simple object to allow referencing other components in the specification, internally and externally.
- * https://swagger.io/specification/#reference-object
+ * http://spec.openapis.org/oas/v3.0.3#reference-object
  */
 
 final class Reference

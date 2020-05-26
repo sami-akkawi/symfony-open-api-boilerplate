@@ -8,7 +8,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiInfo\Contact\ContactUrl;
 
 /**
  * The contact information for the exposed API.
- * https://swagger.io/specification/#info-object
+ * http://spec.openapis.org/oas/v3.0.3#info-object
  */
 
 final class Contact

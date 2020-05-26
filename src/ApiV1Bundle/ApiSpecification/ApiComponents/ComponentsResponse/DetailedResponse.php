@@ -9,7 +9,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 /**
  * Describes a single response from an API Operation, including design-time, static links to operations based on the
  * response.
- * https://swagger.io/specification/#responses-object
+ * http://spec.openapis.org/oas/v3.0.3#responses-object
  */
 
 final class DetailedResponse extends Response

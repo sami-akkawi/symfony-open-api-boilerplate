@@ -8,7 +8,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiTag\TagName;
 /**
  * Adds metadata to a single tag that is used by the Operation Object. It is not mandatory to have a Tag Object per
  * tag defined in the Operation Object instances.
- * https://swagger.io/specification/#tag-object
+ * http://spec.openapis.org/oas/v3.0.3#tag-object
  */
 
 final class ApiTag

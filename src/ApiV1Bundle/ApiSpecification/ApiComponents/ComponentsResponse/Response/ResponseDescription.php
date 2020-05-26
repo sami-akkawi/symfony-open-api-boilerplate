@@ -4,7 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsResponse\Resp
 
 /**
  * REQUIRED. A short description of the response. CommonMark syntax MAY be used for rich text representation.
- * https://swagger.io/specification/#response-object
+ * http://spec.openapis.org/oas/v3.0.3#response-object
  */
 
 final class ResponseDescription

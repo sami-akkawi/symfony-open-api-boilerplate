@@ -6,7 +6,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 /**
  * REQUIRED. The reference string.
- * https://swagger.io/specification/#reference-object
+ * http://spec.openapis.org/oas/v3.0.3#reference-object
  */
 
 final class ReferenceType

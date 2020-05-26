@@ -6,7 +6,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 /**
  * A URL to the Terms of Service for the API. MUST be in the format of a URL.
- * https://swagger.io/specification/#info-object
+ * http://spec.openapis.org/oas/v3.0.3#info-object
  */
 
 final class TermsOfService

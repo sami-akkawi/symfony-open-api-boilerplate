@@ -6,7 +6,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 /**
  * REQUIRED. The name of the tag.
- * https://swagger.io/specification/#tag-object
+ * http://spec.openapis.org/oas/v3.0.3#tag-object
  */
 
 final class TagName

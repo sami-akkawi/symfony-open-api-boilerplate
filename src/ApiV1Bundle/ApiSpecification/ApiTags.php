@@ -10,7 +10,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiTag\TagName;
  * their order by the parsing tools. Not all tags that are used by the Operation Object must be declared.
  * The tags that are not declared MAY be organized randomly or based on the tools' logic.
  * Each tag name in the list MUST be unique.
- * https://swagger.io/specification/#fixed-fields
+ * http://spec.openapis.org/oas/v3.0.3#fixed-fields
  */
 
 final class ApiTags

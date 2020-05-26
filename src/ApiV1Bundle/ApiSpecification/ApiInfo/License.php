@@ -7,7 +7,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiInfo\License\LicenseUrl;
 
 /**
  * The license information for the exposed API.
- * https://swagger.io/specification/#info-object
+ * http://spec.openapis.org/oas/v3.0.3#info-object
  */
 
 final class License

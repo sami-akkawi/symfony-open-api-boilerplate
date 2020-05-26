@@ -9,7 +9,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiServers\ServerVariables;
 
 /**
  * An object representing a Server.
- * https://swagger.io/specification/#server-object
+ * http://spec.openapis.org/oas/v3.0.3#server-object
  */
 
 final class ApiServer

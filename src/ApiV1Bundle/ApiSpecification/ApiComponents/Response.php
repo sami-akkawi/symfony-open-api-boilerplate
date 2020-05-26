@@ -7,7 +7,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsResponse\Response\R
 /**
  * Describes a single response from an API Operation, including design-time, static links to operations based on the
  * response.
- * https://swagger.io/specification/#response-object
+ * http://spec.openapis.org/oas/v3.0.3#response-object
  */
 abstract class Response
 {

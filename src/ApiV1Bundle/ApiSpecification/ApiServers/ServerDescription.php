@@ -4,7 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiServers;
 
 /**
  * An optional string describing the host designated by the URL.
- * https://swagger.io/specification/#server-object
+ * http://spec.openapis.org/oas/v3.0.3#server-object
  */
 
 final class ServerDescription

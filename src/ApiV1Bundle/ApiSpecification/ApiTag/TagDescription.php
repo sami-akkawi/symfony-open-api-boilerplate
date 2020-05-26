@@ -4,7 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiTag;
 
 /**
  * A short description for the tag.
- * https://swagger.io/specification/#tag-object
+ * http://spec.openapis.org/oas/v3.0.3#tag-object
  */
 
 final class TagDescription

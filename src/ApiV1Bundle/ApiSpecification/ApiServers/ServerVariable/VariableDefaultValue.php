@@ -8,7 +8,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
  * REQUIRED. The default value to use for substitution, which SHALL be sent if an alternate value is not supplied.
  * Note this behavior is different than the Schema Object's treatment of default values, because in those cases
  * parameter values are optional. If the enum is defined, the value SHOULD exist in the enum's values.
- * https://swagger.io/specification/#server-variable-object
+ * http://spec.openapis.org/oas/v3.0.3#server-variable-object
  */
 
 final class VariableDefaultValue

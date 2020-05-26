@@ -6,7 +6,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 /**
  * The identifying name of the contact person/organization.
- * https://swagger.io/specification/#contact-object
+ * http://spec.openapis.org/oas/v3.0.3#contact-object
  */
 
 final class ContactName

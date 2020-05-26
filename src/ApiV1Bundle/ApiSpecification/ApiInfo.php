@@ -11,7 +11,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiInfo\Version;
 
 /**
  * REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
- * https://swagger.io/specification/#fixed-fields
+ * http://spec.openapis.org/oas/v3.0.3#fixed-fields
  */
 
 final class ApiInfo

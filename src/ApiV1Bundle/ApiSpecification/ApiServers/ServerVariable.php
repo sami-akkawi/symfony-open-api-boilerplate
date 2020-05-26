@@ -10,7 +10,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiServers\ServerVariable\VariableValueOpti
 
 /**
  * An object representing a Server Variable for server URL template substitution.
- * https://swagger.io/specification/#server-variable-object
+ * http://spec.openapis.org/oas/v3.0.3#server-variable-object
  */
 
 final class ServerVariable

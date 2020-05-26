@@ -13,7 +13,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiSecurityRequirement\SecurityRequirementN
  * are required to convey security information.
  * When a list of Security Requirement Objects is defined on the OpenAPI Object or Operation Object, only one of the
  * Security Requirement Objects in the list needs to be satisfied to authorize the request.
- * https://swagger.io/specification/#security-requirement-object
+ * http://spec.openapis.org/oas/v3.0.3#security-requirement-object
  */
 
 final class ApiSecurityRequirements

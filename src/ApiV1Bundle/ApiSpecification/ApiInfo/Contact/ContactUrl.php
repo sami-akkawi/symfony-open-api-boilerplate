@@ -6,7 +6,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 /**
  * The URL pointing to the contact information. MUST be in the format of a URL.
- * https://swagger.io/specification/#contact-object
+ * http://spec.openapis.org/oas/v3.0.3#contact-object
  */
 
 final class ContactUrl

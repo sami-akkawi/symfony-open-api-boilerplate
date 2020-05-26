@@ -4,7 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiInfo;
 
 /**
  * A short description of the API.
- * https://swagger.io/specification/#info-object
+ * http://spec.openapis.org/oas/v3.0.3#info-object
  */
 
 final class Description

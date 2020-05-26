@@ -7,7 +7,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiServers\ServerVariable\VariableName;
 
 /**
  * A map between a variable name and its value. The value is used for substitution in the server's URL template.
- * https://swagger.io/specification/#server-object
+ * http://spec.openapis.org/oas/v3.0.3#server-object
  */
 
 final class ServerVariables

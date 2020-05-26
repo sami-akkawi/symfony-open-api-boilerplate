@@ -9,7 +9,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
  * Note that integer as a type is also supported and is defined as a JSON number without a fraction or exponent part.
  * null is not supported as a type (see nullable for an alternative solution). Models are defined using the Schema
  * Object, which is an extended subset of JSON Schema Specification Wright Draft 00.
- * https://swagger.io/specification/#dataTypeFormat
+ * http://spec.openapis.org/oas/v3.0.3#dataTypeFormat
  */
 
 final class SchemaType
