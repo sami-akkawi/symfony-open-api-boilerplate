@@ -17,6 +17,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiServers\ServerVariable;
 use App\ApiV1Bundle\ApiSpecification\ApiTag;
 use App\ApiV1Bundle\ApiSpecification\ApiTags;
 use App\ApiV1Bundle\ApiSpecification\OpenApiVersion;
+use App\ApiV1Bundle\Response\AbstractResponse;
 use App\ApiV1Bundle\Schema\AbstractSchema;
 use App\Kernel;
 use RecursiveDirectoryIterator;
@@ -28,18 +29,15 @@ final class SpecificationController
 {
     public function show(): Response
     {
-        try {
-            $specification = new ApiSpecification(
-                OpenApiVersion::generate(),
-                $this->getInfo(),
-                $this->getServers(),
-                $this->getComponents(),
-                $this->getSecurityRequirements(),
-                $this->getTags()
-            );
-        } catch (SpecificationException $exception) {
-            return new Response($exception->getMessage());
-        }
+
+        $specification = new ApiSpecification(
+            OpenApiVersion::generate(),
+            $this->getInfo(),
+            $this->getServers(),
+            $this->getComponents(),
+            $this->getSecurityRequirements(),
+            $this->getTags()
+        );
 
         // todo: insert json into swagger/openApi UI
         // todo: cache file
@@ -54,6 +52,7 @@ final class SpecificationController
             );
 
         $components = $this->addSchemas($components);
+        $components = $this->addResponses($components);
 
         return $components;
     }
@@ -73,6 +72,27 @@ final class SpecificationController
             $schemaClass = $this->getFullyQualifiedClassName($file, $type);
             $components = $components->addSchema(
                 $schemaClass::getOpenApiSchema()
+            );
+        }
+
+        return $components;
+    }
+
+    private function addResponses(ApiComponents $components): ApiComponents
+    {
+        $type = 'response';
+        foreach ($this->getAutoLoadedClasses($type) as $file) {
+            if (
+                !$file->isFile() ||
+                is_int(strpos($file->getBaseName(), 'AbstractResponse'))
+            ) {
+                continue;
+            }
+
+            /** @var AbstractResponse $responseClass */
+            $responseClass = $this->getFullyQualifiedClassName($file, $type);
+            $components = $components->addResponse(
+                $responseClass::getOpenApiResponse()
             );
         }
 
@@ -122,8 +142,7 @@ final class SpecificationController
     private function getSecurityRequirements(): ApiSecurityRequirements
     {
         return ApiSecurityRequirements::generate()
-            ->addRequirement(ApiSecurityRequirement::generate('ApiKey'))
-            ->addRequirement(ApiSecurityRequirement::generate('JWT'));
+            ->addRequirement(ApiSecurityRequirement::generate('JsonWebToken'));
     }
 
     private function getServers(): ApiServers

@@ -3,6 +3,7 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiException;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsReference\ReferenceType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\DiscriminatorSchemaType;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\ApiKeyLocation;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\HttpScheme;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeType;
@@ -104,8 +105,38 @@ final class SpecificationException extends LogicException
         return self::generate("Invalid Security Scheme: $invalidType. Please choose one of: " . implode(', ', SchemeType::getTypes()) . '.');
     }
 
+    public static function generateInvalidDiscriminatorSchemaType(string $invalidType): self
+    {
+        return self::generate("Invalid Discriminator Schema Type: $invalidType. Please choose one of: " . implode(',  ', DiscriminatorSchemaType::getTypes()) . '.');
+    }
+
     public static function generateSchemaInSchemasNeedsAName(): self
     {
         return new self("Cannot add a schema to a list of schemas/properties if it has no name.");
+    }
+
+    public static function generateMediaTypesMustBeDefined(): self
+    {
+        return new self("At least one media type should be defined.");
+    }
+
+    public static function generateResponsesMustBeDefined(): self
+    {
+        return new self("At least one response should be defined.");
+    }
+
+    public static function generateSchemasMustBeDefined(): self
+    {
+        return new self("At least one schema should be defined.");
+    }
+
+    public static function generateMustHaveKeyInComponents(): self
+    {
+        return new self("All objects need to have keys in the components object.");
+    }
+
+    public static function generateReferenceSiblingsAreIgnored(): self
+    {
+        return new self('Sibling values alongside a reference element are ignored. To add properties to a reference element, wrap the element into allOf, or move the extra properties into the referenced definition (if applicable).');
     }
 }

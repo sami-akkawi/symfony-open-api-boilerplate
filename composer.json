@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^7.4.3",
+        "php": "^7.4.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "symfony/console": "5.0.*",

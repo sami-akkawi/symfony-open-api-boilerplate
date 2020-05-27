@@ -4,6 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaDescription;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaExample;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaType;
 
@@ -18,12 +19,25 @@ final class BooleanSchema extends PrimitiveSchema
         SchemaType $type,
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
-        ?SchemaExample $example = null
+        ?SchemaExample $example = null,
+        ?SchemaIsNullable $isNullable = null
     ) {
         $this->type = $type;
         $this->name = $name;
         $this->description = $description;
         $this->example = $example;
+        $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
+    }
+
+    public function setName(SchemaName $name): self
+    {
+        return new self(
+            $this->type,
+            $name,
+            $this->description,
+            $this->example,
+            $this->isNullable
+        );
     }
 
     public static function generate(?string $name = null): self
@@ -37,7 +51,8 @@ final class BooleanSchema extends PrimitiveSchema
             $this->type,
             $this->name,
             SchemaDescription::fromString($description),
-            $this->example
+            $this->example,
+            $this->isNullable
         );
     }
 
@@ -47,7 +62,19 @@ final class BooleanSchema extends PrimitiveSchema
             $this->type,
             $this->name,
             $this->description,
-            SchemaExample::fromString($example)
+            SchemaExample::fromString($example),
+            $this->isNullable
+        );
+    }
+
+    public function makeNullable(): self
+    {
+        return new self(
+            $this->type,
+            $this->name,
+            $this->description,
+            $this->example,
+            SchemaIsNullable::generateTrue()
         );
     }
 
@@ -59,6 +86,9 @@ final class BooleanSchema extends PrimitiveSchema
         }
         if ($this->example) {
             $specification['example'] = $this->example->toString();
+        }
+        if ($this->isNullable()) {
+            $specification['nullable'] = true;
         }
         return $specification;
     }

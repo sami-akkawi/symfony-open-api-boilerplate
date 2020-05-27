@@ -4,6 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaDescription;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaExample;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaMaximum;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaMinimum;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
@@ -25,7 +26,8 @@ final class NumberSchema extends PrimitiveSchema
         ?SchemaDescription $description = null,
         ?SchemaExample $example = null,
         ?SchemaMinimum $minimum = null,
-        ?SchemaMaximum $maximum = null
+        ?SchemaMaximum $maximum = null,
+        ?SchemaIsNullable $isNullable = null
     ) {
         $this->type = $type;
         $this->name = $name;
@@ -36,6 +38,20 @@ final class NumberSchema extends PrimitiveSchema
         }
         $this->minimum = $minimum;
         $this->maximum = $maximum;
+        $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
+    }
+
+    public function setName(SchemaName $name): self
+    {
+        return new self(
+            $this->type,
+            $name,
+            $this->description,
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            $this->isNullable
+        );
     }
 
     public function setFormat(string $format): self
@@ -46,7 +62,8 @@ final class NumberSchema extends PrimitiveSchema
             $this->description,
             $this->example,
             $this->minimum,
-            $this->maximum
+            $this->maximum,
+            $this->isNullable
         );
     }
 
@@ -58,7 +75,8 @@ final class NumberSchema extends PrimitiveSchema
             SchemaDescription::fromString($description),
             $this->example,
             $this->minimum,
-            $this->maximum
+            $this->maximum,
+            $this->isNullable
         );
     }
 
@@ -70,7 +88,8 @@ final class NumberSchema extends PrimitiveSchema
             $this->description,
             SchemaExample::fromString($example),
             $this->minimum,
-            $this->maximum
+            $this->maximum,
+            $this->isNullable
         );
     }
 
@@ -82,7 +101,8 @@ final class NumberSchema extends PrimitiveSchema
             $this->description,
             $this->example,
             SchemaMinimum::fromFloat($minimum),
-            $this->maximum
+            $this->maximum,
+            $this->isNullable
         );
     }
 
@@ -94,7 +114,21 @@ final class NumberSchema extends PrimitiveSchema
             $this->description,
             $this->example,
             $this->minimum,
-            SchemaMaximum::fromFloat($maximum)
+            SchemaMaximum::fromFloat($maximum),
+            $this->isNullable
+        );
+    }
+
+    public function makeNullable(): self
+    {
+        return new self(
+            $this->type,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            SchemaIsNullable::generateTrue()
         );
     }
 
@@ -120,6 +154,9 @@ final class NumberSchema extends PrimitiveSchema
         }
         if ($this->maximum) {
             $specification['maximum'] = $this->maximum->toFloat();
+        }
+        if ($this->isNullable()) {
+            $specification['nullable'] = true;
         }
         return $specification;
     }

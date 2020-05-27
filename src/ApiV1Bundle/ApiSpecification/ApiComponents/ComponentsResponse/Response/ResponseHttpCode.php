@@ -19,6 +19,7 @@ final class ResponseHttpCode
 {
     private const OK = '200';
     private const CREATED = '201';
+    private const NOT_FOUND = '404';
 
     private string $statusCode;
 
@@ -33,6 +34,11 @@ final class ResponseHttpCode
     public static function fromInt(int $statusCode): self
     {
         return new self((string)$statusCode);
+    }
+
+    public static function generateOk(): self
+    {
+        return new self(self::OK);
     }
 
     public function toString(): string

@@ -105,7 +105,7 @@ final class Pagination extends AbstractSchema
         return $uriParts[0] . '?' . http_build_query($parameters);
     }
 
-    public static function getOpenApiSchema(): Schema
+    protected static function getOpenApiSchemaWithoutName(): Schema
     {
         return ObjectSchema::generate(
             Schemas::generate()
@@ -122,8 +122,7 @@ final class Pagination extends AbstractSchema
                         ->addSchema(StringSchema::generate('next')->setDescription('Link to the endpoint of the next page.'))
                         ->addSchema(StringSchema::generate('last')->setDescription('Link to the endpoint of the last page.')),
                     'links')
-                ),
-            'Pagination'
+                )
         );
     }
 }

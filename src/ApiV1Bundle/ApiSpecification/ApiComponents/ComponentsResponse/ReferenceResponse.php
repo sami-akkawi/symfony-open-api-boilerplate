@@ -3,6 +3,7 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsResponse;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseHttpCode;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseKey;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Reference;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 
@@ -15,14 +16,21 @@ final class ReferenceResponse extends Response
 {
     private Reference $reference;
 
-    private function __construct(ResponseHttpCode $code, Reference $reference)
+    private function __construct(ResponseHttpCode $code, Reference $reference, ?ResponseKey $key = null)
     {
         $this->code = $code;
+        $this->reference = $reference;
+        $this->key = $key;
     }
 
     public static function generate(int $httpCode, string $objectName): self
     {
         return new self(ResponseHttpCode::fromInt($httpCode), Reference::generateSchemaReference($objectName));
+    }
+
+    public function setKey(ResponseKey $key): self
+    {
+        return new self($this->code, $this->reference, $key);
     }
 
     public function toOpenApiSpecification(): array

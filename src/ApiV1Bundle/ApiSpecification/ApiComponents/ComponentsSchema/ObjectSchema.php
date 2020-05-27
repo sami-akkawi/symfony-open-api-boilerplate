@@ -3,6 +3,7 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaDescription;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaType;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
@@ -16,8 +17,12 @@ final class ObjectSchema extends Schema
     private Schemas $properties;
     private ?SchemaDescription $description;
 
-    private function __construct(Schemas $properties, ?SchemaName $name = null, ?SchemaDescription $description = null)
-    {
+    private function __construct(
+        Schemas $properties,
+        ?SchemaName $name = null,
+        ?SchemaDescription $description = null,
+        ?SchemaIsNullable $isNullable = null
+    ) {
         if (!$properties->hasValues()) {
             throw SpecificationException::generateObjectSchemaNeedsProperties($name ? $name->toString() : 'no_name');
         }
@@ -25,6 +30,17 @@ final class ObjectSchema extends Schema
         $this->type = SchemaType::generateObject();
         $this->properties = $properties;
         $this->description = $description;
+        $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
+    }
+
+    public function setName(SchemaName $name): self
+    {
+        return new self(
+            $this->properties,
+            $name,
+            $this->description,
+            $this->isNullable
+        );
     }
 
     public static function generate(Schemas $properties, ?string $name = null): self
@@ -37,7 +53,18 @@ final class ObjectSchema extends Schema
         return new self(
             $this->properties,
             $this->name,
-            SchemaDescription::fromString($description)
+            SchemaDescription::fromString($description),
+            $this->isNullable
+        );
+    }
+
+    public function makeNullable(): self
+    {
+        return new self(
+            $this->properties,
+            $this->name,
+            $this->description,
+            SchemaIsNullable::generateTrue()
         );
     }
 
@@ -49,6 +76,9 @@ final class ObjectSchema extends Schema
         ];
         if ($this->description) {
             $specification['description'] = $this->description->toString();
+        }
+        if ($this->isNullable()) {
+            $specification['nullable'] = true;
         }
         return $specification;
     }

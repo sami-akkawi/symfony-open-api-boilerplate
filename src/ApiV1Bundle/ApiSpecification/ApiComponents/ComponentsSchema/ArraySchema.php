@@ -2,6 +2,7 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaDescription;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
@@ -19,13 +20,26 @@ final class ArraySchema extends Schema
         Schema $itemType,
         ?SchemaName $name,
         bool $itemsAreUnique = true,
-        ?SchemaDescription $description = null
+        ?SchemaDescription $description = null,
+        ?SchemaIsNullable $isNullable = null
     ) {
         $this->itemType = $itemType;
         $this->name = $name;
         $this->itemsAreUnique = $itemsAreUnique;
         $this->type = SchemaType::generateArray();
         $this->description = $description;
+        $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
+    }
+
+    public function setName(SchemaName $name): self
+    {
+        return new self(
+            $this->itemType,
+            $name,
+            $this->itemsAreUnique,
+            $this->description,
+            $this->isNullable
+        );
     }
 
     public static function generateWithUniqueValues(Schema $itemType, ?string $name = null): self
@@ -51,7 +65,19 @@ final class ArraySchema extends Schema
             $this->itemType,
             $this->name,
             $this->itemsAreUnique,
-            SchemaDescription::fromString($description)
+            SchemaDescription::fromString($description),
+            $this->isNullable
+        );
+    }
+
+    public function makeNullable(): self
+    {
+        return new self(
+            $this->itemType,
+            $this->name,
+            $this->itemsAreUnique,
+            $this->description,
+            SchemaIsNullable::generateTrue()
         );
     }
 
@@ -66,6 +92,9 @@ final class ArraySchema extends Schema
         }
         if ($this->description) {
             $specification['description'] = $this->description->toString();
+        }
+        if ($this->isNullable()) {
+            $specification['nullable'] = true;
         }
         return $specification;
     }

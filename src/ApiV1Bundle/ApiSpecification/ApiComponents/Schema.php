@@ -2,6 +2,7 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
 
 /**
@@ -12,9 +13,12 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\Schem
 
 abstract class Schema
 {
+    protected SchemaIsNullable $isNullable;
     protected ?SchemaName $name;
 
     public abstract function toOpenApiSpecification(): array;
+
+    public abstract function setName(SchemaName $name);
 
     public function hasName(): bool
     {
@@ -25,4 +29,11 @@ abstract class Schema
     {
         return $this->name;
     }
+
+    public function isNullable(): bool
+    {
+        return $this->isNullable->toBool();
+    }
+
+    public abstract function makeNullable();
 }
