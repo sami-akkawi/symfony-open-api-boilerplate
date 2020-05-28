@@ -67,14 +67,14 @@ final class ApiComponents
     public function toOpenApiSpecification(): array
     {
         $specifications = [];
+        if ($this->responses->isDefined()) {
+            $specifications['responses'] =  $this->responses->toOpenApiSpecificationForComponents();
+        }
         if ($this->schemas->hasValues()) {
             $specifications['schemas'] =  $this->schemas->toOpenApiSpecification(true);
         }
         if ($this->securitySchemes->isDefined()) {
             $specifications['securitySchemes'] =  $this->securitySchemes->toOpenApiSpecification();
-        }
-        if ($this->responses->isDefined()) {
-            $specifications['responses'] =  $this->responses->toOpenApiSpecificationForComponents();
         }
         return $specifications;
     }
