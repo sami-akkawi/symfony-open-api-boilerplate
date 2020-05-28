@@ -17,8 +17,8 @@ final class FieldMessage extends AbstractSchema
     {
         return ObjectSchema::generate(
             Schemas::generate()->addSchema(
-                ArraySchema::generateWithUniqueValues(
-                    DiscriminatorSchema::generateAnyOf('path')
+                ArraySchema::generateWithoutUniqueValues(
+                    DiscriminatorSchema::generateAnyOf()
                     ->addSchema(StringSchema::generate())
                     ->addSchema(IntegerSchema::generate())
                 )->setName(SchemaName::fromString('path'))

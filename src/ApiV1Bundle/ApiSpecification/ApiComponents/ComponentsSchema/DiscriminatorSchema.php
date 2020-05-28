@@ -21,7 +21,7 @@ final class DiscriminatorSchema extends Schema
     private function __construct(
         DiscriminatorSchemaType $type,
         Schemas $schemas,
-        SchemaName $name,
+        ?SchemaName $name = null,
         ?SchemaDescription $description = null,
         ?SchemaIsNullable $isNullable = null
     )
@@ -33,19 +33,19 @@ final class DiscriminatorSchema extends Schema
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
     }
 
-    public static function generateAnyOf(string $name): self
+    public static function generateAnyOf(): self
     {
-        return new self(DiscriminatorSchemaType::generateAnyOf(), Schemas::generate(), SchemaName::fromString($name));
+        return new self(DiscriminatorSchemaType::generateAnyOf(), Schemas::generate());
     }
 
-    public static function generateAllOf(string $name): self
+    public static function generateAllOf(): self
     {
-        return new self(DiscriminatorSchemaType::generateAllOf(), Schemas::generate(), SchemaName::fromString($name));
+        return new self(DiscriminatorSchemaType::generateAllOf(), Schemas::generate());
     }
 
-    public static function generateOneOf(string $name): self
+    public static function generateOneOf(): self
     {
-        return new self(DiscriminatorSchemaType::generateOneOf(), Schemas::generate(), SchemaName::fromString($name));
+        return new self(DiscriminatorSchemaType::generateOneOf(), Schemas::generate());
     }
 
     public function addSchema(Schema $schema): self
