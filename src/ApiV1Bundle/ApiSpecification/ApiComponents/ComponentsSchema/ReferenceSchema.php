@@ -20,17 +20,16 @@ final class ReferenceSchema extends Schema
 
     private function __construct(
         Reference $reference,
-        ?SchemaName $name = null,
-        ?SchemaIsNullable $isNullable = null
+        ?SchemaName $name = null
     ) {
         $this->reference = $reference;
         $this->name = $name;
-        $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
+        $this->isNullable = SchemaIsNullable::generateFalse();
     }
 
     public function setName(SchemaName $name): self
     {
-        return new self($this->reference, $name, $this->isNullable);
+        return new self($this->reference, $name);
     }
 
     public static function generateWithName(string $objectName, string $name): self
