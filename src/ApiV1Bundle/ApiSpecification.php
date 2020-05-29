@@ -13,7 +13,7 @@ final class ApiSpecification
 {
     private OpenApiVersion $openApiVersion;
     private ApiInfo $info;
-    // todo: paths
+    // todo: private Paths $paths
     private ?ApiServers $servers;
     private ?ApiComponents $components;
     private ?ApiSecurityRequirements $securityRequirements;

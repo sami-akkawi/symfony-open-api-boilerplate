@@ -14,12 +14,12 @@ final class ApiComponents
 {
     private Schemas $schemas;
     private Responses $responses;
-    // todo: parameters
-    // todo: examples
-    // todo: requestBodies
-    // todo: headers
+    // todo: private Parameters $parameters
+    // todo: private Examples $examples
+    // todo: private RequestBodies $requestBodies
+    // todo: private Headers $headers
     private SecuritySchemes $securitySchemes;
-    // todo: links
+    // todo: private Links $links
 
     private function __construct(Schemas $schemas, SecuritySchemes $securitySchemes, Responses $responses)
     {
