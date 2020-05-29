@@ -15,11 +15,14 @@ final class Message extends AbstractSchema
     {
         return ObjectSchema::generate(
             Schemas::generate()
-                ->addSchema(StringSchema::generate('id')->setFormat(SchemaType::STRING_UUID_FORMAT))
-                ->addSchema(StringSchema::generate('type')->setOptions(['info', 'success', 'warning', 'error']))
+                ->addSchema(StringSchema::generate('id')
+                    ->setFormat(SchemaType::STRING_UUID_FORMAT))
+                ->addSchema(StringSchema::generate('type')
+                    ->setOptions(['info', 'success', 'warning', 'error']))
                 ->addSchema(StringSchema::generate('translationId'))
                 ->addSchema(StringSchema::generate('defaultText'))
-                ->addSchema(MapSchema::generateStringMap('placeholders')->makeNullable())
+                ->addSchema(MapSchema::generateStringMap('placeholders')
+                    ->makeNullable())
         );
     }
 }

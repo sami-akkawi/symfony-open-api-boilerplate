@@ -23,8 +23,10 @@ final class NotFoundResponse extends AbstractResponse
                     Schemas::generate()
                     ->addSchema(StringSchema::generate('errorType')), 'data'
                 ))
-                ->addSchema(ArraySchema::generateWithUniqueValues(Message::getReferenceSchema())->setName(SchemaName::fromString('messages'))->makeNullable())
-                ->addSchema(ArraySchema::generateWithUniqueValues(FieldMessage::getReferenceSchema())->setName(SchemaName::fromString('fieldMessages'))->makeNullable())
+                ->addSchema(ArraySchema::generateWithUniqueValues(Message::getReferenceSchema())
+                    ->setName(SchemaName::fromString('messages'))->makeNullable())
+                ->addSchema(ArraySchema::generateWithUniqueValues(FieldMessage::getReferenceSchema())
+                    ->setName(SchemaName::fromString('fieldMessages'))->makeNullable())
             )
         );
     }
