@@ -2,6 +2,7 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiException;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsParameter\ParameterLocation;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsReference\ReferenceType;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\DiscriminatorSchemaType;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\ApiKeyLocation;
@@ -103,6 +104,16 @@ final class SpecificationException extends LogicException
     public static function generateInvalidSecuritySchemeType(string $invalidType): self
     {
         return self::generate("Invalid Security Scheme: $invalidType. Please choose one of: " . implode(', ', SchemeType::getTypes()) . '.');
+    }
+
+    public static function generateInvalidNameInHeader(string $invalidName): self
+    {
+        return self::generate("$invalidName may not be defined in header.");
+    }
+
+    public static function generateInvalidParameterLocation(string $invalidLocation): self
+    {
+        return self::generate("Invalid Parameter Location: $invalidLocation. Please choose one of: " . implode(', ', ParameterLocation::getValidLocations()) . '.');
     }
 
     public static function generateInvalidDiscriminatorSchemaType(string $invalidType): self

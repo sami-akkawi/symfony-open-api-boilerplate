@@ -15,6 +15,7 @@ abstract class Schema
 {
     protected SchemaIsNullable $isNullable;
     protected ?SchemaName $name;
+    // todo: protected ?Example $example;
 
     public abstract function toOpenApiSpecification(): array;
 
