@@ -17,8 +17,8 @@ use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 final class ResponseHttpCode
 {
-    private const OK = '200';
-    private const CREATED = '201';
+    private const OK        = '200';
+    private const CREATED   = '201';
     private const NOT_FOUND = '404';
 
     private string $statusCode;
@@ -36,9 +36,19 @@ final class ResponseHttpCode
         return new self((string)$statusCode);
     }
 
+    public static function fromString(string $statusCode): self
+    {
+        return new self($statusCode);
+    }
+
     public static function generateOk(): self
     {
         return new self(self::OK);
+    }
+
+    public static function generateNotFound(): self
+    {
+        return new self(self::NOT_FOUND);
     }
 
     public function toString(): string

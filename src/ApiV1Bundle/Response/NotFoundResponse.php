@@ -28,9 +28,4 @@ final class NotFoundResponse extends AbstractResponse
             )
         );
     }
-
-    public static function getHttpCode(): int
-    {
-        return 404;
-    }
 }

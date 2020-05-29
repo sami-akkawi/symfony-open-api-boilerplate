@@ -54,8 +54,8 @@ final class DetailedResponse extends Response
     public static function generateNotFoundJson($schema): self
     {
         return new self(
-            ResponseHttpCode::generateOk(),
-            ResponseDescription::fromString('404 Not Found. Resource not found.'),
+            ResponseHttpCode::generateNotFound(),
+            ResponseDescription::fromString('Not Found.'),
             ResponseContent::generate()->addMediaType(
                 ContentMediaType::generateJson($schema)
             )

@@ -26,5 +26,8 @@ abstract class AbstractResponse
         return array_pop($path);
     }
 
-    public abstract static function getHttpCode(): int;
+    private static function getHttpCode(): string
+    {
+        return static::getOpenApiResponseWithoutName()->getCode()->toString();
+    }
 }
