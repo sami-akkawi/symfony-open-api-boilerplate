@@ -4,7 +4,6 @@ namespace App\ApiV1Bundle;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSecurityScheme\HttpSecurityScheme;
-use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 use App\ApiV1Bundle\ApiSpecification\ApiInfo;
 use App\ApiV1Bundle\ApiSpecification\ApiInfo\Contact;
 use App\ApiV1Bundle\ApiSpecification\ApiInfo\License;
@@ -14,11 +13,11 @@ use App\ApiV1Bundle\ApiSpecification\ApiSecurityRequirements;
 use App\ApiV1Bundle\ApiSpecification\ApiServer;
 use App\ApiV1Bundle\ApiSpecification\ApiServers;
 use App\ApiV1Bundle\ApiSpecification\ApiServers\ServerVariable;
-use App\ApiV1Bundle\ApiSpecification\ApiTag;
 use App\ApiV1Bundle\ApiSpecification\ApiTags;
 use App\ApiV1Bundle\ApiSpecification\OpenApiVersion;
 use App\ApiV1Bundle\Response\AbstractResponse;
 use App\ApiV1Bundle\Schema\AbstractSchema;
+use App\ApiV1Bundle\Tag\AbstractTag;
 use App\Kernel;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -166,10 +165,23 @@ final class SpecificationController
 
     private function getTags(): ApiTags
     {
-        return ApiTags::generate()
-            ->addTag(
-                ApiTag::generate('Security')
-                    ->setDescription('Operations related to authentication and authorisation.')
+        $tags = ApiTags::generate();
+        $type = 'tag';
+        foreach ($this->getAutoLoadedClasses($type) as $file) {
+            if (
+                !$file->isFile() ||
+                is_int(strpos($file->getBaseName(), 'Abstract'))
+            ) {
+                continue;
+            }
+
+            /** @var AbstractTag $tagClass */
+            $tagClass = $this->getFullyQualifiedClassName($file, $type);
+            $tags = $tags->addTag(
+                $tagClass::getApiTag()
             );
+        }
+
+        return $tags;
     }
 }
