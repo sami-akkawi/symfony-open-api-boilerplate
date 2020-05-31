@@ -25,7 +25,7 @@ final class ReferenceResponse extends Response
 
     public static function generate(string $httpCode, string $objectName): self
     {
-        return new self(ResponseHttpCode::fromString($httpCode), Reference::generateSchemaReference($objectName));
+        return new self(ResponseHttpCode::fromString($httpCode), Reference::generateResponseReference($objectName));
     }
 
     public function setKey(ResponseKey $key): self
