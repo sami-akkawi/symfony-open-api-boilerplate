@@ -22,7 +22,10 @@ final class Parameters
     private function hasParameter(Parameter $parameter): bool
     {
         foreach ($this->parameters as $thisParameter) {
-            if ($thisParameter->isIdenticalTo($parameter)) {
+            $thisParameter = $thisParameter->toDetailedParameter();
+            $thatParameter = $parameter->toDetailedParameter();
+
+            if ($thisParameter->isIdenticalTo($thatParameter)) {
                 return true;
             }
         }

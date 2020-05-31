@@ -59,6 +59,19 @@ abstract class DetailedParameter extends Parameter
         return $this->location->isInPath();
     }
 
+    public function toDetailedParameter(): self
+    {
+        return $this;
+    }
+
+    public function isIdenticalTo(self $parameter): bool
+    {
+        return (
+            $this->getName()->isIdenticalTo($parameter->getName())
+            && $this->getLocation()->isIdenticalTo($parameter->getLocation())
+        );
+    }
+
     public abstract static function generateInQuery(string $name);
 
     public abstract static function generateInHeader(string $name);
