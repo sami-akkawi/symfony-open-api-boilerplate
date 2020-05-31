@@ -2,12 +2,10 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterDescription;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterIsDeprecated;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterIsRequired;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterLocation;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterName;
-use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\DetailedParameter;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterDocName;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ReferenceParameter;
+use App\ApiV1Bundle\Parameter\AbstractParameter;
 
 /**
  * Describes a single operation parameter.
@@ -17,57 +15,52 @@ use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 abstract class Parameter
 {
-    private const INVALID_NAMES_IN_HEADER = ['Accept', 'Content-Type', 'Authorization'];
+    private const PARAMETERS_NAMESPACE_PREFIX = 'App\\ApiV1Bundle\\ApiSpecification\\ApiComponents\\Parameter\\';
 
-    protected ParameterName $name;
-    protected ParameterLocation $location;
-    protected ParameterIsRequired $isRequired;
-    protected ParameterIsDeprecated $isDeprecated;
-    protected ?ParameterDescription $description;
-    // todo: protected ?ParameterStyle $style;
-    // todo: protected ?Example $example;
-    // todo: protected ?Examples $examples;
+    protected ?ParameterDocName $docName;
 
-    protected function __construct(
-        ParameterName $name,
-        ParameterLocation $location,
-        ParameterIsRequired $isRequired,
-        ParameterIsDeprecated $isDeprecated,
-        ?ParameterDescription $description
-    ) {
-        if ($location->isInHeader() && in_array($name->toString(), self::INVALID_NAMES_IN_HEADER)) {
-            SpecificationException::generateInvalidNameInHeader($name->toString());
+    public abstract function setDocName(string $name);
+
+    public function hasDocName(): bool
+    {
+        return (bool)$this->docName;
+    }
+
+    public function getDocName(): ?ParameterDocName
+    {
+        return $this->docName;
+    }
+
+    private function getDetailedParameterFromReferenceParameter(ReferenceParameter $parameter): DetailedParameter
+    {
+        /** @var AbstractParameter $namespace */
+        $namespace = (self::PARAMETERS_NAMESPACE_PREFIX . $parameter->getName());
+        return $namespace::getOpenApiParameter();
+    }
+
+    public function isIdenticalTo(self $parameter): bool
+    {
+        if ($parameter instanceof ReferenceParameter) {
+            $thatParameter = $this->getDetailedParameterFromReferenceParameter($parameter);
+        } else {
+            /** @var DetailedParameter $thatParameter */
+            $thatParameter = $parameter;
         }
 
-        $this->name = $name;
-        $this->location = $location;
-        $this->isRequired = $isRequired;
-        $this->isDeprecated = $isDeprecated;
-        $this->description = $description;
+        if (static::class === ReferenceParameter::class) {
+            /** @var ReferenceParameter $thisReferenceParameter */
+            $thisReferenceParameter = $this;
+            $thisParameter = $this->getDetailedParameterFromReferenceParameter($thisReferenceParameter);
+        } else {
+            /** @var DetailedParameter $thisParameter */
+            $thisParameter = $this;
+        }
+
+        return (
+            $thisParameter->getName()->isIdenticalTo($thatParameter->getName())
+            && $thisParameter->getLocation()->isIdenticalTo($thatParameter->getLocation())
+        );
     }
-
-    public function getName(): ParameterName
-    {
-        return $this->name;
-    }
-
-    public function getLocation(): ParameterLocation
-    {
-        return $this->location;
-    }
-
-    public function isInPath(): bool
-    {
-        return $this->location->isInPath();
-    }
-
-    public abstract static function generateInQuery(string $name);
-
-    public abstract static function generateInHeader(string $name);
-
-    public abstract static function generateInPath(string $name);
-
-    public abstract static function generateInCookie(string $name);
 
     public abstract function toOpenApiSpecification(): array;
 }

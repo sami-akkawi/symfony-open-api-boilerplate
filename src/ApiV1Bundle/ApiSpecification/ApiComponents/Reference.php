@@ -86,6 +86,11 @@ final class Reference
         );
     }
 
+    public function getStringName(): string
+    {
+        return $this->objectName->toString();
+    }
+
     public function toOpenApiSpecification(): array
     {
         return ['$ref' => self::REFERENCE_PREFIX . $this->type->toReferenceLinkPart() . $this->objectName->toString()];

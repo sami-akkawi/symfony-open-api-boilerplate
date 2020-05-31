@@ -15,6 +15,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiServers;
 use App\ApiV1Bundle\ApiSpecification\ApiServers\ServerVariable;
 use App\ApiV1Bundle\ApiSpecification\ApiTags;
 use App\ApiV1Bundle\ApiSpecification\OpenApiVersion;
+use App\ApiV1Bundle\Parameter\AbstractParameter;
 use App\ApiV1Bundle\Response\AbstractResponse;
 use App\ApiV1Bundle\Schema\AbstractSchema;
 use App\ApiV1Bundle\Tag\AbstractTag;
@@ -52,6 +53,7 @@ final class SpecificationController
 
         $components = $this->addSchemas($components);
         $components = $this->addResponses($components);
+        $components = $this->addParameters($components);
 
         return $components;
     }
@@ -92,6 +94,27 @@ final class SpecificationController
             $responseClass = $this->getFullyQualifiedClassName($file, $type);
             $components = $components->addResponse(
                 $responseClass::getOpenApiResponse()
+            );
+        }
+
+        return $components;
+    }
+
+    private function addParameters(ApiComponents $components): ApiComponents
+    {
+        $type = 'parameter';
+        foreach ($this->getAutoLoadedClasses($type) as $file) {
+            if (
+                !$file->isFile() ||
+                is_int(strpos($file->getBaseName(), 'AbstractParameter'))
+            ) {
+                continue;
+            }
+
+            /** @var AbstractParameter $parameterClass */
+            $parameterClass = $this->getFullyQualifiedClassName($file, $type);
+            $components = $components->addParameter(
+                $parameterClass::getOpenApiParameter()
             );
         }
 

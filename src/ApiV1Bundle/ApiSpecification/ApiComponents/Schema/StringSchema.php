@@ -115,6 +115,9 @@ final class StringSchema extends PrimitiveSchema
         if ($this->example) {
             $specification['example'] = $this->example->toString();
         }
+        if ($this->isNullable()) {
+            $specification['nullable'] = true;
+        }
         return $specification;
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\StringSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\IntegerSchema;
 
-final class StringParameter extends SchemaParameter
+final class IntegerParameter extends SchemaParameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
@@ -13,26 +13,26 @@ final class StringParameter extends SchemaParameter
             $location,
             $location->isInPath() ? ParameterIsRequired::generateTrue() : ParameterIsRequired::generateFalse(),
             ParameterIsDeprecated::generateFalse(),
-            StringSchema::generate()
+            IntegerSchema::generate()
         );
     }
 
-    public static function generateInCookie(string $name): self
+    public static function generateInCookie(string $name, ?string $docName = null): self
     {
         return self::generate($name, ParameterLocation::generateCookie());
     }
 
-    public static function generateInQuery(string $name): self
+    public static function generateInQuery(string $name, ?string $docName = null): self
     {
         return self::generate($name, ParameterLocation::generateQuery());
     }
 
-    public static function generateInHeader(string $name): self
+    public static function generateInHeader(string $name, ?string $docName = null): self
     {
         return self::generate($name, ParameterLocation::generateHeader());
     }
 
-    public static function generateInPath(string $name): self
+    public static function generateInPath(string $name, ?string $docName = null): self
     {
         return self::generate($name, ParameterLocation::generatePath());
     }
@@ -45,33 +45,6 @@ final class StringParameter extends SchemaParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->schema->setFormat($format),
-            $this->description,
-            $this->docName
-        );
-    }
-
-    /** @param string[] $options */
-    public function setOptions(array $options): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema->setOptions($options),
-            $this->description,
-            $this->docName
-        );
-    }
-
-    public function makeNullable(): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema->makeNullable(),
             $this->description,
             $this->docName
         );
@@ -112,6 +85,45 @@ final class StringParameter extends SchemaParameter
             $this->isDeprecated,
             $this->schema,
             ParameterDescription::fromString($description),
+            $this->docName
+        );
+    }
+
+    public function makeNullable(): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->makeNullable(),
+            $this->description,
+            $this->docName
+        );
+    }
+
+    public function setMinimum(int $minimum): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->setMinimum($minimum),
+            $this->description,
+            $this->docName
+        );
+    }
+
+    public function setMaximum(int $maximum): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->setMaximum($maximum),
+            $this->description,
             $this->docName
         );
     }

@@ -2,6 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameters;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Responses;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
@@ -14,31 +16,42 @@ final class ApiComponents
 {
     private Schemas $schemas;
     private Responses $responses;
-    // todo: private Parameters $parameters
+    private Parameters $parameters;
     // todo: private Examples $examples
     // todo: private RequestBodies $requestBodies
     // todo: private Headers $headers
     private SecuritySchemes $securitySchemes;
     // todo: private Links $links
 
-    private function __construct(Schemas $schemas, SecuritySchemes $securitySchemes, Responses $responses)
-    {
+    private function __construct(
+        Schemas $schemas,
+        Responses $responses,
+        Parameters $parameters,
+        SecuritySchemes $securitySchemes
+    ) {
         $this->schemas = $schemas;
-        $this->securitySchemes = $securitySchemes;
         $this->responses = $responses;
+        $this->parameters = $parameters;
+        $this->securitySchemes = $securitySchemes;
     }
 
     public static function generate(): self
     {
-        return new self(Schemas::generate(), SecuritySchemes::generate(), Responses::generate());
+        return new self(
+            Schemas::generate(),
+            Responses::generate(),
+            Parameters::generate(),
+            SecuritySchemes::generate()
+        );
     }
 
     public function addSecurityScheme(SecurityScheme $scheme): self
     {
         return new self(
             $this->schemas,
+            $this->responses,
+            $this->parameters,
             $this->securitySchemes->addScheme($scheme),
-            $this->responses
         );
     }
 
@@ -46,8 +59,9 @@ final class ApiComponents
     {
         return new self(
             $this->schemas->addSchema($schema),
-            $this->securitySchemes,
-            $this->responses
+            $this->responses,
+            $this->parameters,
+            $this->securitySchemes
         );
     }
 
@@ -59,10 +73,27 @@ final class ApiComponents
 
         return new self(
             $this->schemas,
-            $this->securitySchemes,
-            $this->responses->addResponse($response)
+            $this->responses->addResponse($response),
+            $this->parameters,
+            $this->securitySchemes
         );
     }
+
+    public function addParameter(Parameter $parameter): self
+    {
+        if (!$parameter->hasDocName()) {
+            throw SpecificationException::generateMustHaveKeyInComponents();
+        }
+
+        return new self(
+            $this->schemas,
+            $this->responses,
+            $this->parameters->addParameter($parameter),
+            $this->securitySchemes
+        );
+    }
+
+
 
     public function toOpenApiSpecification(): array
     {
@@ -72,6 +103,9 @@ final class ApiComponents
         }
         if ($this->schemas->hasValues()) {
             $specifications['schemas'] =  $this->schemas->toOpenApiSpecification(true);
+        }
+        if ($this->parameters->isDefined()) {
+            $specifications['parameters'] =  $this->parameters->toOpenApiSpecificationForComponents();
         }
         if ($this->securitySchemes->isDefined()) {
             $specifications['securitySchemes'] =  $this->securitySchemes->toOpenApiSpecification();

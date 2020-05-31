@@ -71,6 +71,11 @@ final class SpecificationException extends LogicException
         return self::generate("Duplicate security requirements.");
     }
 
+    public static function generateDuplicateParameters(): self
+    {
+        return self::generate("Duplicate parameter definitions.");
+    }
+
     public static function generateInvalidReferenceType(string $invalidReferenceType): self
     {
         return self::generate("Invalid Reference Type: $invalidReferenceType. Please choose one of: " . implode(', ', ReferenceType::getValidReferenceTypes()) . '.');

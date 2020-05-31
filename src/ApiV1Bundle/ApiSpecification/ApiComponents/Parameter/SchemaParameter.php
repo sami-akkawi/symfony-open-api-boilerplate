@@ -2,10 +2,9 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
-abstract class SchemaParameter extends Parameter
+abstract class SchemaParameter extends DetailedParameter
 {
     protected Schema $schema;
 
@@ -15,11 +14,14 @@ abstract class SchemaParameter extends Parameter
         ParameterIsRequired $isRequired,
         ParameterIsDeprecated $isDeprecated,
         Schema $schema,
-        ?ParameterDescription $description = null
+        ?ParameterDescription $description = null,
+        ParameterDocName $docName = null
     ) {
-        parent::__construct($name, $location, $isRequired, $isDeprecated, $description);
+        parent::__construct($name, $location, $isRequired, $isDeprecated, $description, $docName);
         $this->schema = $schema;
     }
+
+    public abstract function makeNullable();
 
     public function toOpenApiSpecification(): array
     {

@@ -72,4 +72,9 @@ final class ParameterLocation
     {
         return self::VALID_LOCATIONS;
     }
+
+    public function isIdenticalTo(self $location): bool
+    {
+        return $this->toString() === $location->toString();
+    }
 }
