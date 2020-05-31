@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\Response;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsResponse\ReferenceResponse;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseKey;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\ReferenceResponse;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseKey;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 
 abstract class AbstractResponse

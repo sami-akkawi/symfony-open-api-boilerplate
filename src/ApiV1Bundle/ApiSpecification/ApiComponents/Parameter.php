@@ -2,11 +2,11 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsParameter\ParameterDescription;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsParameter\ParameterIsDeprecated;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsParameter\ParameterIsRequired;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsParameter\ParameterLocation;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsParameter\ParameterName;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterDescription;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterIsDeprecated;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterIsRequired;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterLocation;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterName;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 final class Schemas

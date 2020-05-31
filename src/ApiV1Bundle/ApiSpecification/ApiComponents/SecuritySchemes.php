@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeName;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeName;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 final class SecuritySchemes

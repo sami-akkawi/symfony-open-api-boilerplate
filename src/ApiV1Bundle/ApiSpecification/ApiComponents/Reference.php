@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsReference\ReferenceObjectName;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsReference\ReferenceType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Reference\ReferenceObjectName;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Reference\ReferenceType;
 
 /**
  * A simple object to allow referencing other components in the specification, internally and externally.

@@ -2,12 +2,12 @@
 
 namespace App\ApiV1Bundle\Schema;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\ArraySchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\DiscriminatorSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\IntegerSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\ObjectSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\StringSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ArraySchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DiscriminatorSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\IntegerSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\StringSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
 

@@ -2,12 +2,12 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiException;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsParameter\ParameterLocation;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsReference\ReferenceType;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\DiscriminatorSchemaType;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\ApiKeyLocation;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\HttpScheme;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterLocation;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Reference\ReferenceType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\DiscriminatorSchemaType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\ApiKeyLocation;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\HttpScheme;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeType;
 use LogicException;
 
 final class SpecificationException extends LogicException

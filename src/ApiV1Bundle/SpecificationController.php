@@ -3,7 +3,7 @@
 namespace App\ApiV1Bundle;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSecurityScheme\HttpSecurityScheme;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\SecurityScheme\HttpSecurityScheme;
 use App\ApiV1Bundle\ApiSpecification\ApiInfo;
 use App\ApiV1Bundle\ApiSpecification\ApiInfo\Contact;
 use App\ApiV1Bundle\ApiSpecification\ApiInfo\License;

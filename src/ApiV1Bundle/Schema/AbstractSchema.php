@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\Schema;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\ReferenceSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ReferenceSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 abstract class AbstractSchema
