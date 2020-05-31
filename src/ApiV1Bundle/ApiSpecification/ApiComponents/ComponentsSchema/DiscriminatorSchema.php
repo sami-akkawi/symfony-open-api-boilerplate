@@ -9,7 +9,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\ComponentsSchema\Schema\Schem
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 final class DiscriminatorSchema extends Schema
 {
@@ -52,7 +52,7 @@ final class DiscriminatorSchema extends Schema
     {
         return new self(
             $this->type,
-            $this->schemas->addSchema($schema->setName(SchemaName::fromString(Uuid::uuid4()->toString()))),
+            $this->schemas->addSchema($schema->setName(SchemaName::fromString(Uuid::v4()->toRfc4122()))),
             $this->name,
             $this->description,
             $this->isNullable
