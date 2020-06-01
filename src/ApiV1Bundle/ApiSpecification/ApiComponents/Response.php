@@ -2,8 +2,9 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\DetailedResponse;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseHttpCode;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseKey;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseName;
 
 /**
  * Describes a single response from an API Operation, including design-time, static links to operations based on the
@@ -12,7 +13,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseKey
  */
 abstract class Response
 {
-    protected ?ResponseKey $key;
+    protected ?ResponseName $name;
     protected ResponseHttpCode $code;
 
     public function getCode(): ResponseHttpCode
@@ -20,15 +21,19 @@ abstract class Response
         return $this->code;
     }
 
-    public function hasKey(): bool
+    public function hasName(): bool
     {
-        return (bool)$this->key;
+        return (bool)$this->name;
     }
 
-    public function getKey(): ?ResponseKey
+    public function getName(): ?ResponseName
     {
-        return $this->key;
+        return $this->name;
     }
+
+    public abstract function setName(string $name);
 
     public abstract function toOpenApiSpecification(): array;
+
+    public abstract function toDetailedResponse(): DetailedResponse;
 }

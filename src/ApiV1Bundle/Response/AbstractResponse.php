@@ -3,31 +3,25 @@
 namespace App\ApiV1Bundle\Response;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\ReferenceResponse;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseKey;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\DetailedResponse;
 
 abstract class AbstractResponse
 {
-    public static function getOpenApiResponse(): Response
+    public static function getOpenApiResponse(): DetailedResponse
     {
-        return static::getOpenApiResponseWithoutName()->setKey(ResponseKey::fromString(static::getClassName()));
+        return static::getOpenApiResponseWithoutName()->setName(static::getClassName());
     }
 
-    protected abstract static function getOpenApiResponseWithoutName(): Response;
+    protected abstract static function getOpenApiResponseWithoutName(): DetailedResponse;
 
     public static function getReferenceResponse(): ReferenceResponse
     {
-        return ReferenceResponse::generate(static::getHttpCode(), static::getClassName());
+        return ReferenceResponse::generate(static::getClassName(), static::getOpenApiResponseWithoutName());
     }
 
     public static function getClassName(): string
     {
         $path = explode('\\', static::class);
         return array_pop($path);
-    }
-
-    private static function getHttpCode(): string
-    {
-        return static::getOpenApiResponseWithoutName()->getCode()->toString();
     }
 }

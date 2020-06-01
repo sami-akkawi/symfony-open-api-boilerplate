@@ -3,7 +3,7 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseHttpCode;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseKey;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseName;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 final class Responses
@@ -31,10 +31,10 @@ final class Responses
         return false;
     }
 
-    private function hasKey(ResponseKey $key): bool
+    private function hasKey(ResponseName $key): bool
     {
         foreach ($this->responses as $response) {
-            if ($response->hasKey() && $response->getKey()->isIdenticalTo($key)) {
+            if ($response->hasName() && $response->getName()->isIdenticalTo($key)) {
                 return true;
             }
         }
@@ -46,8 +46,8 @@ final class Responses
         if ($this->hasHttpCode($response->getCode())) {
             throw SpecificationException::generateDuplicateDefinitionException($response->getCode()->toString());
         }
-        if ($response->hasKey() && $this->hasKey($response->getKey())) {
-            throw SpecificationException::generateDuplicateDefinitionException($response->getKey()->toString());
+        if ($response->hasName() && $this->hasKey($response->getName())) {
+            throw SpecificationException::generateDuplicateDefinitionException($response->getName()->toString());
         }
         return new self(array_merge($this->responses, [$response]));
     }
@@ -74,10 +74,10 @@ final class Responses
         }
         $responses = [];
         foreach ($this->responses as $response) {
-            if (!$response->hasKey()) {
+            if (!$response->hasName()) {
                 throw SpecificationException::generateMustHaveKeyInComponents();
             }
-            $responses[$response->getKey()->toString()] = $response->toOpenApiSpecification();
+            $responses[$response->getName()->toString()] = $response->toOpenApiSpecification();
         }
         if ($sorted) {
             ksort($responses);

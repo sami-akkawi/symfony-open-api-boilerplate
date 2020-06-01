@@ -67,7 +67,7 @@ final class ApiComponents
 
     public function addResponse(Response $response): self
     {
-        if (!$response->hasKey()) {
+        if (!$response->hasName()) {
             throw SpecificationException::generateMustHaveKeyInComponents();
         }
 

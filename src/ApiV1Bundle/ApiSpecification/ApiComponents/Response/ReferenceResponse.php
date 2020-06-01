@@ -2,8 +2,7 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseHttpCode;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseKey;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseName;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Reference;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 
@@ -15,26 +14,33 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 final class ReferenceResponse extends Response
 {
     private Reference $reference;
+    private DetailedResponse $response;
 
-    private function __construct(ResponseHttpCode $code, Reference $reference, ?ResponseKey $key = null)
+    private function __construct(Reference $reference, DetailedResponse $response, ?ResponseName $name = null)
     {
-        $this->code = $code;
+        $this->code = $response->getCode();
         $this->reference = $reference;
-        $this->key = $key;
+        $this->response = $response;
+        $this->name = $name;
     }
 
-    public static function generate(string $httpCode, string $objectName): self
+    public static function generate(string $objectName, DetailedResponse $response): self
     {
-        return new self(ResponseHttpCode::fromString($httpCode), Reference::generateResponseReference($objectName));
+        return new self(Reference::generateResponseReference($objectName), $response);
     }
 
-    public function setKey(ResponseKey $key): self
+    public function setName(string $name): self
     {
-        return new self($this->code, $this->reference, $key);
+        return new self($this->reference, $this->response,ResponseName::fromString($name));
     }
 
     public function toOpenApiSpecification(): array
     {
         return $this->reference->toOpenApiSpecification();
+    }
+
+    public function toDetailedResponse(): DetailedResponse
+    {
+        return $this->response;
     }
 }

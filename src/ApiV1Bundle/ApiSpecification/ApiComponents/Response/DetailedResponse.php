@@ -6,7 +6,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Content;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Content\ContentMediaType;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseDescription;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseHttpCode;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseKey;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseName;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ReferenceSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
@@ -26,12 +26,12 @@ final class DetailedResponse extends Response
         ResponseHttpCode $code,
         ResponseDescription $description,
         Content $content,
-        ?ResponseKey $key = null
+        ?ResponseName $name = null
     ) {
         $this->code = $code;
         $this->description = $description;
         $this->content = $content;
-        $this->key = $key;
+        $this->name = $name;
     }
 
     /**
@@ -62,9 +62,9 @@ final class DetailedResponse extends Response
         );
     }
 
-    public function setKey(ResponseKey $key): self
+    public function setName(string $name): self
     {
-        return new self($this->code, $this->description, $this->content, $key);
+        return new self($this->code, $this->description, $this->content, ResponseName::fromString($name));
     }
 
     public function toOpenApiSpecification(): array
@@ -73,5 +73,10 @@ final class DetailedResponse extends Response
             'description' => $this->description->toString(),
             'content' => $this->content->toOpenApi3Specification()
         ];
+    }
+
+    public function toDetailedResponse(): DetailedResponse
+    {
+        return $this;
     }
 }
