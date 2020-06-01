@@ -14,7 +14,7 @@ abstract class AbstractParameter
 
     protected abstract static function getOpenApiResponseWithoutName(): DetailedParameter;
 
-    public static function getReferenceResponse(): ReferenceParameter
+    public static function getReferenceParameter(): ReferenceParameter
     {
         return ReferenceParameter::generate(static::getClassName(), static::getOpenApiResponseWithoutName());
     }

@@ -54,7 +54,7 @@ final class Schemas
         return $schemas;
     }
 
-    public function hasValues(): bool
+    public function isDefined(): bool
     {
         return (bool)count($this->schemas);
     }

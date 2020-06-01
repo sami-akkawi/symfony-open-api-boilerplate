@@ -15,7 +15,7 @@ abstract class SchemaParameter extends DetailedParameter
         ParameterIsDeprecated $isDeprecated,
         Schema $schema,
         ?ParameterDescription $description = null,
-        ParameterDocName $docName = null
+        ?ParameterDocName $docName = null
     ) {
         parent::__construct($name, $location, $isRequired, $isDeprecated, $description, $docName);
         $this->schema = $schema;

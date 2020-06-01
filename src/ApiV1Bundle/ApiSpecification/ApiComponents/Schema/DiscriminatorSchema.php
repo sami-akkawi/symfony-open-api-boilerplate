@@ -84,7 +84,7 @@ final class DiscriminatorSchema extends DetailedSchema
     public function toOpenApiSpecification(): array
     {
         $specification = [];
-        if (!$this->schemas->hasValues()) {
+        if (!$this->schemas->isDefined()) {
             throw SpecificationException::generateSchemasMustBeDefined();
         }
         if ($this->description) {

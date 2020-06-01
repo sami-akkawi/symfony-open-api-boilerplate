@@ -22,7 +22,7 @@ final class ObjectSchema extends DetailedSchema
         ?SchemaDescription $description = null,
         ?SchemaIsNullable $isNullable = null
     ) {
-        if (!$properties->hasValues()) {
+        if (!$properties->isDefined()) {
             throw SpecificationException::generateObjectSchemaNeedsProperties($name ? $name->toString() : 'no_name');
         }
         $this->name = $name;

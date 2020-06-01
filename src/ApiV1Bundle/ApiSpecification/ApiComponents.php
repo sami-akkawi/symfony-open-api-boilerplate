@@ -101,7 +101,7 @@ final class ApiComponents
         if ($this->responses->isDefined()) {
             $specifications['responses'] =  $this->responses->toOpenApiSpecificationForComponents();
         }
-        if ($this->schemas->hasValues()) {
+        if ($this->schemas->isDefined()) {
             $specifications['schemas'] =  $this->schemas->toOpenApiSpecification(true);
         }
         if ($this->parameters->isDefined()) {
@@ -116,8 +116,10 @@ final class ApiComponents
     public function isDefined(): bool
     {
         return (
-            $this->schemas->hasValues() ||
-            $this->securitySchemes->isDefined()
+            $this->schemas->isDefined() ||
+            $this->securitySchemes->isDefined() ||
+            $this->parameters->isDefined() ||
+            $this->responses->isDefined()
         );
     }
 }
