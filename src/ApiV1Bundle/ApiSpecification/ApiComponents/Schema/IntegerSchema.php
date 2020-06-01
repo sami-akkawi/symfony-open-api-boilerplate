@@ -41,11 +41,11 @@ final class IntegerSchema extends PrimitiveSchema
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
     }
 
-    public function setName(SchemaName $name): self
+    public function setName(string $name): self
     {
         return new self(
             $this->type,
-            $name,
+            SchemaName::fromString($name),
             $this->description,
             $this->example,
             $this->minimum,
@@ -132,9 +132,9 @@ final class IntegerSchema extends PrimitiveSchema
         );
     }
 
-    public static function generate(?string $name = null): self
+    public static function generate(): self
     {
-        return new self(SchemaType::generateInteger(), $name ? SchemaName::fromString($name) : null);
+        return new self(SchemaType::generateInteger());
     }
 
     public function toOpenApiSpecification(): array

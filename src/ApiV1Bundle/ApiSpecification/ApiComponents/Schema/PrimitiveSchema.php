@@ -2,11 +2,9 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
-
-abstract class PrimitiveSchema extends Schema
+abstract class PrimitiveSchema extends DetailedSchema
 {
-    public abstract static function generate(?string $name = null);
+    public abstract static function generate();
 
     public abstract function setDescription(string $description);
 

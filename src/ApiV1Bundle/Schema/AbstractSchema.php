@@ -2,27 +2,21 @@
 
 namespace App\ApiV1Bundle\Schema;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DetailedSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ReferenceSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 abstract class AbstractSchema
 {
-    public static function getOpenApiSchema(): Schema
+    public static function getOpenApiSchema(): DetailedSchema
     {
-        return static::getOpenApiSchemaWithoutName()->setName(SchemaName::fromString(static::getClassName()));
+        return static::getOpenApiSchemaWithoutName()->setName(static::getClassName());
     }
 
-    protected abstract static function getOpenApiSchemaWithoutName(): Schema;
+    protected abstract static function getOpenApiSchemaWithoutName(): DetailedSchema;
 
-    public static function getReferenceSchema(?string $name = null): ReferenceSchema
+    public static function getReferenceSchema(): ReferenceSchema
     {
-        $path = explode('\\', static::class);
-        $className = array_pop($path);
-        if ($name) {
-            return ReferenceSchema::generateWithName($className, $name);
-        }
-        return ReferenceSchema::generateWithNoName($className);
+        return ReferenceSchema::generate(static::getClassName(), static::getOpenApiSchemaWithoutName());
     }
 
     private static function getClassName(): string

@@ -8,7 +8,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescripti
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 
-final class ArraySchema extends Schema
+final class ArraySchema extends DetailedSchema
 {
     private Schema $itemType;
     protected ?SchemaName $name;
@@ -18,8 +18,8 @@ final class ArraySchema extends Schema
 
     private function __construct(
         Schema $itemType,
-        ?SchemaName $name,
-        bool $itemsAreUnique = true,
+        ?SchemaName $name = null,
+        bool $itemsAreUnique = false,
         ?SchemaDescription $description = null,
         ?SchemaIsNullable $isNullable = null
     ) {
@@ -31,32 +31,31 @@ final class ArraySchema extends Schema
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
     }
 
-    public function setName(SchemaName $name): self
+    public function setName(string $name): self
     {
         return new self(
             $this->itemType,
-            $name,
+            SchemaName::fromString($name),
             $this->itemsAreUnique,
             $this->description,
             $this->isNullable
         );
     }
 
-    public static function generateWithUniqueValues(Schema $itemType, ?string $name = null): self
+    public function makeValuesUnique(): self
     {
         return new self(
-            $itemType,
-            $name ? SchemaName::fromString($name) : null
+            $this->itemType,
+            $this->name,
+            true,
+            $this->description,
+            $this->isNullable
         );
     }
 
-    public static function generateWithoutUniqueValues(Schema $itemType, ?string $name = null): self
+    public static function generate(Schema $itemType): self
     {
-        return new self(
-            $itemType,
-            $name ? SchemaName::fromString($name) : null,
-            false
-        );
+        return new self($itemType);
     }
 
     public function setDescription(string $description): self

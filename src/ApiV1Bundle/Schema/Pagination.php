@@ -2,10 +2,10 @@
 
 namespace App\ApiV1Bundle\Schema;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DetailedSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\IntegerSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\StringSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
 
 final class Pagination extends AbstractSchema
@@ -105,34 +105,44 @@ final class Pagination extends AbstractSchema
         return $uriParts[0] . '?' . http_build_query($parameters);
     }
 
-    protected static function getOpenApiSchemaWithoutName(): Schema
+    protected static function getOpenApiSchemaWithoutName(): DetailedSchema
     {
         return ObjectSchema::generate(
             Schemas::generate()
-                ->addSchema(IntegerSchema::generate('totalCount')
+                ->addSchema(IntegerSchema::generate()
+                    ->setName('totalCount')
                     ->setDescription('Total number of results.'))
-                ->addSchema(IntegerSchema::generate('filteredCount')
+                ->addSchema(IntegerSchema::generate()
+                    ->setName('filteredCount')
                     ->setDescription('Total number of results after filter was applied.'))
-                ->addSchema(IntegerSchema::generate('perPage')
+                ->addSchema(IntegerSchema::generate()
+                    ->setName('perPage')
                     ->setDescription('Number of results shown per page. 0 will return all results in one page.')
                     ->setMinimum(0))
-                ->addSchema(IntegerSchema::generate('currentPage')
+                ->addSchema(IntegerSchema::generate()
+                    ->setName('currentPage')
                     ->setDescription('Index of the current page.'))
-                ->addSchema(IntegerSchema::generate('lastPage')
+                ->addSchema(IntegerSchema::generate()
+                    ->setName('lastPage')
                     ->setDescription('Index of the last page.'))
                 ->addSchema(ObjectSchema::generate(
                     Schemas::generate()
-                        ->addSchema(StringSchema::generate('first')
+                        ->addSchema(StringSchema::generate()
+                            ->setName('first')
                             ->setDescription('Link to the endpoint of the first page.'))
-                        ->addSchema(StringSchema::generate('previous')
+                        ->addSchema(StringSchema::generate()
+                            ->setName('previous')
                             ->setDescription('Link to the endpoint of the previous page.'))
-                        ->addSchema(StringSchema::generate('current')
+                        ->addSchema(StringSchema::generate()
+                            ->setName('current')
                             ->setDescription('Link to the endpoint of the current page.'))
-                        ->addSchema(StringSchema::generate('next')
+                        ->addSchema(StringSchema::generate()
+                            ->setName('next')
                             ->setDescription('Link to the endpoint of the next page.'))
-                        ->addSchema(StringSchema::generate('last')
-                            ->setDescription('Link to the endpoint of the last page.')),
-                    'links')
+                        ->addSchema(StringSchema::generate()
+                            ->setName('last')
+                            ->setDescription('Link to the endpoint of the last page.'))
+                    )->setName('links')
                 )
         );
     }

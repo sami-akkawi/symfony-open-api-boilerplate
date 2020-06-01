@@ -11,7 +11,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 use Symfony\Component\Uid\Uuid;
 
-final class DiscriminatorSchema extends Schema
+final class DiscriminatorSchema extends DetailedSchema
 {
     protected DiscriminatorSchemaType $type;
     protected Schemas $schemas;
@@ -52,7 +52,7 @@ final class DiscriminatorSchema extends Schema
     {
         return new self(
             $this->type,
-            $this->schemas->addSchema($schema->setName(SchemaName::fromString(Uuid::v4()->toRfc4122()))),
+            $this->schemas->addSchema($schema->setName(Uuid::v4()->toRfc4122())),
             $this->name,
             $this->description,
             $this->isNullable
@@ -98,8 +98,8 @@ final class DiscriminatorSchema extends Schema
         return $specification;
     }
 
-    public function setName(SchemaName $name): self
+    public function setName(string $name): self
     {
-        return new self($this->type, $this->schemas, $name, $this->description);
+        return new self($this->type, $this->schemas, SchemaName::fromString($name), $this->description);
     }
 }

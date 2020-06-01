@@ -5,7 +5,6 @@ namespace App\ApiV1Bundle\Response;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\DetailedResponse;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ArraySchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\StringSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
@@ -21,12 +20,19 @@ final class NotFoundResponse extends AbstractResponse
                 Schemas::generate()
                 ->addSchema(ObjectSchema::generate(
                     Schemas::generate()
-                    ->addSchema(StringSchema::generate('errorType')), 'data'
-                ))
-                ->addSchema(ArraySchema::generateWithUniqueValues(Message::getReferenceSchema())
-                    ->setName(SchemaName::fromString('messages'))->makeNullable())
-                ->addSchema(ArraySchema::generateWithUniqueValues(FieldMessage::getReferenceSchema())
-                    ->setName(SchemaName::fromString('fieldMessages'))->makeNullable())
+                        ->addSchema(
+                            StringSchema::generate()
+                                ->setName('errorType')
+                        )
+                )->setName('data'))
+                ->addSchema(ArraySchema::generate(Message::getReferenceSchema())
+                    ->setName('messages')
+                    ->makeValuesUnique()
+                    ->makeNullable())
+                ->addSchema(ArraySchema::generate(FieldMessage::getReferenceSchema())
+                    ->setName('fieldMessages')
+                    ->makeValuesUnique()
+                    ->makeNullable())
             )
         );
     }

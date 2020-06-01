@@ -5,9 +5,8 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaAdditionalProperty;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
-final class MapSchema extends Schema
+final class MapSchema extends DetailedSchema
 {
     private SchemaAdditionalProperty $additionalProperty;
 
@@ -21,9 +20,9 @@ final class MapSchema extends Schema
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
     }
 
-    public static function generateStringMap(string $name): self
+    public static function generateStringMap(): self
     {
-        return new self(SchemaAdditionalProperty::fromStringSchema(StringSchema::generate()), SchemaName::fromString($name));
+        return new self(SchemaAdditionalProperty::fromStringSchema(StringSchema::generate()));
     }
 
     public static function fromReferenceSchema(ReferenceSchema $schema): self
@@ -52,8 +51,8 @@ final class MapSchema extends Schema
         return $specification;
     }
 
-    public function setName(SchemaName $name): self
+    public function setName(string $name): self
     {
-        return new self($this->additionalProperty, $name, $this->isNullable);
+        return new self($this->additionalProperty, SchemaName::fromString($name), $this->isNullable);
     }
 }

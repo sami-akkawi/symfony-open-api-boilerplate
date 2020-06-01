@@ -6,11 +6,10 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescripti
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaType;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
-final class ObjectSchema extends Schema
+final class ObjectSchema extends DetailedSchema
 {
     protected ?SchemaName $name;
     private SchemaType $type;
@@ -33,19 +32,19 @@ final class ObjectSchema extends Schema
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
     }
 
-    public function setName(SchemaName $name): self
+    public function setName(string $name): self
     {
         return new self(
             $this->properties,
-            $name,
+            SchemaName::fromString($name),
             $this->description,
             $this->isNullable
         );
     }
 
-    public static function generate(Schemas $properties, ?string $name = null): self
+    public static function generate(Schemas $properties): self
     {
-        return new self($properties, $name ? SchemaName::fromString($name) : null);
+        return new self($properties);
     }
 
     public function setDescription(string $description): self
