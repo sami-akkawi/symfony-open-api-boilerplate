@@ -91,6 +91,16 @@ final class SpecificationException extends LogicException
         return self::generate("The Schema Enum must be a string array.");
     }
 
+    public static function generateRequiredParamNamesMustBeString(): self
+    {
+        return self::generate("Required parameter names must be a strings.");
+    }
+
+    public static function generateRequiredParametersMustBeObject(): self
+    {
+        return self::generate("Required parameter names must be a strings.");
+    }
+
     public static function generateObjectSchemaNeedsProperties(string $schemaName): self
     {
         return new self("$schemaName of type object needs properties.");
@@ -154,5 +164,15 @@ final class SpecificationException extends LogicException
     public static function generateReferenceSiblingsAreIgnored(): self
     {
         return new self('Sibling values alongside a reference element are ignored. To add properties to a reference element, wrap the element into allOf, or move the extra properties into the referenced definition (if applicable).');
+    }
+
+    public static function generateCannotBeInPath(string $parameterType): self
+    {
+        return new self("Parameter of type '$parameterType' cannot be defined in path.");
+    }
+
+    public static function generateParameterMustBeDefinedToBeRequired(string $parameterName): self
+    {
+        return new self("Parameter '$parameterName' must be defined to be set as required.");
     }
 }

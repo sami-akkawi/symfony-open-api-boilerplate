@@ -1,6 +1,6 @@
 <?php declare(strict=1);
 
-namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Content\MediaType;
+namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestContent\MediaType;
 
 final class MediaTypeMimeType
 {

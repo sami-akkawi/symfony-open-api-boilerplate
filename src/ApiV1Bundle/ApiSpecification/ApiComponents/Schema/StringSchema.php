@@ -5,6 +5,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 
@@ -17,12 +18,14 @@ final class StringSchema extends PrimitiveSchema
 
     private function __construct(
         SchemaType $type,
+        SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
         ?SchemaExample $example = null,
         ?SchemaIsNullable $isNullable = null
     ) {
         $this->type = $type;
+        $this->isRequired = $isRequired;
         $this->name = $name;
         $this->description = $description;
         $this->example = $example;
@@ -33,7 +36,20 @@ final class StringSchema extends PrimitiveSchema
     {
         return new self(
             $this->type,
+            $this->isRequired,
             SchemaName::fromString($name),
+            $this->description,
+            $this->example,
+            $this->isNullable
+        );
+    }
+
+    public function require(): self
+    {
+        return new self(
+            $this->type,
+            SchemaIsRequired::generateTrue(),
+            $this->name,
             $this->description,
             $this->example,
             $this->isNullable
@@ -42,13 +58,14 @@ final class StringSchema extends PrimitiveSchema
 
     public static function generate(): self
     {
-        return new self(SchemaType::generateString());
+        return new self(SchemaType::generateString(), SchemaIsRequired::generateFalse());
     }
 
     public function setFormat(string $format): self
     {
         return new self(
             $this->type->setFormat($format),
+            $this->isRequired,
             $this->name,
             $this->description,
             $this->example,
@@ -60,6 +77,7 @@ final class StringSchema extends PrimitiveSchema
     {
         return new self(
             $this->type->setEnum($options),
+            $this->isRequired,
             $this->name,
             $this->description,
             $this->example,
@@ -71,6 +89,7 @@ final class StringSchema extends PrimitiveSchema
     {
         return new self(
             $this->type,
+            $this->isRequired,
             $this->name,
             SchemaDescription::fromString($description),
             $this->example,
@@ -82,6 +101,7 @@ final class StringSchema extends PrimitiveSchema
     {
         return new self(
             $this->type,
+            $this->isRequired,
             $this->name,
             $this->description,
             SchemaExample::fromString($example),
@@ -93,6 +113,7 @@ final class StringSchema extends PrimitiveSchema
     {
         return new self(
             $this->type,
+            $this->isRequired,
             $this->name,
             $this->description,
             $this->example,

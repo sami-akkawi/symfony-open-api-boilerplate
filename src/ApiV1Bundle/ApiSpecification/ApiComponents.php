@@ -102,7 +102,7 @@ final class ApiComponents
             $specifications['responses'] =  $this->responses->toOpenApiSpecificationForComponents();
         }
         if ($this->schemas->isDefined()) {
-            $specifications['schemas'] =  $this->schemas->toOpenApiSpecification(true);
+            $specifications['schemas'] =  $this->schemas->toOpenApiSpecificationForComponents();
         }
         if ($this->parameters->isDefined()) {
             $specifications['parameters'] =  $this->parameters->toOpenApiSpecificationForComponents();

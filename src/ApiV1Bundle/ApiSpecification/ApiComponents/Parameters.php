@@ -41,19 +41,7 @@ final class Parameters
         return new self(array_merge($this->parameters, [$parameter]));
     }
 
-    public function toOpenApiSpecificationForEndpoint(): array
-    {
-        if (!$this->isDefined()) {
-            throw SpecificationException::generateResponsesMustBeDefined();
-        }
-        $responses = [];
-        foreach ($this->parameters as $parameter) {
-            $responses[] = $parameter->toOpenApiSpecification();
-        }
-        return $responses;
-    }
-
-    public function toOpenApiSpecificationForComponents(bool $sorted = true): array
+    public function toOpenApiSpecificationForRequestContent(): array
     {
         if (!$this->isDefined()) {
             throw SpecificationException::generateResponsesMustBeDefined();
@@ -65,8 +53,24 @@ final class Parameters
             }
             $parameters[$parameter->getDocName()->toString()] = $parameter->toOpenApiSpecification();
         }
-        if ($sorted) {
-            ksort($parameters);
+        return $parameters;
+    }
+
+    public function toOpenApiSpecificationForComponents(): array
+    {
+        $parameters = $this->toOpenApiSpecificationForRequestContent();
+        ksort($parameters);
+        return $parameters;
+    }
+
+    public function toOpenApiSpecificationForEndpoint(): array
+    {
+        if (!$this->isDefined()) {
+            throw SpecificationException::generateResponsesMustBeDefined();
+        }
+        $parameters = [];
+        foreach ($this->parameters as $parameter) {
+            $parameters[] = $parameter->toOpenApiSpecification();
         }
         return $parameters;
     }

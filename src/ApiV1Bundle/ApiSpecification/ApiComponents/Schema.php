@@ -4,6 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DetailedSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 
 /**
@@ -16,6 +17,7 @@ abstract class Schema
 {
     protected SchemaIsNullable $isNullable;
     protected ?SchemaName $name;
+    protected SchemaIsRequired $isRequired;
     // todo: protected ?Example $example;
 
     public abstract function toOpenApiSpecification(): array;
@@ -36,6 +38,13 @@ abstract class Schema
     {
         return $this->isNullable->toBool();
     }
+
+    public function isRequired(): bool
+    {
+        return $this->isRequired->toBool();
+    }
+
+    public abstract function require();
 
     public abstract function makeNullable();
 

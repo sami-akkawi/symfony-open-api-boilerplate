@@ -20,7 +20,21 @@ final class Schemas
         return new self([]);
     }
 
-    private function hasSchema(SchemaName $name): bool
+    public function getRequiredSchemaNames(): array
+    {
+        $requiredSchemas = [];
+        foreach ($this->schemas as $schema) {
+            if ($schema->isRequired()) {
+                if (!$schema->hasName()) {
+                    throw SpecificationException::generateSchemaInSchemasNeedsAName();
+                }
+                $requiredSchemas[] = $schema->getName()->toString();
+            }
+        }
+        return $requiredSchemas;
+    }
+
+    public function hasSchema(SchemaName $name): bool
     {
         foreach ($this->schemas as $schema) {
             if ($schema->getName()->isIdenticalTo($name)) {
@@ -42,15 +56,19 @@ final class Schemas
         return new self(array_merge($this->schemas, [$schema]));
     }
 
-    public function toOpenApiSpecification(bool $sorted = false): array
+    public function toOpenApiSpecification(): array
     {
         $schemas = [];
         foreach ($this->schemas as $schema) {
             $schemas[$schema->getName()->toString()] = $schema->toOpenApiSpecification();
         }
-        if ($sorted) {
-            ksort($schemas);
-        }
+        return $schemas;
+    }
+
+    public function toOpenApiSpecificationForComponents(): array
+    {
+        $schemas = $this->toOpenApiSpecification();
+        ksort($schemas);
         return $schemas;
     }
 

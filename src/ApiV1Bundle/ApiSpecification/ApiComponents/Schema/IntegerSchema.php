@@ -5,6 +5,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaMaximum;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaMinimum;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -22,6 +23,7 @@ final class IntegerSchema extends PrimitiveSchema
 
     private function __construct(
         SchemaType $type,
+        SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
         ?SchemaExample $example = null,
@@ -30,6 +32,7 @@ final class IntegerSchema extends PrimitiveSchema
         ?SchemaIsNullable $isNullable = null
     ) {
         $this->type = $type;
+        $this->isRequired = $isRequired;
         $this->name = $name;
         $this->description = $description;
         $this->example = $example;
@@ -45,7 +48,22 @@ final class IntegerSchema extends PrimitiveSchema
     {
         return new self(
             $this->type,
+            $this->isRequired,
             SchemaName::fromString($name),
+            $this->description,
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            $this->isNullable
+        );
+    }
+
+    public function require(): self
+    {
+        return new self(
+            $this->type,
+            SchemaIsRequired::generateTrue(),
+            $this->name,
             $this->description,
             $this->example,
             $this->minimum,
@@ -58,6 +76,7 @@ final class IntegerSchema extends PrimitiveSchema
     {
         return new self(
             $this->type->setFormat($format),
+            $this->isRequired,
             $this->name,
             $this->description,
             $this->example,
@@ -71,6 +90,7 @@ final class IntegerSchema extends PrimitiveSchema
     {
         return new self(
             $this->type,
+            $this->isRequired,
             $this->name,
             SchemaDescription::fromString($description),
             $this->example,
@@ -84,6 +104,7 @@ final class IntegerSchema extends PrimitiveSchema
     {
         return new self(
             $this->type,
+            $this->isRequired,
             $this->name,
             $this->description,
             SchemaExample::fromString($example),
@@ -97,6 +118,7 @@ final class IntegerSchema extends PrimitiveSchema
     {
         return new self(
             $this->type,
+            $this->isRequired,
             $this->name,
             $this->description,
             $this->example,
@@ -110,6 +132,7 @@ final class IntegerSchema extends PrimitiveSchema
     {
         return new self(
             $this->type,
+            $this->isRequired,
             $this->name,
             $this->description,
             $this->example,
@@ -123,6 +146,7 @@ final class IntegerSchema extends PrimitiveSchema
     {
         return new self(
             $this->type,
+            $this->isRequired,
             $this->name,
             $this->description,
             $this->example,
@@ -134,7 +158,7 @@ final class IntegerSchema extends PrimitiveSchema
 
     public static function generate(): self
     {
-        return new self(SchemaType::generateInteger());
+        return new self(SchemaType::generateInteger(), SchemaIsRequired::generateFalse());
     }
 
     public function toOpenApiSpecification(): array

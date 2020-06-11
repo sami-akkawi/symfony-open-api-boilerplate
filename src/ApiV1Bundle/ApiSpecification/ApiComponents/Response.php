@@ -11,6 +11,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseNam
  * response.
  * http://spec.openapis.org/oas/v3.0.3#response-object
  */
+
 abstract class Response
 {
     protected ?ResponseName $name;

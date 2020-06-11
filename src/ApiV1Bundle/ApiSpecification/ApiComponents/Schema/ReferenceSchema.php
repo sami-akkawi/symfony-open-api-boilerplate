@@ -3,6 +3,7 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Reference;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -21,10 +22,12 @@ final class ReferenceSchema extends Schema
 
     private function __construct(
         Reference $reference,
+        SchemaIsRequired $isRequired,
         DetailedSchema $schema,
         ?SchemaName $name = null
     ) {
         $this->reference = $reference;
+        $this->isRequired = $isRequired;
         $this->name = $name;
         $this->schema = $schema;
         $this->isNullable = SchemaIsNullable::generateFalse();
@@ -37,12 +40,17 @@ final class ReferenceSchema extends Schema
 
     public function setName(string $name): self
     {
-        return new self($this->reference, $this->schema, SchemaName::fromString($name));
+        return new self($this->reference, $this->isRequired, $this->schema, SchemaName::fromString($name));
     }
 
     public static function generate(string $objectName, DetailedSchema $schema): self
     {
-        return new self(Reference::generateSchemaReference($objectName), $schema);
+        return new self(Reference::generateSchemaReference($objectName), SchemaIsRequired::generateFalse(), $schema);
+    }
+
+    public function require(): self
+    {
+        return new self($this->reference, SchemaIsRequired::generateTrue(), $this->schema, $this->name);
     }
 
     public function toOpenApiSpecification(): array

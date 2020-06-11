@@ -2,11 +2,11 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Content\ContentMediaType;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Content\ContentMediaTypes;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ResponseContent\ContentMediaType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ResponseContent\ContentMediaTypes;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
-final class Content
+final class ResponseContent
 {
     private ContentMediaTypes $mediaTypes;
 
@@ -25,7 +25,7 @@ final class Content
         return new self($this->mediaTypes->addMediaType($mediaType));
     }
 
-    public function toOpenApi3Specification(): array
+    public function toOpenApiSpecification(): array
     {
         if (!$this->mediaTypes->hasValues()) {
             throw SpecificationException::generateMediaTypesMustBeDefined();

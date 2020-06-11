@@ -9,6 +9,4 @@ abstract class PrimitiveSchema extends DetailedSchema
     public abstract function setDescription(string $description);
 
     public abstract function setExample(string $example);
-
-    public abstract function toOpenApiSpecification(): array;
 }

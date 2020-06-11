@@ -44,6 +44,11 @@ abstract class DetailedParameter extends Parameter
         $this->docName = $docName;
     }
 
+    public function isRequired(): bool
+    {
+        return $this->isRequired->toBool();
+    }
+
     public function getName(): ParameterName
     {
         return $this->name;

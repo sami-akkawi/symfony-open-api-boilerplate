@@ -2,13 +2,12 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Content;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Content\ContentMediaType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ResponseContent;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ResponseContent\ContentMediaType;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseDescription;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseHttpCode;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseName;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ReferenceSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 
 /**
@@ -20,12 +19,12 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 final class DetailedResponse extends Response
 {
     private ResponseDescription $description;
-    private Content $content;
+    private ResponseContent $content;
 
     private function __construct(
         ResponseHttpCode $code,
         ResponseDescription $description,
-        Content $content,
+        ResponseContent $content,
         ?ResponseName $name = null
     ) {
         $this->code = $code;
@@ -34,31 +33,21 @@ final class DetailedResponse extends Response
         $this->name = $name;
     }
 
-    /**
-     * @param ObjectSchema|ReferenceSchema $schema
-     */
-    public static function generateOkJson($schema): self
+    public static function generateOkJson(Schema $schema): self
     {
         return new self(
             ResponseHttpCode::generateOk(),
             ResponseDescription::fromString('Ok.'),
-            Content::generate()->addMediaType(
-                ContentMediaType::generateJson($schema)
-            )
+            ResponseContent::generate()->addMediaType(ContentMediaType::generateJson($schema))
         );
     }
 
-    /**
-     * @param ObjectSchema|ReferenceSchema $schema
-     */
-    public static function generateNotFoundJson($schema): self
+    public static function generateNotFoundJson(Schema $schema): self
     {
         return new self(
             ResponseHttpCode::generateNotFound(),
             ResponseDescription::fromString('Not Found.'),
-            Content::generate()->addMediaType(
-                ContentMediaType::generateJson($schema)
-            )
+            ResponseContent::generate()->addMediaType(ContentMediaType::generateJson($schema))
         );
     }
 
@@ -71,7 +60,7 @@ final class DetailedResponse extends Response
     {
         return [
             'description' => $this->description->toString(),
-            'content' => $this->content->toOpenApi3Specification()
+            'content' => $this->content->toOpenApiSpecification()
         ];
     }
 

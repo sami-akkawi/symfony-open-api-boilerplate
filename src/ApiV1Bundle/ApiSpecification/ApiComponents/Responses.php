@@ -52,22 +52,7 @@ final class Responses
         return new self(array_merge($this->responses, [$response]));
     }
 
-    public function toOpenApiSpecificationForEndpoint(bool $sorted = false): array
-    {
-        if (!$this->isDefined()) {
-            throw SpecificationException::generateResponsesMustBeDefined();
-        }
-        $responses = [];
-        foreach ($this->responses as $response) {
-            $responses[$response->getCode()->toString()] = $response->toOpenApiSpecification();
-        }
-        if ($sorted) {
-            ksort($responses);
-        }
-        return $responses;
-    }
-
-    public function toOpenApiSpecificationForComponents(bool $sorted = false): array
+    public function toOpenApiSpecificationForComponents(): array
     {
         if (!$this->isDefined()) {
             throw SpecificationException::generateResponsesMustBeDefined();
@@ -77,11 +62,9 @@ final class Responses
             if (!$response->hasName()) {
                 throw SpecificationException::generateMustHaveKeyInComponents();
             }
-            $responses[$response->getName()->toString()] = $response->toOpenApiSpecification();
+            $responses[$response->getName()->toString()] = $response->toOpenApi3Specification();
         }
-        if ($sorted) {
-            ksort($responses);
-        }
+        ksort($responses);
         return $responses;
     }
 

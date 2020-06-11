@@ -2,15 +2,16 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\NumberSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
-final class NumberParameter extends SchemaParameter
+final class ObjectParameter extends SchemaParameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
         if ($location->isInPath()) {
-            throw SpecificationException::generateCannotBeInPath('NumberParameter');
+            throw SpecificationException::generateCannotBeInPath('ObjectParameter');
         }
 
         return new self(
@@ -18,13 +19,8 @@ final class NumberParameter extends SchemaParameter
             $location,
             ParameterIsRequired::generateFalse(),
             ParameterIsDeprecated::generateFalse(),
-            NumberSchema::generate()
+            ObjectSchema::generate(Schemas::generate())
         );
-    }
-
-    public static function generateInCookie(string $name): self
-    {
-        return self::generate($name, ParameterLocation::generateCookie());
     }
 
     public static function generateInQuery(string $name): self
@@ -39,20 +35,12 @@ final class NumberParameter extends SchemaParameter
 
     public static function generateInPath(string $name): self
     {
-        throw SpecificationException::generateCannotBeInPath('NumberParameter');
+        throw SpecificationException::generateCannotBeInPath('ObjectParameter');
     }
 
-    public function setFormat(string $format): self
+    public static function generateInCookie(string $name): self
     {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema->setFormat($format),
-            $this->description,
-            $this->docName
-        );
+        return self::generate($name, ParameterLocation::generateCookie());
     }
 
     public function require(): self
@@ -94,45 +82,6 @@ final class NumberParameter extends SchemaParameter
         );
     }
 
-    public function makeNullable(): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema->makeNullable(),
-            $this->description,
-            $this->docName
-        );
-    }
-
-    public function setMinimum(float $minimum): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema->setMinimum($minimum),
-            $this->description,
-            $this->docName
-        );
-    }
-
-    public function setMaximum(float $maximum): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema->setMaximum($maximum),
-            $this->description,
-            $this->docName
-        );
-    }
-
     public function setDocName(string $name): self
     {
         return new self(
@@ -143,6 +92,19 @@ final class NumberParameter extends SchemaParameter
             $this->schema,
             $this->description,
             ParameterDocName::fromString($name)
+        );
+    }
+
+    public function makeNullable(): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->makeNullable(),
+            $this->description,
+            $this->docName
         );
     }
 }

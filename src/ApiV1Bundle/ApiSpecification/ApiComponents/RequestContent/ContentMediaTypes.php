@@ -1,8 +1,8 @@
 <?php declare(strict=1);
 
-namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Content;
+namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestContent;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Content\MediaType\MediaTypeMimeType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\ResponseContent\MediaType\MediaTypeMimeType;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 final class ContentMediaTypes
