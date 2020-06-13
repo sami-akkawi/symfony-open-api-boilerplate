@@ -68,6 +68,16 @@ final class ParameterLocation
         return $this->location === self::PATH;
     }
 
+    public function isInQuery(): bool
+    {
+        return $this->location === self::QUERY;
+    }
+
+    public function isInCookie(): bool
+    {
+        return $this->location === self::COOKIE;
+    }
+
     public static function getValidLocations(): array
     {
         return self::VALID_LOCATIONS;

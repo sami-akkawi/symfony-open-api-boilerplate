@@ -20,7 +20,6 @@ abstract class DetailedParameter extends Parameter
     protected ParameterIsRequired $isRequired;
     protected ParameterIsDeprecated $isDeprecated;
     protected ?ParameterDescription $description;
-    // todo: protected ?ParameterStyle $style;
     // todo: protected ?Example $example;
     // todo: protected ?Examples $examples;
 
@@ -33,7 +32,7 @@ abstract class DetailedParameter extends Parameter
         ?ParameterDocName $docName
     ) {
         if ($location->isInHeader() && in_array($name->toString(), self::INVALID_NAMES_IN_HEADER)) {
-            SpecificationException::generateInvalidNameInHeader($name->toString());
+            throw SpecificationException::generateInvalidNameInHeader($name->toString());
         }
 
         $this->name = $name;

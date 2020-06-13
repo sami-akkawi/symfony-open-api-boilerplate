@@ -2,19 +2,23 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\StringSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\BooleanSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
-final class StringParameter extends SchemaParameter
+final class BooleanParameter extends SchemaParameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
+        if ($location->isInPath()) {
+            throw SpecificationException::generateCannotBeInPath('BooleanParameter');
+        }
+
         return new self(
             ParameterName::fromString($name),
             $location,
             $location->isInPath() ? ParameterIsRequired::generateTrue() : ParameterIsRequired::generateFalse(),
             ParameterIsDeprecated::generateFalse(),
-            StringSchema::generate()
+            BooleanSchema::generate()
         );
     }
 
@@ -130,7 +134,7 @@ final class StringParameter extends SchemaParameter
 
     public static function generateInPath(string $name): self
     {
-        return self::generate($name, ParameterLocation::generatePath());
+        throw SpecificationException::generateCannotBeInPath('BooleanParameter');
     }
 
     public function setFormat(string $format): self

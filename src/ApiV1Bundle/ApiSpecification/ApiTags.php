@@ -2,7 +2,6 @@
 
 namespace App\ApiV1Bundle\ApiSpecification;
 
-use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 use App\ApiV1Bundle\ApiSpecification\ApiTag\TagName;
 
 /**
@@ -40,10 +39,6 @@ final class ApiTags
 
     public function addTag(ApiTag $tag): self
     {
-        if ($this->hasTag($tag->getName())) {
-            throw SpecificationException::generateDuplicateDefinitionException($tag->getName()->toString());
-        }
-
         return new self(array_merge($this->tags, [$tag]));
     }
 

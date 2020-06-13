@@ -3,6 +3,7 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\IntegerSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 final class IntegerParameter extends SchemaParameter
 {
@@ -14,6 +15,101 @@ final class IntegerParameter extends SchemaParameter
             $location->isInPath() ? ParameterIsRequired::generateTrue() : ParameterIsRequired::generateFalse(),
             ParameterIsDeprecated::generateFalse(),
             IntegerSchema::generate()
+        );
+    }
+
+    public function styleAsMatrix(): self
+    {
+        if (!$this->location->isInPath()) {
+            throw SpecificationException::generateStyleNotSupportedForLocation(
+                ParameterStyle::MATRIX,
+                $this->location->toString()
+            );
+        }
+
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema,
+            $this->description,
+            $this->docName,
+            ParameterStyle::generateMatrix()
+        );
+    }
+
+    public function styleAsLabel(): self
+    {
+        if (!$this->location->isInPath()) {
+            throw SpecificationException::generateStyleNotSupportedForLocation(
+                ParameterStyle::LABEL,
+                $this->location->toString()
+            );
+        }
+
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema,
+            $this->description,
+            $this->docName,
+            ParameterStyle::generateLabel()
+        );
+    }
+
+    public function styleAsForm(): self
+    {
+        if (!$this->location->isInQuery() && !$this->location->isInCookie()) {
+            throw SpecificationException::generateStyleNotSupportedForLocation(
+                ParameterStyle::FORM,
+                $this->location->toString()
+            );
+        }
+
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema,
+            $this->description,
+            $this->docName,
+            ParameterStyle::generateForm()
+        );
+    }
+
+    public function styleAsSimple(): self
+    {
+        throw SpecificationException::generateStyleNotSupportedForType(
+            ParameterStyle::SIMPLE,
+            $this->getParameterType()
+        );
+    }
+
+    public function styleAsSpaceDelimited(): self
+    {
+        throw SpecificationException::generateStyleNotSupportedForType(
+            ParameterStyle::SPACE_DELIMITED,
+            $this->getParameterType()
+        );
+    }
+
+    public function styleAsPipeDelimited(): self
+    {
+        throw SpecificationException::generateStyleNotSupportedForType(
+            ParameterStyle::PIPE_DELIMITED,
+            $this->getParameterType()
+        );
+    }
+
+    public function styleAsDeepObject(): self
+    {
+        throw SpecificationException::generateStyleNotSupportedForType(
+            ParameterStyle::DEEP_OBJECT,
+            $this->getParameterType()
         );
     }
 
@@ -46,7 +142,8 @@ final class IntegerParameter extends SchemaParameter
             $this->isDeprecated,
             $this->schema->setFormat($format),
             $this->description,
-            $this->docName
+            $this->docName,
+            $this->style
         );
     }
 
@@ -59,7 +156,8 @@ final class IntegerParameter extends SchemaParameter
             $this->isDeprecated,
             $this->schema,
             $this->description,
-            $this->docName
+            $this->docName,
+            $this->style
         );
     }
 
@@ -72,7 +170,8 @@ final class IntegerParameter extends SchemaParameter
             ParameterIsDeprecated::generateTrue(),
             $this->schema,
             $this->description,
-            $this->docName
+            $this->docName,
+            $this->style
         );
     }
 
@@ -85,7 +184,8 @@ final class IntegerParameter extends SchemaParameter
             $this->isDeprecated,
             $this->schema,
             ParameterDescription::fromString($description),
-            $this->docName
+            $this->docName,
+            $this->style
         );
     }
 
@@ -98,7 +198,8 @@ final class IntegerParameter extends SchemaParameter
             $this->isDeprecated,
             $this->schema->makeNullable(),
             $this->description,
-            $this->docName
+            $this->docName,
+            $this->style
         );
     }
 
@@ -111,7 +212,8 @@ final class IntegerParameter extends SchemaParameter
             $this->isDeprecated,
             $this->schema->setMinimum($minimum),
             $this->description,
-            $this->docName
+            $this->docName,
+            $this->style
         );
     }
 
@@ -124,7 +226,8 @@ final class IntegerParameter extends SchemaParameter
             $this->isDeprecated,
             $this->schema->setMaximum($maximum),
             $this->description,
-            $this->docName
+            $this->docName,
+            $this->style
         );
     }
 
@@ -137,7 +240,8 @@ final class IntegerParameter extends SchemaParameter
             $this->isDeprecated,
             $this->schema,
             $this->description,
-            ParameterDocName::fromString($name)
+            ParameterDocName::fromString($name),
+            $this->style
         );
     }
 }

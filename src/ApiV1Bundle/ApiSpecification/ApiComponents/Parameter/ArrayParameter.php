@@ -2,19 +2,39 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ArraySchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\StringSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
-final class StringParameter extends SchemaParameter
+final class ArrayParameter extends SchemaParameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
+        if ($location->isInPath()) {
+            throw SpecificationException::generateCannotBeInPath('ArrayParameter');
+        }
+
         return new self(
             ParameterName::fromString($name),
             $location,
             $location->isInPath() ? ParameterIsRequired::generateTrue() : ParameterIsRequired::generateFalse(),
             ParameterIsDeprecated::generateFalse(),
-            StringSchema::generate()
+            ArraySchema::generate(StringSchema::generate())
+        );
+    }
+
+    public function setItemSchema(Schema $itemSchema): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            ArraySchema::generate($itemSchema),
+            $this->description,
+            $this->docName,
+            $this->style
         );
     }
 
@@ -83,25 +103,64 @@ final class StringParameter extends SchemaParameter
 
     public function styleAsSimple(): self
     {
-        throw SpecificationException::generateStyleNotSupportedForType(
-            ParameterStyle::SIMPLE,
-            $this->getParameterType()
+        if (!$this->location->isInPath() && !$this->location->isInHeader()) {
+            throw SpecificationException::generateStyleNotSupportedForLocation(
+                ParameterStyle::FORM,
+                $this->location->toString()
+            );
+        }
+
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema,
+            $this->description,
+            $this->docName,
+            ParameterStyle::generateSimple()
         );
     }
 
     public function styleAsSpaceDelimited(): self
     {
-        throw SpecificationException::generateStyleNotSupportedForType(
-            ParameterStyle::SPACE_DELIMITED,
-            $this->getParameterType()
+        if (!$this->location->isInQuery()) {
+            throw SpecificationException::generateStyleNotSupportedForLocation(
+                ParameterStyle::SPACE_DELIMITED,
+                $this->location->toString()
+            );
+        }
+
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema,
+            $this->description,
+            $this->docName,
+            ParameterStyle::generateSpaceDelimited()
         );
     }
 
     public function styleAsPipeDelimited(): self
     {
-        throw SpecificationException::generateStyleNotSupportedForType(
-            ParameterStyle::PIPE_DELIMITED,
-            $this->getParameterType()
+        if (!$this->location->isInQuery()) {
+            throw SpecificationException::generateStyleNotSupportedForLocation(
+                ParameterStyle::PIPE_DELIMITED,
+                $this->location->toString()
+            );
+        }
+
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema,
+            $this->description,
+            $this->docName,
+            ParameterStyle::generatePipeDelimited()
         );
     }
 
@@ -130,7 +189,7 @@ final class StringParameter extends SchemaParameter
 
     public static function generateInPath(string $name): self
     {
-        return self::generate($name, ParameterLocation::generatePath());
+        throw SpecificationException::generateCannotBeInPath('ArrayParameter');
     }
 
     public function setFormat(string $format): self

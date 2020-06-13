@@ -3,6 +3,7 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiException;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterLocation;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\ParameterStyle;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Reference\ReferenceType;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\DiscriminatorSchemaType;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\ApiKeyLocation;
@@ -174,5 +175,20 @@ final class SpecificationException extends LogicException
     public static function generateParameterMustBeDefinedToBeRequired(string $parameterName): self
     {
         return new self("Parameter '$parameterName' must be defined to be set as required.");
+    }
+
+    public static function generateInvalidStyle(string $invalidStyle): self
+    {
+        return self::generate("Invalid Parameter Style: $invalidStyle. Please choose one of: " . implode(', ', ParameterStyle::getValidStyles()) . '.');
+    }
+
+    public static function generateStyleNotSupportedForType(string $invalidStyle, string $type): self
+    {
+        return self::generate("Invalid Parameter Styling. Parameter of type '$type' cannot by styled as '$invalidStyle'");
+    }
+
+    public static function generateStyleNotSupportedForLocation(string $invalidStyle, string $location): self
+    {
+        return self::generate("Invalid Parameter Styling. Parameter in '$location' cannot by styled as '$invalidStyle'");
     }
 }

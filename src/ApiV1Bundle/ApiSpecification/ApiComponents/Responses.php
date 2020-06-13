@@ -62,7 +62,7 @@ final class Responses
             if (!$response->hasName()) {
                 throw SpecificationException::generateMustHaveKeyInComponents();
             }
-            $responses[$response->getName()->toString()] = $response->toOpenApi3Specification();
+            $responses[$response->getName()->toString()] = $response->toOpenApiSpecification();
         }
         ksort($responses);
         return $responses;
