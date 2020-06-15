@@ -18,7 +18,6 @@ final class ArraySchema extends DetailedSchema
     private SchemaItemsAreUnique $itemsAreUnique;
     private SchemaType $type;
     private ?SchemaDescription $description;
-    private ?SchemaExample $example;
 
     private function __construct(
         Schema $itemType,
@@ -104,7 +103,7 @@ final class ArraySchema extends DetailedSchema
         );
     }
 
-    public function setExample(array $example): self
+    public function setExample($example): self
     {
         $exception = $this->validateValue($example);
         if ($exception) {

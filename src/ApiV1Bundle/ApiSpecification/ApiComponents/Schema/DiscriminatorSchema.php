@@ -20,7 +20,6 @@ final class DiscriminatorSchema extends DetailedSchema
     protected Schemas $schemas;
     protected ?SchemaName $name;
     protected ?SchemaDescription $description;
-    private ?SchemaExample $example;
 
     private function __construct(
         DiscriminatorSchemaType $type,
@@ -30,8 +29,7 @@ final class DiscriminatorSchema extends DetailedSchema
         ?SchemaDescription $description = null,
         ?SchemaIsNullable $isNullable = null,
         ?SchemaExample $example = null
-    )
-    {
+    ) {
         $this->type = $type;
         $this->isRequired = $isRequired;
         $this->schemas = $schemas;
@@ -54,6 +52,89 @@ final class DiscriminatorSchema extends DetailedSchema
     public static function generateOneOf(): self
     {
         return new self(DiscriminatorSchemaType::generateOneOf(), SchemaIsRequired::generateFalse(), Schemas::generate());
+    }
+
+    public function addSchema(Schema $schema): self
+    {
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->schemas->addSchema($schema->setName(Uuid::v4()->toRfc4122())),
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example
+        );
+    }
+
+    public function setDescription(string $description): self
+    {
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->schemas,
+            $this->name,
+            SchemaDescription::fromString($description),
+            $this->isNullable,
+            $this->example
+        );
+    }
+
+    public function makeNullable(): self
+    {
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->schemas,
+            $this->name,
+            $this->description,
+            SchemaIsNullable::generateTrue(),
+            $this->example
+        );
+    }
+
+    public function require(): self
+    {
+        return new self(
+            $this->type,
+            SchemaIsRequired::generateTrue(),
+            $this->schemas,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example
+        );
+    }
+
+    public function setName(string $name): self
+    {
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->schemas,
+            SchemaName::fromString($name),
+            $this->description,
+            $this->isNullable,
+            $this->example
+        );
+    }
+
+    public function setExample($example): self
+    {
+        $exception = $this->validateValue($example);
+        if ($exception) {
+            throw $exception;
+        }
+
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->schemas,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            SchemaExample::fromAny($example)
+        );
     }
 
     public function isValueValid($value): array
@@ -109,59 +190,6 @@ final class DiscriminatorSchema extends DetailedSchema
         return $errors;
     }
 
-    public function addSchema(Schema $schema): self
-    {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->schemas->addSchema($schema->setName(Uuid::v4()->toRfc4122())),
-            $this->name,
-            $this->description,
-            $this->isNullable
-        );
-    }
-
-    public function setDescription(string $description): self
-    {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->schemas,
-            $this->name,
-            SchemaDescription::fromString($description),
-            $this->isNullable
-        );
-    }
-
-    public function makeNullable(): self
-    {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->schemas,
-            $this->name,
-            $this->description,
-            SchemaIsNullable::generateTrue()
-        );
-    }
-
-    public function require(): self
-    {
-        return new self(
-            $this->type,
-            SchemaIsRequired::generateTrue(),
-            $this->schemas,
-            $this->name,
-            $this->description,
-            $this->isNullable
-        );
-    }
-
-    public function setName(string $name): self
-    {
-        return new self($this->type, $this->isRequired, $this->schemas, SchemaName::fromString($name), $this->description);
-    }
-
     public function toOpenApiSpecification(): array
     {
         $specification = [];
@@ -173,6 +201,9 @@ final class DiscriminatorSchema extends DetailedSchema
         }
         if ($this->isNullable()) {
             $specification['nullable'] = true;
+        }
+        if ($this->example) {
+            $specification['example'] = $this->example->toAny();
         }
         $specification[$this->type->toString()] = array_values($this->schemas->toOpenApiSpecification());
 

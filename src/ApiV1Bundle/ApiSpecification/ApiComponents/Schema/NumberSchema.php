@@ -17,7 +17,6 @@ final class NumberSchema extends PrimitiveSchema
     private SchemaType $type;
     protected ?SchemaName $name;
     private ?SchemaDescription $description;
-    private ?SchemaExample $example;
     private ?SchemaMinimum $minimum;
     private ?SchemaMaximum $maximum;
 
@@ -100,8 +99,13 @@ final class NumberSchema extends PrimitiveSchema
         );
     }
 
-    public function setExample(string $example): self
+    public function setExample($example): self
     {
+        $exception = $this->validateValue($example);
+        if ($exception) {
+            throw $exception;
+        }
+
         return new self(
             $this->type,
             $this->isRequired,

@@ -33,6 +33,11 @@ final class ReferenceSchema extends Schema
         $this->isNullable = SchemaIsNullable::generateFalse();
     }
 
+    public function isValueValid($value): array
+    {
+        return $this->schema->isValueValid($value);
+    }
+
     public function makeNullable()
     {
         throw SpecificationException::generateReferenceSiblingsAreIgnored();
@@ -53,14 +58,14 @@ final class ReferenceSchema extends Schema
         return new self($this->reference, SchemaIsRequired::generateTrue(), $this->schema, $this->name);
     }
 
+    public function setExample($example): self
+    {
+        throw SpecificationException::generateReferenceSiblingsAreIgnored();
+    }
+
     public function toOpenApiSpecification(): array
     {
         return $this->reference->toOpenApiSpecification();
-    }
-
-    public function isValueValid($value): array
-    {
-        return $this->schema->isValueValid($value);
     }
 
     public function toDetailedSchema(): DetailedSchema

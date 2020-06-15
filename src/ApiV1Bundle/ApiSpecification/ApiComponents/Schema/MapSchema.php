@@ -3,6 +3,7 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaAdditionalProperty;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -15,12 +16,14 @@ final class MapSchema extends DetailedSchema
         SchemaAdditionalProperty $additionalProperty,
         SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
-        ?SchemaIsNullable $isNullable = null
+        ?SchemaIsNullable $isNullable = null,
+        ?SchemaExample $example = null
     ) {
         $this->additionalProperty = $additionalProperty;
         $this->isRequired = $isRequired;
         $this->name = $name;
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
+        $this->example = $example;
     }
 
     public static function generateStringMap(): self
@@ -33,13 +36,19 @@ final class MapSchema extends DetailedSchema
         return new self(SchemaAdditionalProperty::fromReferenceSchema($schema), SchemaIsRequired::generateFalse());
     }
 
+    public function isValueValid($value): array
+    {
+        return $this->additionalProperty->getSchema()->isValueValid($value);
+    }
+
     public function makeNullable(): self
     {
         return new self(
             $this->additionalProperty,
             $this->isRequired,
             $this->name,
-            SchemaIsNullable::generateTrue()
+            SchemaIsNullable::generateTrue(),
+            $this->example
         );
     }
 
@@ -49,18 +58,36 @@ final class MapSchema extends DetailedSchema
             $this->additionalProperty,
             SchemaIsRequired::generateTrue(),
             $this->name,
-            $this->isNullable
+            $this->isNullable,
+            $this->example
         );
     }
 
     public function setName(string $name): self
     {
-        return new self($this->additionalProperty, $this->isRequired, SchemaName::fromString($name), $this->isNullable);
+        return new self(
+            $this->additionalProperty,
+            $this->isRequired,
+            SchemaName::fromString($name),
+            $this->isNullable,
+            $this->example
+        );
     }
 
-    public function isValueValid($value): array
+    public function setExample($example): self
     {
-        return $this->additionalProperty->getSchema()->isValueValid($value);
+        $exception = $this->validateValue($example);
+        if ($exception) {
+            throw $exception;
+        }
+
+        return new self(
+            $this->additionalProperty,
+            $this->isRequired,
+            $this->name,
+            $this->isNullable,
+            SchemaExample::fromAny($example)
+        );
     }
 
     public function toOpenApiSpecification(): array
@@ -71,6 +98,9 @@ final class MapSchema extends DetailedSchema
         ];
         if ($this->isNullable()) {
             $specification['nullable'] = true;
+        }
+        if ($this->example) {
+            $specification['example'] = $this->example->toAny();
         }
         return $specification;
     }

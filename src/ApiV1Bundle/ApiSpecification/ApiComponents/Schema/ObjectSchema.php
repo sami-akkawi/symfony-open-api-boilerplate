@@ -3,6 +3,7 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -22,7 +23,8 @@ final class ObjectSchema extends DetailedSchema
         SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
-        ?SchemaIsNullable $isNullable = null
+        ?SchemaIsNullable $isNullable = null,
+        ?SchemaExample $example = null
     ) {
         if (!$properties->isDefined()) {
             throw SpecificationException::generateObjectSchemaNeedsProperties($name ? $name->toString() : 'no_name');
@@ -33,6 +35,7 @@ final class ObjectSchema extends DetailedSchema
         $this->properties = $properties;
         $this->description = $description;
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
+        $this->example = $example;
     }
 
     public function setName(string $name): self
@@ -42,7 +45,8 @@ final class ObjectSchema extends DetailedSchema
             $this->isRequired,
             SchemaName::fromString($name),
             $this->description,
-            $this->isNullable
+            $this->isNullable,
+            $this->example
         );
     }
 
@@ -58,13 +62,19 @@ final class ObjectSchema extends DetailedSchema
             SchemaIsRequired::generateTrue(),
             $this->name,
             $this->description,
-            $this->isNullable
+            $this->isNullable,
+            $this->example
         );
     }
 
     public static function generate(Schemas $properties): self
     {
         return new self($properties, SchemaIsRequired::generateFalse());
+    }
+
+    public static function generateDataSchema(Schemas $properties): self
+    {
+        return new self($properties, SchemaIsRequired::generateTrue(), SchemaName::fromString('data'));
     }
 
     public function setDescription(string $description): self
@@ -74,24 +84,26 @@ final class ObjectSchema extends DetailedSchema
             $this->isRequired,
             $this->name,
             SchemaDescription::fromString($description),
-            $this->isNullable
+            $this->isNullable,
+            $this->example
         );
     }
 
-    public function makeNullable(): self
+    public function setExample($example): self
     {
+        $exception = $this->validateValue($example);
+        if ($exception) {
+            throw $exception;
+        }
+
         return new self(
             $this->properties,
             $this->isRequired,
             $this->name,
             $this->description,
-            SchemaIsNullable::generateTrue()
+            $this->isNullable,
+            SchemaExample::fromAny($example)
         );
-    }
-
-    private function getRequiredProperties(): array
-    {
-        return $this->properties->getRequiredSchemaNames();
     }
 
     public function isValueValid($object): array
@@ -123,6 +135,23 @@ final class ObjectSchema extends DetailedSchema
         return $errors;
     }
 
+    public function makeNullable(): self
+    {
+        return new self(
+            $this->properties,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            SchemaIsNullable::generateTrue(),
+            $this->example
+        );
+    }
+
+    private function getRequiredProperties(): array
+    {
+        return $this->properties->getRequiredSchemaNames();
+    }
+
     public function toOpenApiSpecification(): array
     {
         $specification = [
@@ -138,6 +167,9 @@ final class ObjectSchema extends DetailedSchema
         }
         if ($this->isNullable()) {
             $specification['nullable'] = true;
+        }
+        if ($this->example) {
+            $specification['example'] = $this->example->toAny();
         }
         return $specification;
     }

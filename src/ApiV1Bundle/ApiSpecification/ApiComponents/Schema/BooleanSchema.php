@@ -13,7 +13,6 @@ final class BooleanSchema extends PrimitiveSchema
 {
     private SchemaType $type;
     private ?SchemaDescription $description;
-    private ?SchemaExample $example;
 
     private function __construct(
         SchemaType $type,
@@ -72,8 +71,13 @@ final class BooleanSchema extends PrimitiveSchema
         );
     }
 
-    public function setExample(bool $example): self
+    public function setExample($example): self
     {
+        $exception = $this->validateValue($example);
+        if ($exception) {
+            throw $exception;
+        }
+
         return new self(
             $this->type,
             $this->isRequired,

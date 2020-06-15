@@ -14,7 +14,6 @@ final class StringSchema extends PrimitiveSchema
     private SchemaType $type;
     protected ?SchemaName $name;
     private ?SchemaDescription $description;
-    private ?SchemaExample $example;
 
     private function __construct(
         SchemaType $type,
@@ -97,8 +96,13 @@ final class StringSchema extends PrimitiveSchema
         );
     }
 
-    public function setExample(string $example): self
+    public function setExample($example): self
     {
+        $exception = $this->validateValue($example);
+        if ($exception) {
+            throw $exception;
+        }
+
         return new self(
             $this->type,
             $this->isRequired,
