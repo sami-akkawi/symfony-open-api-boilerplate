@@ -4,12 +4,14 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\DiscriminatorSchemaType;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
+use LogicException;
 use Symfony\Component\Uid\Uuid;
 
 final class DiscriminatorSchema extends DetailedSchema
@@ -18,6 +20,7 @@ final class DiscriminatorSchema extends DetailedSchema
     protected Schemas $schemas;
     protected ?SchemaName $name;
     protected ?SchemaDescription $description;
+    private ?SchemaExample $example;
 
     private function __construct(
         DiscriminatorSchemaType $type,
@@ -25,7 +28,8 @@ final class DiscriminatorSchema extends DetailedSchema
         Schemas $schemas,
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
-        ?SchemaIsNullable $isNullable = null
+        ?SchemaIsNullable $isNullable = null,
+        ?SchemaExample $example = null
     )
     {
         $this->type = $type;
@@ -34,6 +38,7 @@ final class DiscriminatorSchema extends DetailedSchema
         $this->name = $name;
         $this->description = $description;
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
+        $this->example = $example;
     }
 
     public static function generateAnyOf(): self
@@ -49,6 +54,59 @@ final class DiscriminatorSchema extends DetailedSchema
     public static function generateOneOf(): self
     {
         return new self(DiscriminatorSchemaType::generateOneOf(), SchemaIsRequired::generateFalse(), Schemas::generate());
+    }
+
+    public function isValueValid($value): array
+    {
+        if ($this->type->isAllOf()) {
+            return $this->isValueValidForAllOf($value);
+        } elseif ($this->type->isAnyOf()) {
+            return $this->isValueValidForAnyOf($value);
+        } elseif ($this->type->isOneOf()) {
+            return $this->isValueValidForOneOf($value);
+        }
+
+        throw new LogicException("Missing Value Validation for Discriminator Object of type " . $this->type->toString());
+    }
+
+    private function isValueValidForAllOf($value): array
+    {
+        return ObjectSchema::generate($this->schemas)->isValueValid($value);
+    }
+
+    private function isValueValidForOneOf($value): array
+    {
+        $errors = [];
+        foreach ($this->schemas->getSchemaNames() as $name) {
+            $schema = $this->schemas->getSchema($name);
+            $errors[$name] = $schema->isValueValid($value);
+        }
+
+        $numberOfValid = 0;
+        foreach ($errors as $error) {
+            if (empty($error)) {
+                $numberOfValid++;
+            }
+        }
+
+        return $numberOfValid === 1 ? [] : ["Exactly ONE value should match, $numberOfValid matched"];
+    }
+
+    private function isValueValidForAnyOf($value): array
+    {
+        $errors = [];
+        foreach ($this->schemas->getSchemaNames() as $name) {
+            $schema = $this->schemas->getSchema($name);
+            $errors[$name] = $schema->isValueValid($value);
+        }
+
+        foreach ($errors as $error) {
+            if (empty($error)) {
+                return [];
+            }
+        }
+
+        return $errors;
     }
 
     public function addSchema(Schema $schema): self

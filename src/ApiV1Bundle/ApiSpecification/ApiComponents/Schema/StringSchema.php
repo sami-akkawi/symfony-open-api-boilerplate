@@ -104,7 +104,7 @@ final class StringSchema extends PrimitiveSchema
             $this->isRequired,
             $this->name,
             $this->description,
-            SchemaExample::fromString($example),
+            SchemaExample::fromAny($example),
             $this->isNullable
         );
     }
@@ -121,6 +121,14 @@ final class StringSchema extends PrimitiveSchema
         );
     }
 
+    public function isValueValid($value): array
+    {
+        if (is_string($value)) {
+            return [];
+        }
+        return [$this->getWrongTypeMessage('string', $value)];
+    }
+
     public function toOpenApiSpecification(): array
     {
         $specification = ['type' => $this->type->getType()];
@@ -134,7 +142,7 @@ final class StringSchema extends PrimitiveSchema
             $specification['description'] = $this->description->toString();
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toString();
+            $specification['example'] = $this->example->toAny();
         }
         if ($this->isNullable()) {
             $specification['nullable'] = true;

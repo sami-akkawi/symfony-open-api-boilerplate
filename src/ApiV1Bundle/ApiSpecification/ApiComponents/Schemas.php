@@ -56,6 +56,25 @@ final class Schemas
         return new self(array_merge($this->schemas, [$schema]));
     }
 
+    public function getSchemaNames(): array
+    {
+        $requiredSchemas = [];
+        foreach ($this->schemas as $schema) {
+            $requiredSchemas[] = $schema->getName()->toString();
+        }
+        return $requiredSchemas;
+    }
+
+    public function getSchema(string $name): ?Schema
+    {
+        foreach ($this->schemas as $schema) {
+            if ($schema->getName()->toString() === $name) {
+                return $schema;
+            }
+        }
+        return null;
+    }
+
     public function toOpenApiSpecification(): array
     {
         $schemas = [];

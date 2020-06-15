@@ -6,6 +6,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DetailedSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
+use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 /**
  * The Schema Object allows the definition of input and output data types. These types can be objects, but also
@@ -49,4 +50,31 @@ abstract class Schema
     public abstract function makeNullable();
 
     public abstract function toDetailedSchema(): DetailedSchema;
+
+    public abstract function isValueValid($value): array;
+
+    public function validateValue($value): ?SpecificationException
+    {
+        $errors = $this->isValueValid($value);
+        if ($errors) {
+            return new SpecificationException($this->getKeyErrorAndValues($errors));
+        }
+        return null;
+    }
+
+    private function getKeyErrorAndValues(array $errors): string
+    {
+        $string = '';
+        foreach ($errors as $key => $error) {
+            $string .= "$key: ";
+            if (is_array($error)) {
+                $string .= $this->getKeyErrorAndValues($error);
+            } else {
+                $string .= $error;
+            }
+            $string .= PHP_EOL;
+        }
+
+        return $string;
+    }
 }

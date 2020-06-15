@@ -72,14 +72,14 @@ final class BooleanSchema extends PrimitiveSchema
         );
     }
 
-    public function setExample(string $example): self
+    public function setExample(bool $example): self
     {
         return new self(
             $this->type,
             $this->isRequired,
             $this->name,
             $this->description,
-            SchemaExample::fromString($example),
+            SchemaExample::fromAny($example),
             $this->isNullable
         );
     }
@@ -96,6 +96,14 @@ final class BooleanSchema extends PrimitiveSchema
         );
     }
 
+    public function isValueValid($value): array
+    {
+        if (is_bool($value)) {
+            return [];
+        }
+        return [$this->getWrongTypeMessage('bool', $value)];
+    }
+
     public function toOpenApiSpecification(): array
     {
         $specification = ['type' => $this->type->getType()];
@@ -103,7 +111,7 @@ final class BooleanSchema extends PrimitiveSchema
             $specification['description'] = $this->description->toString();
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toString();
+            $specification['example'] = $this->example->toAny();
         }
         if ($this->isNullable()) {
             $specification['nullable'] = true;

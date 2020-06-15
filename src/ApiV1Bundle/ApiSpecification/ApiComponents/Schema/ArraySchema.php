@@ -2,6 +2,7 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaItemsAreUnique;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
@@ -17,6 +18,7 @@ final class ArraySchema extends DetailedSchema
     private SchemaItemsAreUnique $itemsAreUnique;
     private SchemaType $type;
     private ?SchemaDescription $description;
+    private ?SchemaExample $example;
 
     private function __construct(
         Schema $itemType,
@@ -24,7 +26,8 @@ final class ArraySchema extends DetailedSchema
         ?SchemaName $name = null,
         ?SchemaItemsAreUnique $itemsAreUnique = null,
         ?SchemaDescription $description = null,
-        ?SchemaIsNullable $isNullable = null
+        ?SchemaIsNullable $isNullable = null,
+        ?SchemaExample $example = null
     ) {
         $this->itemType = $itemType;
         $this->isRequired = $isRequired;
@@ -33,6 +36,12 @@ final class ArraySchema extends DetailedSchema
         $this->type = SchemaType::generateArray();
         $this->description = $description;
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
+        $this->example = $example;
+    }
+
+    public function getItemType(): Schema
+    {
+        return $this->itemType;
     }
 
     public function setName(string $name): self
@@ -43,7 +52,8 @@ final class ArraySchema extends DetailedSchema
             SchemaName::fromString($name),
             $this->itemsAreUnique,
             $this->description,
-            $this->isNullable
+            $this->isNullable,
+            $this->example
         );
     }
 
@@ -55,13 +65,30 @@ final class ArraySchema extends DetailedSchema
             $this->name,
             SchemaItemsAreUnique::generateTrue(),
             $this->description,
-            $this->isNullable
+            $this->isNullable,
+            $this->example
         );
     }
 
     public static function generate(Schema $itemType): self
     {
         return new self($itemType, SchemaIsRequired::generateFalse());
+    }
+
+    public function isValueValid($value): array
+    {
+        $errors = [];
+        if (!is_array($value)) {
+            $errors[] = $this->getWrongTypeMessage('array', $value);
+            return $errors;
+        }
+        foreach ($value as $item) {
+            $subErrors = $this->itemType->isValueValid($item);
+            if ($subErrors) {
+                $errors[] = $subErrors;
+            }
+        }
+        return $errors;
     }
 
     public function setDescription(string $description): self
@@ -72,7 +99,25 @@ final class ArraySchema extends DetailedSchema
             $this->name,
             $this->itemsAreUnique,
             SchemaDescription::fromString($description),
-            $this->isNullable
+            $this->isNullable,
+            $this->example
+        );
+    }
+
+    public function setExample(array $example): self
+    {
+        $exception = $this->validateValue($example);
+        if ($exception) {
+            throw $exception;
+        }
+        return new self(
+            $this->itemType,
+            $this->isRequired,
+            $this->name,
+            $this->itemsAreUnique,
+            $this->description,
+            $this->isNullable,
+            $this->example
         );
     }
 
@@ -84,7 +129,8 @@ final class ArraySchema extends DetailedSchema
             $this->name,
             $this->itemsAreUnique,
             $this->description,
-            SchemaIsNullable::generateTrue()
+            SchemaIsNullable::generateTrue(),
+            $this->example
         );
     }
 
@@ -96,7 +142,8 @@ final class ArraySchema extends DetailedSchema
             $this->name,
             $this->itemsAreUnique,
             $this->description,
-            $this->isNullable
+            $this->isNullable,
+            $this->example
         );
     }
 
@@ -114,6 +161,9 @@ final class ArraySchema extends DetailedSchema
         }
         if ($this->isNullable()) {
             $specification['nullable'] = true;
+        }
+        if ($this->example) {
+            $specification['example'] = $this->example->toAny();
         }
         return $specification;
     }

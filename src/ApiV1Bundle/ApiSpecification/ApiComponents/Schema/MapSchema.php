@@ -58,6 +58,11 @@ final class MapSchema extends DetailedSchema
         return new self($this->additionalProperty, $this->isRequired, SchemaName::fromString($name), $this->isNullable);
     }
 
+    public function isValueValid($value): array
+    {
+        return $this->additionalProperty->getSchema()->isValueValid($value);
+    }
+
     public function toOpenApiSpecification(): array
     {
         $specification =  [

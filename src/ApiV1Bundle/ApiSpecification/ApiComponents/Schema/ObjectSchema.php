@@ -94,6 +94,35 @@ final class ObjectSchema extends DetailedSchema
         return $this->properties->getRequiredSchemaNames();
     }
 
+    public function isValueValid($object): array
+    {
+        $errors = [];
+        foreach (array_keys($object) as $key) {
+            if (!$this->properties->hasSchema(SchemaName::fromString($key))) {
+                $errors[$key] = 'Key defined in object but not in schema!';
+            }
+            $schema = $this->properties->getSchema($key);
+            $subErrors = $schema->isValueValid($object[$key]);
+            if ($subErrors) {
+                $errors[] = $subErrors;
+            }
+        }
+
+        $requiredSchemaNames = $this->properties->getRequiredSchemaNames();
+        foreach ($requiredSchemaNames as $name) {
+            if (!in_array(array_keys($object), $name)) {
+                $errors[$name] = 'Property is required, but never defined!';
+            }
+            $schema = $this->properties->getSchema($name);
+            $subErrors = $schema->isValueValid($object[$name]);
+            if ($subErrors) {
+                $errors[] = $subErrors;
+            }
+        }
+
+        return $errors;
+    }
+
     public function toOpenApiSpecification(): array
     {
         $specification = [

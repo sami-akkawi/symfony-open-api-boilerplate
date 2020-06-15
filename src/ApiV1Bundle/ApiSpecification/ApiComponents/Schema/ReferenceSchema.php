@@ -58,6 +58,11 @@ final class ReferenceSchema extends Schema
         return $this->reference->toOpenApiSpecification();
     }
 
+    public function isValueValid($value): array
+    {
+        return $this->schema->isValueValid($value);
+    }
+
     public function toDetailedSchema(): DetailedSchema
     {
         return $this->schema;

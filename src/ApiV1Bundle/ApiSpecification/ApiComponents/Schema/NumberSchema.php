@@ -107,7 +107,7 @@ final class NumberSchema extends PrimitiveSchema
             $this->isRequired,
             $this->name,
             $this->description,
-            SchemaExample::fromString($example),
+            SchemaExample::fromAny($example),
             $this->minimum,
             $this->maximum,
             $this->isNullable
@@ -161,6 +161,14 @@ final class NumberSchema extends PrimitiveSchema
         return new self(SchemaType::generateNumber(), SchemaIsRequired::generateFalse());
     }
 
+    public function isValueValid($value): array
+    {
+        if (is_float($value)) {
+            return [];
+        }
+        return [$this->getWrongTypeMessage('float', $value)];
+    }
+
     public function toOpenApiSpecification(): array
     {
         $specification = ['type' => $this->type->getType()];
@@ -171,7 +179,7 @@ final class NumberSchema extends PrimitiveSchema
             $specification['description'] = $this->description->toString();
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toString();
+            $specification['example'] = $this->example->toAny();
         }
         if ($this->minimum) {
             $specification['minimum'] = $this->minimum->toFloat();

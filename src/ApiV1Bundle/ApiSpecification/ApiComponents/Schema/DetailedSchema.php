@@ -10,4 +10,9 @@ abstract class DetailedSchema extends Schema
     {
         return $this;
     }
+
+    protected function getWrongTypeMessage(string $correctType, $value): string
+    {
+        return "Should be $correctType, " . gettype($value) . ' supplied.';
+    }
 }

@@ -22,6 +22,21 @@ final class DiscriminatorSchemaType
         $this->type = $type;
     }
 
+    public function isOneOf(): bool
+    {
+        return $this->type === self::ONE_OF;
+    }
+
+    public function isAnyOf(): bool
+    {
+        return $this->type === self::ANY_OF;
+    }
+
+    public function isAllOf(): bool
+    {
+        return $this->type === self::ALL_OF;
+    }
+
     public static function generateOneOf(): self
     {
         return new self(self::ONE_OF);
