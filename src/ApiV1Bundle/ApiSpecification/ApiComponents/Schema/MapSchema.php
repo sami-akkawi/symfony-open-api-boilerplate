@@ -36,9 +36,21 @@ final class MapSchema extends DetailedSchema
         return new self(SchemaAdditionalProperty::fromReferenceSchema($schema), SchemaIsRequired::generateFalse());
     }
 
-    public function isValueValid($value): array
+    public function isValueValid($values): array
     {
-        return $this->additionalProperty->getSchema()->isValueValid($value);
+        $errors = [];
+        if (!is_array($values)) {
+            $errors[] = $this->getWrongTypeMessage('array', $values);
+            return $errors;
+        }
+        foreach (array_values($values) as $value) {
+            $subError = $this->additionalProperty->getSchema()->isValueValid($value);
+            if ($subError) {
+                $errors[] = $subError;
+            }
+        }
+
+        return $errors;
     }
 
     public function makeNullable(): self
