@@ -6,14 +6,19 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaMaximumLength;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaMinimumLength;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaType;
+use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 final class StringSchema extends PrimitiveSchema
 {
     private SchemaType $type;
     protected ?SchemaName $name;
     private ?SchemaDescription $description;
+    private ?SchemaMinimumLength $minimumLength;
+    private ?SchemaMaximumLength $maximumLength;
 
     private function __construct(
         SchemaType $type,
@@ -21,7 +26,9 @@ final class StringSchema extends PrimitiveSchema
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
         ?Example $example = null,
-        ?SchemaIsNullable $isNullable = null
+        ?SchemaIsNullable $isNullable = null,
+        ?SchemaMinimumLength $minimumLength = null,
+        ?SchemaMaximumLength $maximumLength = null
     ) {
         $this->type = $type;
         $this->isRequired = $isRequired;
@@ -29,6 +36,8 @@ final class StringSchema extends PrimitiveSchema
         $this->description = $description;
         $this->example = $example;
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
+        $this->minimumLength = $minimumLength;
+        $this->maximumLength = $maximumLength;
     }
 
     public function setName(string $name): self
@@ -39,7 +48,9 @@ final class StringSchema extends PrimitiveSchema
             SchemaName::fromString($name),
             $this->description,
             $this->example,
-            $this->isNullable
+            $this->isNullable,
+            $this->minimumLength,
+            $this->maximumLength
         );
     }
 
@@ -51,7 +62,9 @@ final class StringSchema extends PrimitiveSchema
             $this->name,
             $this->description,
             $this->example,
-            $this->isNullable
+            $this->isNullable,
+            $this->minimumLength,
+            $this->maximumLength
         );
     }
 
@@ -68,7 +81,9 @@ final class StringSchema extends PrimitiveSchema
             $this->name,
             $this->description,
             $this->example,
-            $this->isNullable
+            $this->isNullable,
+            $this->minimumLength,
+            $this->maximumLength
         );
     }
 
@@ -80,7 +95,9 @@ final class StringSchema extends PrimitiveSchema
             $this->name,
             $this->description,
             $this->example,
-            $this->isNullable
+            $this->isNullable,
+            $this->minimumLength,
+            $this->maximumLength
         );
     }
 
@@ -92,7 +109,9 @@ final class StringSchema extends PrimitiveSchema
             $this->name,
             SchemaDescription::fromString($description),
             $this->example,
-            $this->isNullable
+            $this->isNullable,
+            $this->minimumLength,
+            $this->maximumLength
         );
     }
 
@@ -109,7 +128,9 @@ final class StringSchema extends PrimitiveSchema
             $this->name,
             $this->description,
             $example,
-            $this->isNullable
+            $this->isNullable,
+            $this->minimumLength,
+            $this->maximumLength
         );
     }
 
@@ -121,8 +142,76 @@ final class StringSchema extends PrimitiveSchema
             $this->name,
             $this->description,
             $this->example,
-            SchemaIsNullable::generateTrue()
+            SchemaIsNullable::generateTrue(),
+            $this->minimumLength,
+            $this->maximumLength
         );
+    }
+
+    private function areLengthSettingsValid(
+        ?SchemaMinimumLength $minimumLength,
+        ?SchemaMaximumLength $maximumLength
+    ): bool {
+        if (!$minimumLength || !$maximumLength) {
+            return true;
+        }
+
+        if ($minimumLength->toInt() > $maximumLength->toInt()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function setMinimumLength(int $minLength): self
+    {
+        $minimumLength = SchemaMinimumLength::fromInt($minLength);
+        if (!$this->areLengthSettingsValid($minimumLength, $this->maximumLength)) {
+            throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
+        }
+
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->isNullable,
+            $minimumLength,
+            $this->maximumLength
+        );
+    }
+
+    public function setMaximumLength(int $maxLength): self
+    {
+        $maximumLength = SchemaMaximumLength::fromInt($maxLength);
+        if (!$this->areLengthSettingsValid($this->minimumLength, $maximumLength)) {
+            throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
+        }
+
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->isNullable,
+            $this->minimumLength,
+            $maximumLength
+        );
+    }
+    
+    public function isValueLengthValid(string $value): ?string
+    {
+        $stringLength = strlen($value);
+        if ($this->minimumLength && $value < $this->minimumLength->toInt()) {
+            return "$value has length $stringLength, minimum allowed is: " . $this->minimumLength->toInt();
+        }
+        if ($this->maximumLength && $value > $this->maximumLength->toInt()) {
+            return "$value has length $stringLength, maximum allowed is: " . $this->maximumLength->toInt();
+        }
+
+        return null;
     }
 
     public function isValueValid($value): array
@@ -131,9 +220,18 @@ final class StringSchema extends PrimitiveSchema
             return [$this->getWrongTypeMessage('string', $value)];
         }
 
-        $error = $this->type->isStringValueValid($value);
+        $errors = [];
+        $lengthError = $this->isValueLengthValid($value);
+        if ($lengthError) {
+            $errors[] = $lengthError;
+        }
 
-        return $error ? [$error] : [];
+        $typeError = $this->type->isStringValueValid($value);
+        if ($typeError) {
+            $errors[] = $typeError;
+        }
+
+        return $errors;
     }
 
     private function getNullableStringExample(): ?string
@@ -165,6 +263,12 @@ final class StringSchema extends PrimitiveSchema
         }
         if ($this->description) {
             $specification['description'] = $this->description->toString();
+        }
+        if ($this->minimumLength) {
+            $specification['minLength'] = $this->minimumLength->toInt();
+        }
+        if ($this->maximumLength) {
+            $specification['maxLength'] = $this->maximumLength->toInt();
         }
         if ($example) {
             $specification['example'] = $example;
