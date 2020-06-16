@@ -37,6 +37,16 @@ final class SpecificationException extends LogicException
         return self::generate("The minimum value should be less than the maximum value.");
     }
 
+    public static function generateMinimumItemsCannotBeLessThanZero(): self
+    {
+        return self::generate("The minimum items allowed cannot be less than zero.");
+    }
+
+    public static function generateMinimumLengthCannotBeLessThanZero(): self
+    {
+        return self::generate("The minimum length allowed cannot be less than zero.");
+    }
+
     public static function generateEmptyStringException(string $field): self
     {
         return self::generate("$field cannot have an empty value.");

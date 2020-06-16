@@ -165,6 +165,10 @@ final class StringSchema extends PrimitiveSchema
 
     public function setMinimumLength(int $minLength): self
     {
+        if ($minLength < 0) {
+            throw SpecificationException::generateMinimumLengthCannotBeLessThanZero();
+        }
+
         $minimumLength = SchemaMinimumLength::fromInt($minLength);
         if (!$this->areLengthSettingsValid($minimumLength, $this->maximumLength)) {
             throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
@@ -200,8 +204,8 @@ final class StringSchema extends PrimitiveSchema
             $maximumLength
         );
     }
-    
-    public function isValueLengthValid(string $value): ?string
+
+    public function isStringLengthValid(string $value): ?string
     {
         $stringLength = strlen($value);
         if ($this->minimumLength && $value < $this->minimumLength->toInt()) {
@@ -221,7 +225,7 @@ final class StringSchema extends PrimitiveSchema
         }
 
         $errors = [];
-        $lengthError = $this->isValueLengthValid($value);
+        $lengthError = $this->isStringLengthValid($value);
         if ($lengthError) {
             $errors[] = $lengthError;
         }
