@@ -127,14 +127,35 @@ final class StringSchema extends PrimitiveSchema
 
     public function isValueValid($value): array
     {
-        if (is_string($value)) {
-            return [];
+        if (!is_string($value)) {
+            return [$this->getWrongTypeMessage('string', $value)];
         }
-        return [$this->getWrongTypeMessage('string', $value)];
+
+        $error = $this->type->isStringValueValid($value);
+
+        return $error ? [$error] : [];
+    }
+
+    private function getNullableStringExample(): ?string
+    {
+        if ($this->example) {
+            return $this->example->toAny();
+        }
+
+        if ($this->type->isAtomTime()) {
+            return '2020-05-14T18:53:23+02:00';
+        }
+
+        if ($this->type->isUrl()) {
+            return 'https://www.openapis.org/';
+        }
+
+        return null;
     }
 
     public function toOpenApiSpecification(): array
     {
+        $example = $this->getNullableStringExample();
         $specification = ['type' => $this->type->getType()];
         if ($this->type->hasFormat()) {
             $specification['format'] = $this->type->getFormat();
@@ -145,8 +166,8 @@ final class StringSchema extends PrimitiveSchema
         if ($this->description) {
             $specification['description'] = $this->description->toString();
         }
-        if ($this->example) {
-            $specification['example'] = $this->example->toAny();
+        if ($example) {
+            $specification['example'] = $example;
         }
         if ($this->isNullable()) {
             $specification['nullable'] = true;

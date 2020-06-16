@@ -3,6 +3,8 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
+use DateTimeImmutable;
+use LogicException;
 
 /**
  * Primitive data types in the OAS are based on the types supported by the JSON Schema Specification Wright Draft 00.
@@ -27,24 +29,28 @@ final class SchemaType
     const NUMBER_FLOAT_FORMAT     = 'float';
     const NUMBER_DOUBLE_FORMAT    = 'double';
 
-    const STRING_BYTE_FORMAT      = 'byte';
-    const STRING_BINARY_FORMAT    = 'binary';
-    const STRING_DATE_FORMAT      = 'date';
-    const STRING_DATE_TIME_FORMAT = 'date-time';
-    const STRING_PASSWORD_FORMAT  = 'password';
-    const STRING_UUID_FORMAT      = 'uuid';
-    const STRING_EMAIL_FORMAT     = 'email';
-    const STRING_URL_FORMAT       = 'url';
+    const STRING_BINARY_FORMAT         = 'binary';
+    const STRING_BYTE_FORMAT           = 'byte';
+    const STRING_DATE_FORMAT           = 'date';
+    const STRING_DATE_TIME_ATOM_FORMAT = 'atom-date-time';
+    const STRING_DATE_TIME_FORMAT      = 'date-time';
+    const STRING_PASSWORD_FORMAT       = 'password';
+    const STRING_REGEX_FORMAT          = 'regex';
+    const STRING_UUID_FORMAT           = 'uuid';
+    const STRING_EMAIL_FORMAT          = 'email';
+    const STRING_URL_FORMAT            = 'url';
 
     private const VALID_STRING_FORMATS = [
-        self::STRING_BYTE_FORMAT,
         self::STRING_BINARY_FORMAT,
+        self::STRING_BYTE_FORMAT,
         self::STRING_DATE_FORMAT,
+        self::STRING_DATE_TIME_ATOM_FORMAT,
         self::STRING_DATE_TIME_FORMAT,
-        self::STRING_PASSWORD_FORMAT,
-        self::STRING_UUID_FORMAT,
         self::STRING_EMAIL_FORMAT,
-        self::STRING_URL_FORMAT
+        self::STRING_PASSWORD_FORMAT,
+        self::STRING_REGEX_FORMAT,
+        self::STRING_URL_FORMAT,
+        self::STRING_UUID_FORMAT,
     ];
     private const VALID_INTEGER_FORMATS = [
         self::INTEGER_INT32_FORMAT,
@@ -80,6 +86,129 @@ final class SchemaType
     public function setFormat(string $format): self
     {
         return new self($this->type, $format, $this->enum);
+    }
+
+    public function isStringValueValid(string $value): ?string
+    {
+        if (!$this->format && !$this->enum) {
+            return null;
+        }
+
+        if (
+            $this->format === self::STRING_BINARY_FORMAT
+            || $this->format === self::STRING_BYTE_FORMAT
+            || $this->format === self::STRING_PASSWORD_FORMAT
+        ) {
+            return null;
+        }
+
+        if ($this->enum) {
+            if (in_array($value, $this->enum)) {
+                return null;
+            }
+
+            return "$value not defined in string enum";
+        }
+
+        if ($this->format === self::STRING_EMAIL_FORMAT) {
+            if (filter_var($value, FILTER_VALIDATE_EMAIL, FILTER_FLAG_EMAIL_UNICODE)) {
+                return null;
+            }
+
+            return $this->getInvalidStringFormatErrorMessage(self::STRING_EMAIL_FORMAT, $value);
+        }
+
+        if ($this->format === self::STRING_UUID_FORMAT) {
+            if (preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){3}-[a-f\d]{12}$/i', $value) === 1) {
+                return null;
+            }
+
+            return $this->getInvalidStringFormatErrorMessage(self::STRING_UUID_FORMAT, $value);
+        }
+
+        if ($this->format === self::STRING_REGEX_FORMAT) {
+            if (preg_match($value, '') !== false) {
+                return null;
+            }
+
+            return $this->getInvalidStringFormatErrorMessage(self::STRING_REGEX_FORMAT, $value);
+        }
+
+        if ($this->format === self::STRING_DATE_FORMAT) {
+            if (
+                preg_match('/^[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/', $value) === 1
+                && $this->isValidStandardDate($value)
+            ) {
+                return null;
+            }
+
+            return $this->getInvalidStringFormatErrorMessage(self::STRING_DATE_FORMAT, $value);
+        }
+
+        if ($this->format === self::STRING_DATE_TIME_FORMAT) {
+            if (
+                preg_match('/^[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) ([01][0-9]|2[0-3])(:([0-5][0-9])){2}$/', $value) === 1
+                && $this->isValidStandardDateTime($value)
+            ) {
+                return null;
+            }
+
+            return $this->getInvalidStringFormatErrorMessage(self::STRING_DATE_TIME_FORMAT, $value);
+        }
+
+        if ($this->format === self::STRING_DATE_TIME_ATOM_FORMAT) {
+            if (
+                preg_match('/^[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01][0-9]|2[0-3])(:([0-5][0-9])){2}(\+|\-)(0[0-9]|1[0-2]):([03]0)$/', $value) === 1
+                && $this->isValidStandardDateTime($value)
+            ) {
+                return null;
+            }
+
+            return $this->getInvalidStringFormatErrorMessage(self::STRING_DATE_TIME_FORMAT, $value);
+        }
+
+        if ($this->format === self::STRING_URL_FORMAT) {
+            if (filter_var($value, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
+                return null;
+            }
+
+            return $this->getInvalidStringFormatErrorMessage(self::STRING_DATE_TIME_FORMAT, $value);
+        }
+
+        throw new LogicException("Missing String validation case for format " . $this->format);
+    }
+
+    public function isAtomTime(): bool
+    {
+        return $this->format === self::STRING_DATE_TIME_ATOM_FORMAT;
+    }
+
+    public function isUrl(): bool
+    {
+        return $this->format === self::STRING_URL_FORMAT;
+    }
+
+    private function isValidStandardDate(string $value): bool
+    {
+        $dateTime = new DateTimeImmutable($value);
+        return $dateTime->format('Y-m-d') === $value;
+    }
+
+    private function isValidStandardDateTime(string $value): bool
+    {
+        $dateTime = new DateTimeImmutable($value);
+        return $dateTime->format('Y-m-d H:i:s') === $value;
+    }
+
+    private function isValidAtomDateTime(string $value): bool
+    {
+        $dateTime = new DateTimeImmutable($value);
+        return $dateTime->format(DATE_ATOM) === $value;
+    }
+
+    private function getInvalidStringFormatErrorMessage(string $format, string $invalidValue): string
+    {
+        return "$invalidValue is not a valid $format";
     }
 
     private function isEnumValid(?array $enum): bool
