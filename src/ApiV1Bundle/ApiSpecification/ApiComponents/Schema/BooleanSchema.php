@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -19,7 +19,7 @@ final class BooleanSchema extends PrimitiveSchema
         SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
-        ?SchemaExample $example = null,
+        ?Example $example = null,
         ?SchemaIsNullable $isNullable = null
     ) {
         $this->type = $type;
@@ -71,9 +71,9 @@ final class BooleanSchema extends PrimitiveSchema
         );
     }
 
-    public function setExample($example): self
+    public function setExample(Example $example): self
     {
-        $exception = $this->validateValue($example);
+        $exception = $this->validateValue($example->toDetailedExample()->toMixed());
         if ($exception) {
             throw $exception;
         }
@@ -83,7 +83,7 @@ final class BooleanSchema extends PrimitiveSchema
             $this->isRequired,
             $this->name,
             $this->description,
-            SchemaExample::fromAny($example),
+            $example,
             $this->isNullable
         );
     }
@@ -115,7 +115,7 @@ final class BooleanSchema extends PrimitiveSchema
             $specification['description'] = $this->description->toString();
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toAny();
+            $specification['example'] = $this->example->toMixed();
         }
         if ($this->isNullable()) {
             $specification['nullable'] = true;

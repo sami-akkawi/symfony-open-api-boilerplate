@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -24,7 +24,7 @@ final class ObjectSchema extends DetailedSchema
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
         ?SchemaIsNullable $isNullable = null,
-        ?SchemaExample $example = null
+        ?Example $example = null
     ) {
         if (!$properties->isDefined()) {
             throw SpecificationException::generateObjectSchemaNeedsProperties($name ? $name->toString() : 'no_name');
@@ -89,9 +89,9 @@ final class ObjectSchema extends DetailedSchema
         );
     }
 
-    public function setExample($example): self
+    public function setExample(Example $example): self
     {
-        $exception = $this->validateValue($example);
+        $exception = $this->validateValue($example->toDetailedExample()->toMixed());
         if ($exception) {
             throw $exception;
         }
@@ -102,7 +102,7 @@ final class ObjectSchema extends DetailedSchema
             $this->name,
             $this->description,
             $this->isNullable,
-            SchemaExample::fromAny($example)
+            $example
         );
     }
 
@@ -169,7 +169,7 @@ final class ObjectSchema extends DetailedSchema
             $specification['nullable'] = true;
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toAny();
+            $specification['example'] = $this->example->toMixed();
         }
         return $specification;
     }

@@ -3,7 +3,6 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DetailedSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -20,7 +19,7 @@ abstract class Schema
     protected SchemaIsNullable $isNullable;
     protected ?SchemaName $name;
     protected SchemaIsRequired $isRequired;
-    protected ?SchemaExample $example;
+    protected ?Example $example;
 
     public abstract function toOpenApiSpecification(): array;
 
@@ -50,7 +49,7 @@ abstract class Schema
 
     public abstract function makeNullable();
 
-    public abstract function setExample($example);
+    public abstract function setExample(Example $example);
 
     public abstract function isValueValid($value): array;
 

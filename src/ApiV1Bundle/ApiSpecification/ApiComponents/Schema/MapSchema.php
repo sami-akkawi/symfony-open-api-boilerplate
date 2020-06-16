@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaAdditionalProperty;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -17,7 +17,7 @@ final class MapSchema extends DetailedSchema
         SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaIsNullable $isNullable = null,
-        ?SchemaExample $example = null
+        ?Example $example = null
     ) {
         $this->additionalProperty = $additionalProperty;
         $this->isRequired = $isRequired;
@@ -86,9 +86,9 @@ final class MapSchema extends DetailedSchema
         );
     }
 
-    public function setExample($example): self
+    public function setExample(Example $example): self
     {
-        $exception = $this->validateValue($example);
+        $exception = $this->validateValue($example->toDetailedExample()->toMixed());
         if ($exception) {
             throw $exception;
         }
@@ -98,7 +98,7 @@ final class MapSchema extends DetailedSchema
             $this->isRequired,
             $this->name,
             $this->isNullable,
-            SchemaExample::fromAny($example)
+            $example
         );
     }
 
@@ -112,7 +112,7 @@ final class MapSchema extends DetailedSchema
             $specification['nullable'] = true;
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toAny();
+            $specification['example'] = $this->example->toMixed();
         }
         return $specification;
     }

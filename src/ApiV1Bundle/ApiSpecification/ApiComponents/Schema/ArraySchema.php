@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaItemsAreUnique;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
@@ -26,7 +26,7 @@ final class ArraySchema extends DetailedSchema
         ?SchemaItemsAreUnique $itemsAreUnique = null,
         ?SchemaDescription $description = null,
         ?SchemaIsNullable $isNullable = null,
-        ?SchemaExample $example = null
+        ?Example $example = null
     ) {
         $this->itemType = $itemType;
         $this->isRequired = $isRequired;
@@ -103,9 +103,9 @@ final class ArraySchema extends DetailedSchema
         );
     }
 
-    public function setExample($example): self
+    public function setExample(Example $example): self
     {
-        $exception = $this->validateValue($example);
+        $exception = $this->validateValue($example->toDetailedExample()->toMixed());
         if ($exception) {
             throw $exception;
         }
@@ -116,7 +116,7 @@ final class ArraySchema extends DetailedSchema
             $this->itemsAreUnique,
             $this->description,
             $this->isNullable,
-            $this->example
+            $example
         );
     }
 
@@ -162,7 +162,7 @@ final class ArraySchema extends DetailedSchema
             $specification['nullable'] = true;
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toAny();
+            $specification['example'] = $this->example->toMixed();
         }
         return $specification;
     }

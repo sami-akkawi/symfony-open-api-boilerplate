@@ -35,7 +35,7 @@ final class Parameters
     public function addParameter(Parameter $parameter): self
     {
         if ($this->hasParameter($parameter)) {
-            throw SpecificationException::generateDuplicateSecurityRequirementsException();
+            throw SpecificationException::generateDuplicateParameters();
         }
 
         return new self(array_merge($this->parameters, [$parameter]));

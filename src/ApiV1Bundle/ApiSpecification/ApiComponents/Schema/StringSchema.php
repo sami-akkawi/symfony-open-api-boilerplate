@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -20,7 +20,7 @@ final class StringSchema extends PrimitiveSchema
         SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
-        ?SchemaExample $example = null,
+        ?Example $example = null,
         ?SchemaIsNullable $isNullable = null
     ) {
         $this->type = $type;
@@ -96,9 +96,9 @@ final class StringSchema extends PrimitiveSchema
         );
     }
 
-    public function setExample($example): self
+    public function setExample(Example $example): self
     {
-        $exception = $this->validateValue($example);
+        $exception = $this->validateValue($example->toDetailedExample()->toMixed());
         if ($exception) {
             throw $exception;
         }
@@ -108,7 +108,7 @@ final class StringSchema extends PrimitiveSchema
             $this->isRequired,
             $this->name,
             $this->description,
-            SchemaExample::fromAny($example),
+            $example,
             $this->isNullable
         );
     }
@@ -139,7 +139,7 @@ final class StringSchema extends PrimitiveSchema
     private function getNullableStringExample(): ?string
     {
         if ($this->example) {
-            return $this->example->toAny();
+            return $this->example->toMixed();
         }
 
         if ($this->type->isAtomTime()) {

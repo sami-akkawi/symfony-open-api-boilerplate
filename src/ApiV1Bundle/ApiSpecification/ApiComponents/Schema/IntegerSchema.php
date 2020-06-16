@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaMaximum;
@@ -25,7 +25,7 @@ final class IntegerSchema extends PrimitiveSchema
         SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
-        ?SchemaExample $example = null,
+        ?Example $example = null,
         ?SchemaMinimum $minimum = null,
         ?SchemaMaximum $maximum = null,
         ?SchemaIsNullable $isNullable = null
@@ -99,9 +99,9 @@ final class IntegerSchema extends PrimitiveSchema
         );
     }
 
-    public function setExample($example): self
+    public function setExample(Example $example): self
     {
-        $exception = $this->validateValue($example);
+        $exception = $this->validateValue($example->toDetailedExample()->toMixed());
         if ($exception) {
             throw $exception;
         }
@@ -111,7 +111,7 @@ final class IntegerSchema extends PrimitiveSchema
             $this->isRequired,
             $this->name,
             $this->description,
-            SchemaExample::fromAny($example),
+            $example,
             $this->minimum,
             $this->maximum,
             $this->isNullable
@@ -183,7 +183,7 @@ final class IntegerSchema extends PrimitiveSchema
             $specification['description'] = $this->description->toString();
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toAny();
+            $specification['example'] = $this->example->toMixed();
         }
         if ($this->minimum) {
             $specification['minimum'] = $this->minimum->toInt();

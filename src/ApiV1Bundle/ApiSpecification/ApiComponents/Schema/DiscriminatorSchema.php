@@ -2,9 +2,9 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\DiscriminatorSchemaType;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -28,7 +28,7 @@ final class DiscriminatorSchema extends DetailedSchema
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
         ?SchemaIsNullable $isNullable = null,
-        ?SchemaExample $example = null
+        ?Example $example = null
     ) {
         $this->type = $type;
         $this->isRequired = $isRequired;
@@ -119,9 +119,9 @@ final class DiscriminatorSchema extends DetailedSchema
         );
     }
 
-    public function setExample($example): self
+    public function setExample(Example $example): self
     {
-        $exception = $this->validateValue($example);
+        $exception = $this->validateValue($example->toDetailedExample()->toMixed());
         if ($exception) {
             throw $exception;
         }
@@ -133,7 +133,7 @@ final class DiscriminatorSchema extends DetailedSchema
             $this->name,
             $this->description,
             $this->isNullable,
-            SchemaExample::fromAny($example)
+            $example
         );
     }
 
@@ -203,7 +203,7 @@ final class DiscriminatorSchema extends DetailedSchema
             $specification['nullable'] = true;
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toAny();
+            $specification['example'] = $this->example->toMixed();
         }
         $specification[$this->type->toString()] = array_values($this->schemas->toOpenApiSpecification());
 
