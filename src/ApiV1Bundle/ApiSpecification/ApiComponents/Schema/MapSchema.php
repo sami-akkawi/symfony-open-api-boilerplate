@@ -4,6 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaAdditionalProperty;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -17,10 +18,12 @@ final class MapSchema extends DetailedSchema
         SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaIsNullable $isNullable = null,
-        ?Example $example = null
+        ?Example $example = null,
+        ?SchemaIsDeprecated $isDeprecated = null
     ) {
         $this->additionalProperty = $additionalProperty;
         $this->isRequired = $isRequired;
+        $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
         $this->name = $name;
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
         $this->example = $example;
@@ -60,7 +63,8 @@ final class MapSchema extends DetailedSchema
             $this->isRequired,
             $this->name,
             SchemaIsNullable::generateTrue(),
-            $this->example
+            $this->example,
+            $this->isDeprecated
         );
     }
 
@@ -71,7 +75,20 @@ final class MapSchema extends DetailedSchema
             SchemaIsRequired::generateTrue(),
             $this->name,
             $this->isNullable,
-            $this->example
+            $this->example,
+            $this->isDeprecated
+        );
+    }
+
+    public function deprecate(): self
+    {
+        return new self(
+            $this->additionalProperty,
+            $this->isRequired,
+            $this->name,
+            $this->isNullable,
+            $this->example,
+            SchemaIsDeprecated::generateTrue()
         );
     }
 
@@ -82,7 +99,8 @@ final class MapSchema extends DetailedSchema
             $this->isRequired,
             SchemaName::fromString($name),
             $this->isNullable,
-            $this->example
+            $this->example,
+            $this->isDeprecated
         );
     }
 
@@ -98,7 +116,8 @@ final class MapSchema extends DetailedSchema
             $this->isRequired,
             $this->name,
             $this->isNullable,
-            $example
+            $example,
+            $this->isDeprecated
         );
     }
 

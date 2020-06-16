@@ -4,6 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -20,10 +21,12 @@ final class BooleanSchema extends PrimitiveSchema
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
         ?Example $example = null,
-        ?SchemaIsNullable $isNullable = null
+        ?SchemaIsNullable $isNullable = null,
+        ?SchemaIsDeprecated $isDeprecated = null
     ) {
         $this->type = $type;
         $this->isRequired = $isRequired;
+        $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
         $this->name = $name;
         $this->description = $description;
         $this->example = $example;
@@ -38,7 +41,8 @@ final class BooleanSchema extends PrimitiveSchema
             SchemaName::fromString($name),
             $this->description,
             $this->example,
-            $this->isNullable
+            $this->isNullable,
+            $this->isDeprecated
         );
     }
 
@@ -55,7 +59,8 @@ final class BooleanSchema extends PrimitiveSchema
             $this->name,
             SchemaDescription::fromString($description),
             $this->example,
-            $this->isNullable
+            $this->isNullable,
+            $this->isDeprecated
         );
     }
 
@@ -67,7 +72,21 @@ final class BooleanSchema extends PrimitiveSchema
             $this->name,
             $this->description,
             $this->example,
-            $this->isNullable
+            $this->isNullable,
+            $this->isDeprecated
+        );
+    }
+
+    public function deprecate(): self
+    {
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->isNullable,
+            SchemaIsDeprecated::generateTrue()
         );
     }
 
@@ -84,7 +103,8 @@ final class BooleanSchema extends PrimitiveSchema
             $this->name,
             $this->description,
             $example,
-            $this->isNullable
+            $this->isNullable,
+            $this->isDeprecated
         );
     }
 
@@ -96,7 +116,8 @@ final class BooleanSchema extends PrimitiveSchema
             $this->name,
             $this->description,
             $this->example,
-            SchemaIsNullable::generateTrue()
+            SchemaIsNullable::generateTrue(),
+            $this->isDeprecated
         );
     }
 

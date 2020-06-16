@@ -58,6 +58,11 @@ final class ReferenceSchema extends Schema
         return new self($this->reference, SchemaIsRequired::generateTrue(), $this->schema, $this->name);
     }
 
+    public function deprecate(): self
+    {
+        throw SpecificationException::generateReferenceSiblingsAreIgnored();
+    }
+
     public function setExample($example): self
     {
         throw SpecificationException::generateReferenceSiblingsAreIgnored();

@@ -5,6 +5,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\DiscriminatorSchemaType;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -28,10 +29,12 @@ final class DiscriminatorSchema extends DetailedSchema
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
         ?SchemaIsNullable $isNullable = null,
-        ?Example $example = null
+        ?Example $example = null,
+        ?SchemaIsDeprecated $isDeprecated = null
     ) {
         $this->type = $type;
         $this->isRequired = $isRequired;
+        $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
         $this->schemas = $schemas;
         $this->name = $name;
         $this->description = $description;
@@ -63,7 +66,8 @@ final class DiscriminatorSchema extends DetailedSchema
             $this->name,
             $this->description,
             $this->isNullable,
-            $this->example
+            $this->example,
+            $this->isDeprecated
         );
     }
 
@@ -76,7 +80,8 @@ final class DiscriminatorSchema extends DetailedSchema
             $this->name,
             SchemaDescription::fromString($description),
             $this->isNullable,
-            $this->example
+            $this->example,
+            $this->isDeprecated
         );
     }
 
@@ -89,7 +94,8 @@ final class DiscriminatorSchema extends DetailedSchema
             $this->name,
             $this->description,
             SchemaIsNullable::generateTrue(),
-            $this->example
+            $this->example,
+            $this->isDeprecated
         );
     }
 
@@ -102,7 +108,22 @@ final class DiscriminatorSchema extends DetailedSchema
             $this->name,
             $this->description,
             $this->isNullable,
-            $this->example
+            $this->example,
+            $this->isDeprecated
+        );
+    }
+
+    public function deprecate(): self
+    {
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->schemas,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            SchemaIsDeprecated::generateTrue()
         );
     }
 
@@ -115,7 +136,8 @@ final class DiscriminatorSchema extends DetailedSchema
             SchemaName::fromString($name),
             $this->description,
             $this->isNullable,
-            $this->example
+            $this->example,
+            $this->isDeprecated
         );
     }
 
@@ -133,7 +155,8 @@ final class DiscriminatorSchema extends DetailedSchema
             $this->name,
             $this->description,
             $this->isNullable,
-            $example
+            $example,
+            $this->isDeprecated
         );
     }
 

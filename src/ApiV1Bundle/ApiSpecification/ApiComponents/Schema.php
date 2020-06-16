@@ -3,6 +3,7 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DetailedSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -20,6 +21,7 @@ abstract class Schema
     protected ?SchemaName $name;
     protected SchemaIsRequired $isRequired;
     protected ?Example $example;
+    protected SchemaIsDeprecated $isDeprecated;
 
     public abstract function toOpenApiSpecification(): array;
 
@@ -46,6 +48,8 @@ abstract class Schema
     }
 
     public abstract function require();
+
+    public abstract function deprecate();
 
     public abstract function makeNullable();
 

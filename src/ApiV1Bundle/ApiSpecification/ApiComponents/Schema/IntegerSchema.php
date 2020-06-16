@@ -4,6 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaMaximum;
@@ -28,10 +29,12 @@ final class IntegerSchema extends PrimitiveSchema
         ?Example $example = null,
         ?SchemaMinimum $minimum = null,
         ?SchemaMaximum $maximum = null,
-        ?SchemaIsNullable $isNullable = null
+        ?SchemaIsNullable $isNullable = null,
+        ?SchemaIsDeprecated $isDeprecated = null
     ) {
         $this->type = $type;
         $this->isRequired = $isRequired;
+        $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
         $this->name = $name;
         $this->description = $description;
         $this->example = $example;
@@ -53,7 +56,8 @@ final class IntegerSchema extends PrimitiveSchema
             $this->example,
             $this->minimum,
             $this->maximum,
-            $this->isNullable
+            $this->isNullable,
+            $this->isDeprecated
         );
     }
 
@@ -67,7 +71,23 @@ final class IntegerSchema extends PrimitiveSchema
             $this->example,
             $this->minimum,
             $this->maximum,
-            $this->isNullable
+            $this->isNullable,
+            $this->isDeprecated
+        );
+    }
+
+    public function deprecate(): self
+    {
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            $this->isNullable,
+            SchemaIsDeprecated::generateTrue()
         );
     }
 
@@ -81,7 +101,8 @@ final class IntegerSchema extends PrimitiveSchema
             $this->example,
             $this->minimum,
             $this->maximum,
-            $this->isNullable
+            $this->isNullable,
+            $this->isDeprecated
         );
     }
 
@@ -95,7 +116,8 @@ final class IntegerSchema extends PrimitiveSchema
             $this->example,
             $this->minimum,
             $this->maximum,
-            $this->isNullable
+            $this->isNullable,
+            $this->isDeprecated
         );
     }
 
@@ -114,7 +136,8 @@ final class IntegerSchema extends PrimitiveSchema
             $example,
             $this->minimum,
             $this->maximum,
-            $this->isNullable
+            $this->isNullable,
+            $this->isDeprecated
         );
     }
 
@@ -128,7 +151,8 @@ final class IntegerSchema extends PrimitiveSchema
             $this->example,
             SchemaMinimum::fromInt($minimum),
             $this->maximum,
-            $this->isNullable
+            $this->isNullable,
+            $this->isDeprecated
         );
     }
 
@@ -142,7 +166,8 @@ final class IntegerSchema extends PrimitiveSchema
             $this->example,
             $this->minimum,
             SchemaMaximum::fromInt($maximum),
-            $this->isNullable
+            $this->isNullable,
+            $this->isDeprecated
         );
     }
 
@@ -156,7 +181,8 @@ final class IntegerSchema extends PrimitiveSchema
             $this->example,
             $this->minimum,
             $this->maximum,
-            SchemaIsNullable::generateTrue()
+            SchemaIsNullable::generateTrue(),
+            $this->isDeprecated
         );
     }
 

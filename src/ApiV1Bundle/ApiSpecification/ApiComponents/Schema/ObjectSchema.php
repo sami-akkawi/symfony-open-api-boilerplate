@@ -4,6 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaName;
@@ -24,13 +25,15 @@ final class ObjectSchema extends DetailedSchema
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
         ?SchemaIsNullable $isNullable = null,
-        ?Example $example = null
+        ?Example $example = null,
+        ?SchemaIsDeprecated $isDeprecated = null
     ) {
         if (!$properties->isDefined()) {
             throw SpecificationException::generateObjectSchemaNeedsProperties($name ? $name->toString() : 'no_name');
         }
         $this->name = $name;
         $this->isRequired = $isRequired;
+        $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
         $this->type = SchemaType::generateObject();
         $this->properties = $properties;
         $this->description = $description;
@@ -46,7 +49,8 @@ final class ObjectSchema extends DetailedSchema
             SchemaName::fromString($name),
             $this->description,
             $this->isNullable,
-            $this->example
+            $this->example,
+            $this->isDeprecated
         );
     }
 
@@ -63,7 +67,21 @@ final class ObjectSchema extends DetailedSchema
             $this->name,
             $this->description,
             $this->isNullable,
-            $this->example
+            $this->example,
+            $this->isDeprecated
+        );
+    }
+
+    public function deprecate(): self
+    {
+        return new self(
+            $this->properties,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            SchemaIsDeprecated::generateTrue()
         );
     }
 
@@ -85,7 +103,8 @@ final class ObjectSchema extends DetailedSchema
             $this->name,
             SchemaDescription::fromString($description),
             $this->isNullable,
-            $this->example
+            $this->example,
+            $this->isDeprecated
         );
     }
 
@@ -102,7 +121,8 @@ final class ObjectSchema extends DetailedSchema
             $this->name,
             $this->description,
             $this->isNullable,
-            $example
+            $example,
+            $this->isDeprecated
         );
     }
 
@@ -143,7 +163,8 @@ final class ObjectSchema extends DetailedSchema
             $this->name,
             $this->description,
             SchemaIsNullable::generateTrue(),
-            $this->example
+            $this->example,
+            $this->isDeprecated
         );
     }
 

@@ -3,6 +3,7 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaItemsAreUnique;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaMaximumItems;
@@ -33,10 +34,12 @@ final class ArraySchema extends DetailedSchema
         ?SchemaIsNullable $isNullable = null,
         ?Example $example = null,
         ?SchemaMinimumItems $minimumItems = null,
-        ?SchemaMaximumItems $maximumItems = null
+        ?SchemaMaximumItems $maximumItems = null,
+        ?SchemaIsDeprecated $isDeprecated = null
     ) {
         $this->itemType = $itemType;
         $this->isRequired = $isRequired;
+        $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
         $this->name = $name;
         $this->itemsAreUnique = $itemsAreUnique ?? SchemaItemsAreUnique::generateFalse();
         $this->type = SchemaType::generateArray();
@@ -63,7 +66,8 @@ final class ArraySchema extends DetailedSchema
             $this->isNullable,
             $this->example,
             $this->minimumItems,
-            $this->maximumItems
+            $this->maximumItems,
+            $this->isDeprecated
         );
     }
 
@@ -78,7 +82,8 @@ final class ArraySchema extends DetailedSchema
             $this->isNullable,
             $this->example,
             $this->minimumItems,
-            $this->maximumItems
+            $this->maximumItems,
+            $this->isDeprecated
         );
     }
 
@@ -132,7 +137,8 @@ final class ArraySchema extends DetailedSchema
             $this->isNullable,
             $this->example,
             $this->minimumItems,
-            $this->maximumItems
+            $this->maximumItems,
+            $this->isDeprecated
         );
     }
 
@@ -151,7 +157,24 @@ final class ArraySchema extends DetailedSchema
             $this->isNullable,
             $example,
             $this->minimumItems,
-            $this->maximumItems
+            $this->maximumItems,
+            $this->isDeprecated
+        );
+    }
+
+    public function deprecate(): self
+    {
+        return new self(
+            $this->itemType,
+            $this->isRequired,
+            $this->name,
+            $this->itemsAreUnique,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->minimumItems,
+            $this->maximumItems,
+            SchemaIsDeprecated::generateTrue()
         );
     }
 
@@ -166,7 +189,8 @@ final class ArraySchema extends DetailedSchema
             SchemaIsNullable::generateTrue(),
             $this->example,
             $this->minimumItems,
-            $this->maximumItems
+            $this->maximumItems,
+            $this->isDeprecated
         );
     }
 
@@ -181,7 +205,8 @@ final class ArraySchema extends DetailedSchema
             $this->isNullable,
             $this->example,
             $this->minimumItems,
-            $this->maximumItems
+            $this->maximumItems,
+            $this->isDeprecated
         );
     }
 
@@ -220,7 +245,8 @@ final class ArraySchema extends DetailedSchema
             $this->isNullable,
             $this->example,
             $minimumItems,
-            $this->maximumItems
+            $this->maximumItems,
+            $this->isDeprecated
         );
     }
 
@@ -240,7 +266,8 @@ final class ArraySchema extends DetailedSchema
             $this->isNullable,
             $this->example,
             $this->minimumItems,
-            $maximumItems
+            $maximumItems,
+            $this->isDeprecated
         );
     }
 

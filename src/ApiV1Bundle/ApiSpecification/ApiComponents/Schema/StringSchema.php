@@ -4,6 +4,7 @@ namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaMaximumLength;
@@ -28,10 +29,12 @@ final class StringSchema extends PrimitiveSchema
         ?Example $example = null,
         ?SchemaIsNullable $isNullable = null,
         ?SchemaMinimumLength $minimumLength = null,
-        ?SchemaMaximumLength $maximumLength = null
+        ?SchemaMaximumLength $maximumLength = null,
+        ?SchemaIsDeprecated $isDeprecated = null
     ) {
         $this->type = $type;
         $this->isRequired = $isRequired;
+        $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
         $this->name = $name;
         $this->description = $description;
         $this->example = $example;
@@ -50,7 +53,8 @@ final class StringSchema extends PrimitiveSchema
             $this->example,
             $this->isNullable,
             $this->minimumLength,
-            $this->maximumLength
+            $this->maximumLength,
+            $this->isDeprecated
         );
     }
 
@@ -64,7 +68,23 @@ final class StringSchema extends PrimitiveSchema
             $this->example,
             $this->isNullable,
             $this->minimumLength,
-            $this->maximumLength
+            $this->maximumLength,
+            $this->isDeprecated
+        );
+    }
+
+    public function deprecate(): self
+    {
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->isNullable,
+            $this->minimumLength,
+            $this->maximumLength,
+            SchemaIsDeprecated::generateTrue()
         );
     }
 
@@ -83,7 +103,8 @@ final class StringSchema extends PrimitiveSchema
             $this->example,
             $this->isNullable,
             $this->minimumLength,
-            $this->maximumLength
+            $this->maximumLength,
+            $this->isDeprecated
         );
     }
 
@@ -97,7 +118,8 @@ final class StringSchema extends PrimitiveSchema
             $this->example,
             $this->isNullable,
             $this->minimumLength,
-            $this->maximumLength
+            $this->maximumLength,
+            $this->isDeprecated
         );
     }
 
@@ -111,7 +133,8 @@ final class StringSchema extends PrimitiveSchema
             $this->example,
             $this->isNullable,
             $this->minimumLength,
-            $this->maximumLength
+            $this->maximumLength,
+            $this->isDeprecated
         );
     }
 
@@ -130,7 +153,8 @@ final class StringSchema extends PrimitiveSchema
             $example,
             $this->isNullable,
             $this->minimumLength,
-            $this->maximumLength
+            $this->maximumLength,
+            $this->isDeprecated
         );
     }
 
@@ -144,7 +168,8 @@ final class StringSchema extends PrimitiveSchema
             $this->example,
             SchemaIsNullable::generateTrue(),
             $this->minimumLength,
-            $this->maximumLength
+            $this->maximumLength,
+            $this->isDeprecated
         );
     }
 
@@ -182,7 +207,8 @@ final class StringSchema extends PrimitiveSchema
             $this->example,
             $this->isNullable,
             $minimumLength,
-            $this->maximumLength
+            $this->maximumLength,
+            $this->isDeprecated
         );
     }
 
@@ -201,7 +227,8 @@ final class StringSchema extends PrimitiveSchema
             $this->example,
             $this->isNullable,
             $this->minimumLength,
-            $maximumLength
+            $maximumLength,
+            $this->isDeprecated
         );
     }
 
