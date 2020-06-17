@@ -76,6 +76,21 @@ final class IntegerSchema extends PrimitiveSchema
         );
     }
 
+    public function unRequire(): self
+    {
+        return new self(
+            $this->type,
+            SchemaIsRequired::generateFalse(),
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            $this->isNullable,
+            $this->isDeprecated
+        );
+    }
+
     public function deprecate(): self
     {
         return new self(

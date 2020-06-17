@@ -10,99 +10,28 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
 
 final class Pagination extends AbstractSchema
 {
-    private string $uri;
-    private int $total;
-    private int $filtered;
-    private ?int $perPage;
-    private int $currentPage;
+    private ObjectSchema $schema;
 
-    public function __construct(
-        string $uri = '',
-        int $total = 0,
-        int $filtered = 0,
-        ?int $perPage = 10,
-        int $currentPage = 1
-    ) {
-        $this->uri = $uri;
-        $this->total = $total;
-        $this->filtered = $filtered;
-        $this->perPage = $perPage;
-        $this->currentPage = $currentPage;
+    private function __construct(ObjectSchema $schema)
+    {
+        $this->schema = $schema;
     }
 
-    public function toArray(): array
+    public function toDetailedSchema(): DetailedSchema
     {
-        return [
-            'totalCount' => $this->total,
-            'filteredCount' => $this->filtered,
-            'perPage' => $this->getPerPageRequestParameter(),
-            'currentPage' => $this->currentPage,
-            'lastPage' => $this->getLastPage(),
-            'links' => $this->getLinks(),
-        ];
+        return $this->schema;
     }
 
-    private function getFirstPage(): int
+    public static function getAlwaysRequiredFields(): array
     {
-        return 1;
+        return [];
     }
 
-    private function getLastPage(): int
+    public function requireOnly(array $fieldNames): self
     {
-        if ($this->perPage === 0) {
-            return 1;
-        }
-        $lastPage = (int)ceil($this->filtered / $this->perPage);
-        if ($lastPage === 0) {
-            return 1;
-        }
-        return $lastPage;
-    }
-
-    private function getPreviousPage(): int
-    {
-        return $this->currentPage - 1;
-    }
-
-    private function getNextPage(): int
-    {
-        return $this->currentPage + 1;
-    }
-
-    private function getLinks(): array
-    {
-        $links = [];
-
-        if ($this->currentPage > $this->getFirstPage()) {
-            $links['first'] = $this->createLink($this->getFirstPage());
-            $links['previous'] = $this->createLink($this->getPreviousPage());
-        }
-
-        $links['current'] = $this->createLink($this->currentPage);
-
-        if ($this->currentPage < $this->getLastPage()) {
-            $links['next'] = $this->createLink($this->getNextPage());
-            $links['last'] = $this->createLink($this->getLastPage());
-        }
-
-        return $links;
-    }
-
-    private function getPerPageRequestParameter(): ?int
-    {
-        return $this->perPage;
-    }
-
-    private function createLink(int $currentPage): string
-    {
-        $uriParts = explode('?', $this->uri);
-        $queryString = $uriParts[1] ?? '';
-        parse_str($queryString, $parameters);
-        $parameters['perPage'] = $this->getPerPageRequestParameter();
-        if ($this->perPage !== null) {
-            $parameters['currentPage'] = $currentPage;
-        }
-        return $uriParts[0] . '?' . http_build_query($parameters);
+        $requireAlways = self::getAlwaysRequiredFields();
+        $newSchema = $this->schema->requireOnly(array_merge($requireAlways , $fieldNames));
+        return new self($newSchema);
     }
 
     protected static function getOpenApiSchemaWithoutName(): DetailedSchema

@@ -73,6 +73,21 @@ final class StringSchema extends PrimitiveSchema
         );
     }
 
+    public function unRequire(): self
+    {
+        return new self(
+            $this->type,
+            SchemaIsRequired::generateFalse(),
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->isNullable,
+            $this->minimumLength,
+            $this->maximumLength,
+            $this->isDeprecated
+        );
+    }
+
     public function deprecate(): self
     {
         return new self(

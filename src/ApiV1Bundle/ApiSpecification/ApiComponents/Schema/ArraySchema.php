@@ -210,6 +210,22 @@ final class ArraySchema extends DetailedSchema
         );
     }
 
+    public function unRequire(): self
+    {
+        return new self(
+            $this->itemType,
+            SchemaIsRequired::generateFalse(),
+            $this->name,
+            $this->itemsAreUnique,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->minimumItems,
+            $this->maximumItems,
+            $this->isDeprecated
+        );
+    }
+
     private function areLengthSettingsValid(
         ?SchemaMinimumItems $minimumItems,
         ?SchemaMaximumItems $maximumItems

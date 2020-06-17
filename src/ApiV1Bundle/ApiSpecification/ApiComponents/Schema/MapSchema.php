@@ -80,6 +80,18 @@ final class MapSchema extends DetailedSchema
         );
     }
 
+    public function unRequire(): self
+    {
+        return new self(
+            $this->additionalProperty,
+            SchemaIsRequired::generateFalse(),
+            $this->name,
+            $this->isNullable,
+            $this->example,
+            $this->isDeprecated
+        );
+    }
+
     public function deprecate(): self
     {
         return new self(

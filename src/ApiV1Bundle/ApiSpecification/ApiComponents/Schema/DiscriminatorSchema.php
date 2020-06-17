@@ -59,6 +59,11 @@ final class DiscriminatorSchema extends DetailedSchema
 
     public function addSchema(Schema $schema): self
     {
+        if ($this->type->isAllOf() && $schema instanceof PrimitiveSchema) {
+            $name = $schema->getName() ?? SchemaName::fromString(Uuid::v4()->toRfc4122());
+            $schema = ObjectSchema::generate(Schemas::generate()->addSchema($schema->setName($name->toString())));
+        }
+
         return new self(
             $this->type,
             $this->isRequired,
@@ -105,6 +110,46 @@ final class DiscriminatorSchema extends DetailedSchema
             $this->type,
             SchemaIsRequired::generateTrue(),
             $this->schemas,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->isDeprecated
+        );
+    }
+
+    public function unRequire(): self
+    {
+        return new self(
+            $this->type,
+            SchemaIsRequired::generateFalse(),
+            $this->schemas,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->isDeprecated
+        );
+    }
+
+    public function requireOnly(array $fieldNames): self
+    {
+        if ($this->type->isOneOf() || $this->type->isAnyOf()) {
+            throw SpecificationException::generateRequireOnlyWorksOnlyOnAllOf();
+        }
+
+        $schemas = Schemas::generate();
+        /** @var ObjectSchema $schema */
+        foreach ($this->schemas->toArrayOfSchemas() as $schema) {
+            $schema = $schema->toDetailedSchema();
+            $newSchema = $schema->requireOnly($fieldNames)->setName(Uuid::v4()->toRfc4122());
+            $schemas = $schemas->addSchema($newSchema);
+        }
+
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $schemas,
             $this->name,
             $this->description,
             $this->isNullable,

@@ -72,6 +72,40 @@ final class ObjectSchema extends DetailedSchema
         );
     }
 
+    public function unRequire(): self
+    {
+        return new self(
+            $this->properties,
+            SchemaIsRequired::generateFalse(),
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->isDeprecated
+        );
+    }
+
+    public function requireOnly(array $fieldNames): self
+    {
+        $requiredFields = $this->getRequiredProperties();
+        $fieldsToUnRequire = [];
+        foreach ($requiredFields as $requiredField) {
+            if (!in_array($requiredField, $fieldNames)) {
+                $fieldsToUnRequire[] = $requiredField;
+            }
+        }
+
+        return new self(
+            $this->properties->unRequire($fieldsToUnRequire),
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->isDeprecated
+        );
+    }
+
     public function deprecate(): self
     {
         return new self(

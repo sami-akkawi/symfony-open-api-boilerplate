@@ -47,6 +47,8 @@ abstract class Schema
         return $this->isRequired->toBool();
     }
 
+    public abstract function unRequire();
+
     public abstract function require();
 
     public abstract function deprecate();

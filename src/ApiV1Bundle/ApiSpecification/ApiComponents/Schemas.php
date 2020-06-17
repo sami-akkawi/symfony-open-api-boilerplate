@@ -34,6 +34,23 @@ final class Schemas
         return $requiredSchemas;
     }
 
+    public function toArrayOfSchemas(): array
+    {
+        return $this->schemas;
+    }
+
+    public function unRequire(array $fieldNames): self
+    {
+        $schemas = [];
+        foreach ($this->schemas as $schema) {
+            if (in_array($schema->getName()->toString(), $fieldNames)) {
+                $schema = $schema->unRequire();
+            }
+            $schemas[] = $schema;
+        }
+        return new self($schemas);
+    }
+
     public function hasSchema(SchemaName $name): bool
     {
         foreach ($this->schemas as $schema) {

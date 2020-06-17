@@ -2,15 +2,13 @@
 
 namespace App\ApiV1Bundle\Schema;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ArraySchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DiscriminatorSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\IntegerSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DetailedSchema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\MapSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\StringSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DetailedSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
 
-final class FieldMessage extends AbstractSchema
+final class Translation extends AbstractSchema
 {
     private ObjectSchema $schema;
 
@@ -39,15 +37,12 @@ final class FieldMessage extends AbstractSchema
     protected static function getOpenApiSchemaWithoutName(): DetailedSchema
     {
         return ObjectSchema::generate(
-            Schemas::generate()->addSchema(
-                ArraySchema::generate(
-                    DiscriminatorSchema::generateAnyOf()
-                    ->addSchema(StringSchema::generate())
-                    ->addSchema(IntegerSchema::generate())
-                )->setName('path')
-                    ->setDescription('The path to the field with errors.')
-                    ->setMinimumItems(1)
-            )->addSchema(Message::getReferenceSchema()->setName('message'))
+            Schemas::generate()
+                ->addSchema(StringSchema::generate()->setName('translationId'))
+                ->addSchema(StringSchema::generate()->setName('defaultText'))
+                ->addSchema(MapSchema::generateStringMap()
+                    ->setName('placeholders')
+                    ->makeNullable())
         );
     }
 }

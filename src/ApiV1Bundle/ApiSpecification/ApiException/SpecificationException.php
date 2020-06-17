@@ -211,4 +211,9 @@ final class SpecificationException extends LogicException
     {
         return self::generate("Duplicate headers.");
     }
+
+    public static function generateRequireOnlyWorksOnlyOnAllOf(): self
+    {
+        return self::generate("Cannot requireOnly properties on a 'oneOf' or an 'anyOf'!");
+    }
 }
