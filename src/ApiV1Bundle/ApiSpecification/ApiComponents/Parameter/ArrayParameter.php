@@ -337,6 +337,38 @@ final class ArrayParameter extends SchemaParameter
         );
     }
 
+    public function setMinimumItems(int $minItems): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->setMinimumItems($minItems),
+            $this->description,
+            $this->docName,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setMaximumItems(int $maxItems): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->setMaximumItems($maxItems),
+            $this->description,
+            $this->docName,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
     public function addExample(Example $example): self
     {
         if (!$example->hasName()) {

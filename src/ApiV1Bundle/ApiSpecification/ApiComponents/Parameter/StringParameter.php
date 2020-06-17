@@ -254,6 +254,38 @@ final class StringParameter extends SchemaParameter
         );
     }
 
+    public function setMinimumLength(int $minLength): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->setMinimumLength($minLength),
+            $this->description,
+            $this->docName,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setMaximumLength(int $maxLength): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->setMaximumLength($maxLength),
+            $this->description,
+            $this->docName,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
     public function setExample(Example $example): self
     {
         return new self(
