@@ -145,39 +145,6 @@ final class BooleanParameter extends SchemaParameter
         throw SpecificationException::generateCannotBeInPath('BooleanParameter');
     }
 
-    public function setFormat(string $format): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema->setFormat($format),
-            $this->description,
-            $this->docName,
-            $this->style,
-            $this->example,
-            $this->examples
-        );
-    }
-
-    /** @param string[] $options */
-    public function setOptions(array $options): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema->setOptions($options),
-            $this->description,
-            $this->docName,
-            $this->style,
-            $this->example,
-            $this->examples
-        );
-    }
-
     public function makeNullable(): self
     {
         return new self(
