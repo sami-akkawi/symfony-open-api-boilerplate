@@ -107,14 +107,9 @@ final class SpecificationException extends LogicException
         return self::generate("The Schema Enum must be a string array.");
     }
 
-    public static function generateRequiredParamNamesMustBeString(): self
+    public static function generateRequestBodyInRequestBodiesNeedsAName(): self
     {
-        return self::generate("Required parameter names must be a strings.");
-    }
-
-    public static function generateRequiredParametersMustBeObject(): self
-    {
-        return self::generate("Required parameter names must be a strings.");
+        return new self("Cannot add a request body to a list of request bodies if it has no name.");
     }
 
     public static function generateObjectSchemaNeedsProperties(string $schemaName): self

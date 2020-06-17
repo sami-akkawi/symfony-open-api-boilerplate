@@ -6,6 +6,8 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Examples;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameters;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestBodies;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestBody;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Responses;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
@@ -20,7 +22,7 @@ final class ApiComponents
     private Responses $responses;
     private Parameters $parameters;
     private Examples $examples;
-    // todo: private RequestBodies $requestBodies
+    private RequestBodies $requestBodies;
     // todo: private Headers $headers
     private SecuritySchemes $securitySchemes;
     // todo: private Links $links
@@ -30,12 +32,14 @@ final class ApiComponents
         Responses $responses,
         Parameters $parameters,
         Examples $examples,
+        RequestBodies $requestBodies,
         SecuritySchemes $securitySchemes
     ) {
         $this->schemas = $schemas;
         $this->responses = $responses;
         $this->parameters = $parameters;
         $this->examples = $examples;
+        $this->requestBodies = $requestBodies;
         $this->securitySchemes = $securitySchemes;
     }
 
@@ -46,6 +50,7 @@ final class ApiComponents
             Responses::generate(),
             Parameters::generate(),
             Examples::generate(),
+            RequestBodies::generate(),
             SecuritySchemes::generate()
         );
     }
@@ -57,6 +62,7 @@ final class ApiComponents
             $this->responses,
             $this->parameters,
             $this->examples,
+            $this->requestBodies,
             $this->securitySchemes->addScheme($scheme),
         );
     }
@@ -72,6 +78,7 @@ final class ApiComponents
             $this->responses,
             $this->parameters,
             $this->examples,
+            $this->requestBodies,
             $this->securitySchemes
         );
     }
@@ -87,6 +94,7 @@ final class ApiComponents
             $this->responses->addResponse($response),
             $this->parameters,
             $this->examples,
+            $this->requestBodies,
             $this->securitySchemes
         );
     }
@@ -102,6 +110,7 @@ final class ApiComponents
             $this->responses,
             $this->parameters->addParameter($parameter),
             $this->examples,
+            $this->requestBodies,
             $this->securitySchemes
         );
     }
@@ -117,6 +126,23 @@ final class ApiComponents
             $this->responses,
             $this->parameters,
             $this->examples->addExample($example, $example->getName()->toString()),
+            $this->requestBodies,
+            $this->securitySchemes
+        );
+    }
+
+    public function addRequestBody(RequestBody $requestBody): self
+    {
+        if (!$requestBody->hasName()) {
+            throw SpecificationException::generateMustHaveKeyInComponents();
+        }
+
+        return new self(
+            $this->schemas,
+            $this->responses,
+            $this->parameters,
+            $this->examples,
+            $this->requestBodies->addRequestBody($requestBody),
             $this->securitySchemes
         );
     }
@@ -136,6 +162,9 @@ final class ApiComponents
         if ($this->examples->isDefined()) {
             $specifications['examples'] =  $this->examples->toOpenApiSpecification();
         }
+        if ($this->parameters->isDefined()) {
+            $specifications['requestBodies'] =  $this->requestBodies->toOpenApiSpecification();
+        }
         if ($this->securitySchemes->isDefined()) {
             $specifications['securitySchemes'] =  $this->securitySchemes->toOpenApiSpecification();
         }
@@ -149,6 +178,7 @@ final class ApiComponents
             || $this->securitySchemes->isDefined()
             || $this->responses->isDefined()
             || $this->examples->isDefined()
+            || $this->requestBodies->isDefined()
             || $this->parameters->isDefined()
         );
     }

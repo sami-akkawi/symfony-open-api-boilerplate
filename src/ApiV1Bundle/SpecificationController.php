@@ -15,7 +15,9 @@ use App\ApiV1Bundle\ApiSpecification\ApiServers;
 use App\ApiV1Bundle\ApiSpecification\ApiServers\ServerVariable;
 use App\ApiV1Bundle\ApiSpecification\ApiTags;
 use App\ApiV1Bundle\ApiSpecification\OpenApiVersion;
+use App\ApiV1Bundle\Example\AbstractExample;
 use App\ApiV1Bundle\Parameter\AbstractParameter;
+use App\ApiV1Bundle\RequestBody\AbstractRequestBody;
 use App\ApiV1Bundle\Response\AbstractResponse;
 use App\ApiV1Bundle\Schema\AbstractSchema;
 use App\ApiV1Bundle\Tag\AbstractTag;
@@ -54,6 +56,8 @@ final class SpecificationController
         $components = $this->addSchemas($components);
         $components = $this->addResponses($components);
         $components = $this->addParameters($components);
+        $components = $this->addExamples($components);
+        $components = $this->addRequestBodies($components);
 
         return $components;
     }
@@ -115,6 +119,48 @@ final class SpecificationController
             $parameterClass = $this->getFullyQualifiedClassName($file, $type);
             $components = $components->addParameter(
                 $parameterClass::getOpenApiParameter()
+            );
+        }
+
+        return $components;
+    }
+
+    private function addExamples(ApiComponents $components): ApiComponents
+    {
+        $type = 'example';
+        foreach ($this->getAutoLoadedClasses($type) as $file) {
+            if (
+                !$file->isFile() ||
+                is_int(strpos($file->getBaseName(), 'AbstractExample'))
+            ) {
+                continue;
+            }
+
+            /** @var AbstractExample $exampleClass */
+            $exampleClass = $this->getFullyQualifiedClassName($file, $type);
+            $components = $components->addExample(
+                $exampleClass::getOpenApiExample()
+            );
+        }
+
+        return $components;
+    }
+
+    private function addRequestBodies(ApiComponents $components): ApiComponents
+    {
+        $type = 'requestBody';
+        foreach ($this->getAutoLoadedClasses($type) as $file) {
+            if (
+                !$file->isFile() ||
+                is_int(strpos($file->getBaseName(), 'AbstractRequestBody'))
+            ) {
+                continue;
+            }
+
+            /** @var AbstractRequestBody $exampleClass */
+            $exampleClass = $this->getFullyQualifiedClassName($file, $type);
+            $components = $components->addRequestBody(
+                $exampleClass::getOpenApiRequestBody()
             );
         }
 
