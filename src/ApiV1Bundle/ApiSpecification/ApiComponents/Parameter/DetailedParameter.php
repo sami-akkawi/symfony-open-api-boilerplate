@@ -2,6 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Examples;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
@@ -20,8 +22,8 @@ abstract class DetailedParameter extends Parameter
     protected ParameterIsRequired $isRequired;
     protected ParameterIsDeprecated $isDeprecated;
     protected ?ParameterDescription $description;
-    // todo: protected ?Example $example;
-    // todo: protected ?Examples $examples;
+    protected ?Example $example;
+    protected ?Examples $examples;
 
     protected function __construct(
         ParameterName $name,
@@ -29,7 +31,9 @@ abstract class DetailedParameter extends Parameter
         ParameterIsRequired $isRequired,
         ParameterIsDeprecated $isDeprecated,
         ?ParameterDescription $description,
-        ?ParameterDocName $docName
+        ?ParameterDocName $docName,
+        ?Example $example,
+        ?Examples $examples
     ) {
         if ($location->isInHeader() && in_array($name->toString(), self::INVALID_NAMES_IN_HEADER)) {
             throw SpecificationException::generateInvalidNameInHeader($name->toString());
@@ -41,6 +45,8 @@ abstract class DetailedParameter extends Parameter
         $this->isDeprecated = $isDeprecated;
         $this->description = $description;
         $this->docName = $docName;
+        $this->example = $example;
+        $this->examples = $examples;
     }
 
     public function isRequired(): bool
@@ -89,4 +95,8 @@ abstract class DetailedParameter extends Parameter
     public abstract function deprecate();
 
     public abstract function setDescription(string $description);
+
+    public abstract function addExample(Example $example);
+
+    public abstract function setExample(Example $example);
 }

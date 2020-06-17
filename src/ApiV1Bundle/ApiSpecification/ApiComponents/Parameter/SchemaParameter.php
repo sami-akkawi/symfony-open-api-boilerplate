@@ -2,6 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Examples;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
@@ -25,9 +27,11 @@ abstract class SchemaParameter extends DetailedParameter
         Schema $schema,
         ?ParameterDescription $description = null,
         ?ParameterDocName $docName = null,
-        ?ParameterStyle $style = null
+        ?ParameterStyle $style = null,
+        ?Example $example = null,
+        ?Examples $examples = null
     ) {
-        parent::__construct($name, $location, $isRequired, $isDeprecated, $description, $docName);
+        parent::__construct($name, $location, $isRequired, $isDeprecated, $description, $docName, $example, $examples);
         $this->schema = $schema;
         $this->style = $style;
     }
@@ -131,6 +135,14 @@ abstract class SchemaParameter extends DetailedParameter
 
         if ($this->description) {
             $specification['description'] = $this->description->toString();
+        }
+
+        if ($this->example) {
+            $specification['example'] = $this->example->toOpenApiSpecification();
+        }
+
+        if ($this->examples) {
+            $specification['examples'] = $this->examples->toOpenApiSpecification();
         }
 
         return $specification;

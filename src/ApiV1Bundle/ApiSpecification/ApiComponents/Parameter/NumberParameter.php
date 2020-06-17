@@ -2,6 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Examples;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\NumberSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
@@ -39,7 +41,9 @@ final class NumberParameter extends SchemaParameter
             $this->schema,
             $this->description,
             $this->docName,
-            ParameterStyle::generateMatrix()
+            ParameterStyle::generateMatrix(),
+            $this->example,
+            $this->examples
         );
     }
 
@@ -60,7 +64,9 @@ final class NumberParameter extends SchemaParameter
             $this->schema,
             $this->description,
             $this->docName,
-            ParameterStyle::generateLabel()
+            ParameterStyle::generateLabel(),
+            $this->example,
+            $this->examples
         );
     }
 
@@ -81,7 +87,9 @@ final class NumberParameter extends SchemaParameter
             $this->schema,
             $this->description,
             $this->docName,
-            ParameterStyle::generateForm()
+            ParameterStyle::generateForm(),
+            $this->example,
+            $this->examples
         );
     }
 
@@ -147,7 +155,9 @@ final class NumberParameter extends SchemaParameter
             $this->schema->setFormat($format),
             $this->description,
             $this->docName,
-            $this->style
+            $this->style,
+            $this->example,
+            $this->examples
         );
     }
 
@@ -161,7 +171,9 @@ final class NumberParameter extends SchemaParameter
             $this->schema,
             $this->description,
             $this->docName,
-            $this->style
+            $this->style,
+            $this->example,
+            $this->examples
         );
     }
 
@@ -175,7 +187,9 @@ final class NumberParameter extends SchemaParameter
             $this->schema,
             $this->description,
             $this->docName,
-            $this->style
+            $this->style,
+            $this->example,
+            $this->examples
         );
     }
 
@@ -189,7 +203,9 @@ final class NumberParameter extends SchemaParameter
             $this->schema,
             ParameterDescription::fromString($description),
             $this->docName,
-            $this->style
+            $this->style,
+            $this->example,
+            $this->examples
         );
     }
 
@@ -203,7 +219,9 @@ final class NumberParameter extends SchemaParameter
             $this->schema->makeNullable(),
             $this->description,
             $this->docName,
-            $this->style
+            $this->style,
+            $this->example,
+            $this->examples
         );
     }
 
@@ -217,7 +235,9 @@ final class NumberParameter extends SchemaParameter
             $this->schema->setMinimum($minimum),
             $this->description,
             $this->docName,
-            $this->style
+            $this->style,
+            $this->example,
+            $this->examples
         );
     }
 
@@ -231,7 +251,9 @@ final class NumberParameter extends SchemaParameter
             $this->schema->setMaximum($maximum),
             $this->description,
             $this->docName,
-            $this->style
+            $this->style,
+            $this->example,
+            $this->examples
         );
     }
 
@@ -245,7 +267,50 @@ final class NumberParameter extends SchemaParameter
             $this->schema,
             $this->description,
             ParameterDocName::fromString($name),
-            $this->style
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setExample(Example $example): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema,
+            $this->description,
+            $this->docName,
+            $this->style,
+            $example,
+            null
+        );
+    }
+
+    public function addExample(Example $example): self
+    {
+        if (!$example->hasName()) {
+            throw SpecificationException::generateMustHaveKeyInComponents();
+        }
+
+        $examples = $this->examples;
+        if (!$examples) {
+            $examples = Examples::generate();
+        }
+
+        return new self(
+            $this->name,
+            $this->location,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema,
+            $this->description,
+            $this->docName,
+            $this->style,
+            null,
+            $examples->addExample($example, $example->getName()->toString())
         );
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestContent\ContentMediaType;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestContent\MediaTypes;
+
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Examples;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\MediaType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\MediaTypes;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 final class ContentParameter extends DetailedParameter
@@ -17,9 +20,11 @@ final class ContentParameter extends DetailedParameter
         ?ParameterIsRequired $isRequired = null,
         ?ParameterIsDeprecated $isDeprecated = null,
         ?ParameterDescription $description = null,
-        ?ParameterDocName $docName = null
+        ?ParameterDocName $docName = null,
+        ?Example $example = null,
+        ?Examples $examples = null
     ) {
-        parent::__construct($name, $location, $isRequired, $isDeprecated, $description, $docName);
+        parent::__construct($name, $location, $isRequired, $isDeprecated, $description, $docName, $example, $examples);
         $this->mediaTypes = $mediaTypes;
     }
 
@@ -32,7 +37,9 @@ final class ContentParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            ParameterDocName::fromString($name)
+            ParameterDocName::fromString($name),
+            $this->example,
+            $this->examples
         );
     }
 
@@ -45,7 +52,9 @@ final class ContentParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             ParameterDescription::fromString($description),
-            $this->docName
+            $this->docName,
+            $this->example,
+            $this->examples
         );
     }
 
@@ -58,7 +67,9 @@ final class ContentParameter extends DetailedParameter
             $this->isRequired,
             ParameterIsDeprecated::generateTrue(),
             $this->description,
-            $this->docName
+            $this->docName,
+            $this->example,
+            $this->examples
         );
     }
 
@@ -94,7 +105,9 @@ final class ContentParameter extends DetailedParameter
             ParameterIsRequired::generateTrue(),
             $this->isDeprecated,
             $this->description,
-            $this->docName
+            $this->docName,
+            $this->example,
+            $this->examples
         );
     }
 
@@ -108,7 +121,7 @@ final class ContentParameter extends DetailedParameter
         return self::generate($name, ParameterLocation::generateQuery());
     }
 
-    public function addMediaType(ContentMediaType $mediaType): self
+    public function addMediaType(MediaType $mediaType): self
     {
         return new self(
             $this->name,
@@ -117,7 +130,48 @@ final class ContentParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName
+            $this->docName,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setExample(Example $example): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->mediaTypes,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->docName,
+            $example,
+            null
+        );
+    }
+
+    public function addExample(Example $example): self
+    {
+        if (!$example->hasName()) {
+            throw SpecificationException::generateMustHaveKeyInComponents();
+        }
+
+        $examples = $this->examples;
+        if (!$examples) {
+            $examples = Examples::generate();
+        }
+
+        return new self(
+            $this->name,
+            $this->location,
+            $this->mediaTypes,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->docName,
+            null,
+            $examples->addExample($example, $example->getName()->toString())
         );
     }
 
@@ -139,6 +193,14 @@ final class ContentParameter extends DetailedParameter
 
         if ($this->description) {
             $specification['description'] = $this->description->toString();
+        }
+
+        if ($this->example) {
+            $specification['example'] = $this->example->toOpenApiSpecification();
+        }
+
+        if ($this->examples) {
+            $specification['examples'] = $this->examples->toOpenApiSpecification();
         }
 
         return $specification;
