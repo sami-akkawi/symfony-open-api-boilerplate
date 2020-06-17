@@ -4,6 +4,8 @@ namespace App\ApiV1Bundle\ApiSpecification;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Examples;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Header;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Headers;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameters;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestBodies;
@@ -23,7 +25,7 @@ final class ApiComponents
     private Parameters $parameters;
     private Examples $examples;
     private RequestBodies $requestBodies;
-    // todo: private Headers $headers
+    private Headers $headers;
     private SecuritySchemes $securitySchemes;
     // todo: private Links $links
 
@@ -33,6 +35,7 @@ final class ApiComponents
         Parameters $parameters,
         Examples $examples,
         RequestBodies $requestBodies,
+        Headers $headers,
         SecuritySchemes $securitySchemes
     ) {
         $this->schemas = $schemas;
@@ -40,6 +43,7 @@ final class ApiComponents
         $this->parameters = $parameters;
         $this->examples = $examples;
         $this->requestBodies = $requestBodies;
+        $this->headers = $headers;
         $this->securitySchemes = $securitySchemes;
     }
 
@@ -51,6 +55,7 @@ final class ApiComponents
             Parameters::generate(),
             Examples::generate(),
             RequestBodies::generate(),
+            Headers::generate(),
             SecuritySchemes::generate()
         );
     }
@@ -63,6 +68,7 @@ final class ApiComponents
             $this->parameters,
             $this->examples,
             $this->requestBodies,
+            $this->headers,
             $this->securitySchemes->addScheme($scheme),
         );
     }
@@ -79,6 +85,7 @@ final class ApiComponents
             $this->parameters,
             $this->examples,
             $this->requestBodies,
+            $this->headers,
             $this->securitySchemes
         );
     }
@@ -95,6 +102,7 @@ final class ApiComponents
             $this->parameters,
             $this->examples,
             $this->requestBodies,
+            $this->headers,
             $this->securitySchemes
         );
     }
@@ -111,6 +119,7 @@ final class ApiComponents
             $this->parameters->addParameter($parameter),
             $this->examples,
             $this->requestBodies,
+            $this->headers,
             $this->securitySchemes
         );
     }
@@ -127,6 +136,7 @@ final class ApiComponents
             $this->parameters,
             $this->examples->addExample($example, $example->getName()->toString()),
             $this->requestBodies,
+            $this->headers,
             $this->securitySchemes
         );
     }
@@ -143,6 +153,24 @@ final class ApiComponents
             $this->parameters,
             $this->examples,
             $this->requestBodies->addRequestBody($requestBody),
+            $this->headers,
+            $this->securitySchemes
+        );
+    }
+
+    public function addHeader(Header $header): self
+    {
+        if (!$header->hasDocName()) {
+            throw SpecificationException::generateMustHaveKeyInComponents();
+        }
+
+        return new self(
+            $this->schemas,
+            $this->responses,
+            $this->parameters,
+            $this->examples,
+            $this->requestBodies,
+            $this->headers->addHeader($header),
             $this->securitySchemes
         );
     }
@@ -164,6 +192,9 @@ final class ApiComponents
         }
         if ($this->parameters->isDefined()) {
             $specifications['requestBodies'] =  $this->requestBodies->toOpenApiSpecification();
+        }
+        if ($this->headers->isDefined()) {
+            $specifications['headers'] =  $this->headers->toOpenApiSpecification();
         }
         if ($this->securitySchemes->isDefined()) {
             $specifications['securitySchemes'] =  $this->securitySchemes->toOpenApiSpecification();

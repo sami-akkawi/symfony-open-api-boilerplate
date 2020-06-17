@@ -201,4 +201,14 @@ final class SpecificationException extends LogicException
     {
         return self::generate("Invalid Parameter Styling. Parameter in '$location' cannot by styled as '$invalidStyle'");
     }
+
+    public static function generateHeaderInHeadersNeedsAName(): self
+    {
+        return new self("Cannot add a header to a list of headers if it has no name.");
+    }
+
+    public static function generateDuplicateHeadersException(): self
+    {
+        return self::generate("Duplicate headers.");
+    }
 }
