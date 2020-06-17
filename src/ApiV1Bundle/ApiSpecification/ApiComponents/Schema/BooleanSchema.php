@@ -92,7 +92,7 @@ final class BooleanSchema extends PrimitiveSchema
 
     public function setExample(Example $example): self
     {
-        $exception = $this->validateValue($example->toDetailedExample()->toMixed());
+        $exception = $this->validateValue($example->toDetailedExample()->getLiteralValue());
         if ($exception) {
             throw $exception;
         }
@@ -136,7 +136,7 @@ final class BooleanSchema extends PrimitiveSchema
             $specification['description'] = $this->description->toString();
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toMixed();
+            $specification['example'] = $this->example->getLiteralValue();
         }
         if ($this->isNullable()) {
             $specification['nullable'] = true;

@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ResponseContent;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ResponseContent\ContentMediaType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\MediaType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\MediaTypes;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseDescription;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseHttpCode;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\Response\ResponseName;
@@ -19,12 +19,12 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
 final class DetailedResponse extends Response
 {
     private ResponseDescription $description;
-    private ResponseContent $content;
+    private MediaTypes $content;
 
     private function __construct(
         ResponseHttpCode $code,
         ResponseDescription $description,
-        ResponseContent $content,
+        MediaTypes $content,
         ?ResponseName $name = null
     ) {
         $this->code = $code;
@@ -38,7 +38,7 @@ final class DetailedResponse extends Response
         return new self(
             ResponseHttpCode::generateOk(),
             ResponseDescription::fromString('Ok.'),
-            ResponseContent::generate()->addMediaType(ContentMediaType::generateJson($schema))
+            MediaTypes::generate()->addMediaType(MediaType::generateJson($schema))
         );
     }
 
@@ -47,7 +47,7 @@ final class DetailedResponse extends Response
         return new self(
             ResponseHttpCode::generateNotFound(),
             ResponseDescription::fromString('Not Found.'),
-            ResponseContent::generate()->addMediaType(ContentMediaType::generateJson($schema))
+            MediaTypes::generate()->addMediaType(MediaType::generateJson($schema))
         );
     }
 

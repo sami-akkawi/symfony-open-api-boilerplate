@@ -3,17 +3,17 @@
 namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestContent\ContentMediaType;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestContent\ContentMediaTypes;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestContent\MediaTypes;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
 final class ContentParameter extends DetailedParameter
 {
-    private ContentMediaTypes $mediaTypes;
+    private MediaTypes $mediaTypes;
 
     private function __construct(
         ParameterName $name,
         ParameterLocation $location,
-        ContentMediaTypes $mediaTypes,
+        MediaTypes $mediaTypes,
         ?ParameterIsRequired $isRequired = null,
         ?ParameterIsDeprecated $isDeprecated = null,
         ?ParameterDescription $description = null,
@@ -71,7 +71,7 @@ final class ContentParameter extends DetailedParameter
         return new self(
             ParameterName::fromString($name),
             $location,
-            ContentMediaTypes::generate()
+            MediaTypes::generate()
         );
     }
 

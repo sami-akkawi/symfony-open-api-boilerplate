@@ -15,7 +15,7 @@ abstract class Example
 
     public function isValidForSchema(Schema $schema): array
     {
-        return $schema->isValueValid($this->toDetailedExample()->toMixed());
+        return $schema->isValueValid($this->toDetailedExample()->getLiteralValue());
     }
 
     public function getName(): ?ExampleName
@@ -23,5 +23,12 @@ abstract class Example
         return $this->name;
     }
 
-    public abstract function toMixed();
+    public function hasName(): bool
+    {
+        return (bool)$this->name;
+    }
+
+    public abstract function getLiteralValue();
+
+    public abstract function toOpenApiSpecification(): array;
 }

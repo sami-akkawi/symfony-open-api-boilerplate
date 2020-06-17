@@ -6,18 +6,35 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
 
 final class DetailedExample extends Example
 {
-    /** @var mixed */
-    private $example;
+    private ExampleValue $value;
+    private ?ExampleSummary $summary;
+    private ?ExampleDescription $description;
 
-    private function __construct($example, ?ExampleName $name = null)
-    {
-        $this->example = $example;
+    private function __construct(
+        $example,
+        ?ExampleName $name = null,
+        ?ExampleSummary $summary = null,
+        ?ExampleDescription $description = null
+    ) {
+        $this->value = $example;
         $this->name = $name;
+        $this->summary = $summary;
+        $this->description = $description;
     }
 
     public function setName(string $name): self
     {
-        return new self($this->example, ExampleName::fromString($name));
+        return new self($this->value, ExampleName::fromString($name), $this->summary, $this->description);
+    }
+
+    public function setSummary(string $summary): self
+    {
+        return new self($this->value, $this->name, ExampleSummary::fromString($summary), $this->description);
+    }
+
+    public function setDescription(string $description): self
+    {
+        return new self($this->value, $this->name, $this->summary, ExampleDescription::fromString($description));
     }
 
     public function toDetailedExample(): DetailedExample
@@ -27,11 +44,25 @@ final class DetailedExample extends Example
 
     public static function generate($example): self
     {
-        return new self($example);
+        return new self(ExampleValue::generate($example));
     }
 
-    public function toMixed()
+    public function getLiteralValue()
     {
-        return $this->example;
+        return $this->value->toMixed();
+    }
+
+    public function toOpenApiSpecification(): array
+    {
+        $specifications = [
+            'value' => $this->value->toMixed()
+        ];
+        if ($this->summary) {
+            $specifications['summary'] = $this->summary->toString();
+        }
+        if ($this->description) {
+            $specifications['description'] = $this->description->toString();
+        }
+        return $specifications;
     }
 }

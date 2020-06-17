@@ -1,13 +1,13 @@
 <?php declare(strict=1);
 
-namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestContent;
+namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ResponseContent\MediaType\MediaTypeMimeType;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\MediaType\MediaTypeMimeType;
 use App\ApiV1Bundle\ApiSpecification\ApiException\SpecificationException;
 
-final class ContentMediaTypes
+final class MediaTypes
 {
-    /** @var ContentMediaType[] */
+    /** @var MediaType[] */
     private array $mediaTypes;
 
     private function __construct(array $mediaTypes)
@@ -31,7 +31,7 @@ final class ContentMediaTypes
         return false;
     }
 
-    public function addMediaType(ContentMediaType $mediaType): self
+    public function addMediaType(MediaType $mediaType): self
     {
         if ($this->hasMediaType($mediaType->getMimeType())) {
             throw SpecificationException::generateDuplicateDefinitionException($mediaType->getMimeType()->toString());

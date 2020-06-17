@@ -140,7 +140,7 @@ final class StringSchema extends PrimitiveSchema
 
     public function setExample(Example $example): self
     {
-        $exception = $this->validateValue($example->toDetailedExample()->toMixed());
+        $exception = $this->validateValue($example->toDetailedExample()->getLiteralValue());
         if ($exception) {
             throw $exception;
         }
@@ -268,7 +268,7 @@ final class StringSchema extends PrimitiveSchema
     private function getNullableStringExample(): ?string
     {
         if ($this->example) {
-            return $this->example->toMixed();
+            return $this->example->getLiteralValue();
         }
 
         if ($this->type->isAtomTime()) {

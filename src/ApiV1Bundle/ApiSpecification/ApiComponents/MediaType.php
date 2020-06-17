@@ -1,11 +1,10 @@
 <?php declare(strict=1);
 
-namespace App\ApiV1Bundle\ApiSpecification\ApiComponents\ResponseContent;
+namespace App\ApiV1Bundle\ApiSpecification\ApiComponents;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\ResponseContent\MediaType\MediaTypeMimeType;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\MediaType\MediaTypeMimeType;
 
-final class ContentMediaType
+final class MediaType
 {
     private MediaTypeMimeType $mimeType;
     private Schema $schema;
@@ -20,6 +19,7 @@ final class ContentMediaType
     {
         return new self(MediaTypeMimeType::generateJson(), $schema);
     }
+
 
     public function getMimeType(): MediaTypeMimeType
     {

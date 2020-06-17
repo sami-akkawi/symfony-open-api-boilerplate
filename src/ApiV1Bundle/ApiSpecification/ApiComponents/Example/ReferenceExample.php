@@ -35,7 +35,12 @@ final class ReferenceExample extends Example
         return $this->example;
     }
 
-    public function toMixed(): array
+    public function getLiteralValue(): array
+    {
+        return $this->example->getLiteralValue();
+    }
+
+    public function toOpenApiSpecification(): array
     {
         return $this->reference->toOpenApiSpecification();
     }

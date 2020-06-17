@@ -110,7 +110,7 @@ final class ObjectSchema extends DetailedSchema
 
     public function setExample(Example $example): self
     {
-        $exception = $this->validateValue($example->toDetailedExample()->toMixed());
+        $exception = $this->validateValue($example->toDetailedExample()->getLiteralValue());
         if ($exception) {
             throw $exception;
         }
@@ -190,7 +190,7 @@ final class ObjectSchema extends DetailedSchema
             $specification['nullable'] = true;
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toMixed();
+            $specification['example'] = $this->example->getLiteralValue();
         }
         return $specification;
     }

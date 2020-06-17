@@ -15,7 +15,7 @@ final class Examples
         $this->examples = $examples;
     }
 
-    public static function generateEmpty(): self
+    public static function generate(): self
     {
         return new self([]);
     }
@@ -52,7 +52,7 @@ final class Examples
         }
         $parameters = [];
         foreach ($this->examples as $example) {
-            $parameters[$example->getName()->toString()] = $example->toMixed();
+            $parameters[$example->getName()->toString()] = $example->toOpenApiSpecification();
         }
         return $parameters;
     }

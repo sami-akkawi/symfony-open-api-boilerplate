@@ -2,6 +2,8 @@
 
 namespace App\ApiV1Bundle\ApiSpecification;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Examples;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameters;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response;
@@ -17,7 +19,7 @@ final class ApiComponents
     private Schemas $schemas;
     private Responses $responses;
     private Parameters $parameters;
-    // todo: private Examples $examples
+    private Examples $examples;
     // todo: private RequestBodies $requestBodies
     // todo: private Headers $headers
     private SecuritySchemes $securitySchemes;
@@ -27,11 +29,13 @@ final class ApiComponents
         Schemas $schemas,
         Responses $responses,
         Parameters $parameters,
+        Examples $examples,
         SecuritySchemes $securitySchemes
     ) {
         $this->schemas = $schemas;
         $this->responses = $responses;
         $this->parameters = $parameters;
+        $this->examples = $examples;
         $this->securitySchemes = $securitySchemes;
     }
 
@@ -41,6 +45,7 @@ final class ApiComponents
             Schemas::generate(),
             Responses::generate(),
             Parameters::generate(),
+            Examples::generate(),
             SecuritySchemes::generate()
         );
     }
@@ -51,16 +56,22 @@ final class ApiComponents
             $this->schemas,
             $this->responses,
             $this->parameters,
+            $this->examples,
             $this->securitySchemes->addScheme($scheme),
         );
     }
 
     public function addSchema(Schema $schema): self
     {
+        if (!$schema->hasName()) {
+            throw SpecificationException::generateMustHaveKeyInComponents();
+        }
+
         return new self(
             $this->schemas->addSchema($schema),
             $this->responses,
             $this->parameters,
+            $this->examples,
             $this->securitySchemes
         );
     }
@@ -75,6 +86,7 @@ final class ApiComponents
             $this->schemas,
             $this->responses->addResponse($response),
             $this->parameters,
+            $this->examples,
             $this->securitySchemes
         );
     }
@@ -89,11 +101,25 @@ final class ApiComponents
             $this->schemas,
             $this->responses,
             $this->parameters->addParameter($parameter),
+            $this->examples,
             $this->securitySchemes
         );
     }
 
+    public function addExample(Example $example): self
+    {
+        if (!$example->hasName()) {
+            throw SpecificationException::generateMustHaveKeyInComponents();
+        }
 
+        return new self(
+            $this->schemas,
+            $this->responses,
+            $this->parameters,
+            $this->examples->addExample($example, $example->getName()->toString()),
+            $this->securitySchemes
+        );
+    }
 
     public function toOpenApiSpecification(): array
     {
@@ -107,6 +133,9 @@ final class ApiComponents
         if ($this->parameters->isDefined()) {
             $specifications['parameters'] =  $this->parameters->toOpenApiSpecificationForComponents();
         }
+        if ($this->examples->isDefined()) {
+            $specifications['examples'] =  $this->examples->toOpenApiSpecification();
+        }
         if ($this->securitySchemes->isDefined()) {
             $specifications['securitySchemes'] =  $this->securitySchemes->toOpenApiSpecification();
         }
@@ -116,10 +145,11 @@ final class ApiComponents
     public function isDefined(): bool
     {
         return (
-            $this->schemas->isDefined() ||
-            $this->securitySchemes->isDefined() ||
-            $this->parameters->isDefined() ||
-            $this->responses->isDefined()
+            $this->schemas->isDefined()
+            || $this->securitySchemes->isDefined()
+            || $this->responses->isDefined()
+            || $this->examples->isDefined()
+            || $this->parameters->isDefined()
         );
     }
 }
