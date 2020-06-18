@@ -56,7 +56,7 @@ final class SpecificationController
 
     public function show(): Response
     {
-        $cacheKey = $_ENV['APP_ENV'] === 'production' ? Version::getVersion() : Uuid::v4()->toRfc4122();
+        $cacheKey = $_ENV['APP_ENV'] === 'production' ? $this->getVersion()->getFullVersion() : Uuid::v4()->toRfc4122();
         $specification = $this->cacheInterface->get($cacheKey, function () {
             return $this->getApiSpecification();
         });
@@ -240,7 +240,7 @@ final class SpecificationController
 
     private function getInfo(): ApiInfo
     {
-        return ApiInfo::generate('Boilerplate API')
+        return ApiInfo::generate('Boilerplate API', $this->getVersion())
             ->setDescription('This is a boilerplate API description.')
             ->setContact(Contact::generate()->setEmail('something@your-website.ch'))
             ->setLicense(License::generate('Apache 2.0'))
@@ -253,11 +253,17 @@ final class SpecificationController
             ->addRequirement(ApiSecurityRequirement::generate('JsonWebToken'));
     }
 
+    public function getVersion(): Version
+    {
+        return Version::generate(1, 0, 0);
+    }
+
     private function getServers(): ApiServers
     {
+        $majorVersion = $this->getVersion()->getMajorVersion();
         return ApiServers::generate()
             ->addServer(
-                ApiServer::generate('https://development.your-website.ch/v' . Version::getMajorVersion())
+                ApiServer::generate('https://development.your-website.ch/v' . $majorVersion)
                     ->setDescription('Development Server')
                     ->addVariable(
                         ServerVariable::generate('username', 'admin')
@@ -267,7 +273,7 @@ final class SpecificationController
                     )
             )
             ->addServer(
-                ApiServer::generate('https://platform-api.your-website.ch/v' . Version::getMajorVersion())
+                ApiServer::generate('https://platform-api.your-website.ch/v' . $majorVersion)
                     ->setDescription('Live Server')
             );
     }

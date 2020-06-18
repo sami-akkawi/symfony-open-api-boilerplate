@@ -10,32 +10,44 @@ namespace App\OpenApiSpecification\ApiInfo;
 
 final class Version
 {
-    protected const MAJOR_VERSION = 1;
-    protected const MINOR_VERSION = 0;
-    protected const PATCH_VERSION = 0;
+    private int $majorVersion;
+    private int $minorVersion;
+    private int $patchVersion;
 
-    public static function getVersion(): string
+    private function __construct(int $majorVersion, int $minorVersion, int $patchVersion)
     {
-        return self::MAJOR_VERSION . "." . self::MINOR_VERSION . "." . self::PATCH_VERSION;
+        $this->majorVersion = $majorVersion;
+        $this->minorVersion = $minorVersion;
+        $this->patchVersion = $patchVersion;
     }
 
-    public static function getSubVersion(): string
+    public static function generate(int $majorVersion, int $minorVersion, int $patchVersion): self
     {
-        return self::MAJOR_VERSION . "." . self::MINOR_VERSION;
+        return new self($majorVersion, $minorVersion, $patchVersion);
     }
 
-    public static function getMajorVersion(): int
+    public function getFullVersion(): string
     {
-        return self::MAJOR_VERSION;
+        return $this->majorVersion . "." . $this->minorVersion . "." . $this->patchVersion;
     }
 
-    public static function getMinorVersion(): int
+    public function getSubVersion(): string
     {
-        return self::MINOR_VERSION;
+        return $this->majorVersion . "." . $this->minorVersion;
     }
 
-    public static function getPatchLevel(): int
+    public function getMajorVersion(): int
     {
-        return self::PATCH_VERSION;
+        return $this->majorVersion;
+    }
+
+    public function getMinorVersion(): int
+    {
+        return $this->minorVersion;
+    }
+
+    public function getPatchLevel(): int
+    {
+        return $this->patchVersion;
     }
 }

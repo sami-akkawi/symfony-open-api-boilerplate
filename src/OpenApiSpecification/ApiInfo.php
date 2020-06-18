@@ -16,6 +16,7 @@ use App\OpenApiSpecification\ApiInfo\Version;
 
 final class ApiInfo
 {
+    private Version $version;
     private Title $title;
     private ?Description $description;
     private ?TermsOfService $termsOfService;
@@ -23,12 +24,14 @@ final class ApiInfo
     private ?License $license;
 
     private function __construct(
+        Version $version,
         Title $title,
         ?Description $description = null,
         ?TermsOfService $termsOfService = null,
         ?Contact $contact = null,
         ?License $license = null
     ) {
+        $this->version = $version;
         $this->title = $title;
         $this->description = $description;
         $this->termsOfService = $termsOfService;
@@ -36,14 +39,15 @@ final class ApiInfo
         $this->license = $license;
     }
 
-    public static function generate(string $title): self
+    public static function generate(string $title, Version $version): self
     {
-        return new self(Title::fromString($title));
+        return new self($version, Title::fromString($title));
     }
 
     public function setContact(Contact $contact): self
     {
         return new self(
+            $this->version,
             $this->title,
             $this->description,
             $this->termsOfService,
@@ -55,6 +59,7 @@ final class ApiInfo
     public function setDescription(string $description): self
     {
         return new self(
+            $this->version,
             $this->title,
             Description::fromString($description),
             $this->termsOfService,
@@ -66,6 +71,7 @@ final class ApiInfo
     public function setLicense(License $license): self
     {
         return new self(
+            $this->version,
             $this->title,
             $this->description,
             $this->termsOfService,
@@ -77,6 +83,7 @@ final class ApiInfo
     public function setTermsOfService(string $termsOfService): self
     {
         return new self(
+            $this->version,
             $this->title,
             $this->description,
             TermsOfService::fromString($termsOfService),
@@ -89,7 +96,7 @@ final class ApiInfo
     {
         $specification = [
             'title' => $this->title->toString(),
-            'version' => Version::getVersion()
+            'version' => $this->version->getFullVersion()
         ];
         if ($this->description) {
             $specification['description'] = $this->description->toString();
