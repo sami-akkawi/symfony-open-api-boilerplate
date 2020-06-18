@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\Example;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example\DetailedExample;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example\ReferenceExample;
+use App\OpenApiSpecification\ApiComponents\Example\DetailedExample;
+use App\OpenApiSpecification\ApiComponents\Example\ReferenceExample;
 
 abstract class AbstractExample
 {

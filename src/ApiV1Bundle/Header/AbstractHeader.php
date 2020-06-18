@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\Header;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Header\DetailedHeader;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Header\ReferenceHeader;
+use App\OpenApiSpecification\ApiComponents\Header\DetailedHeader;
+use App\OpenApiSpecification\ApiComponents\Header\ReferenceHeader;
 
 abstract class AbstractHeader
 {

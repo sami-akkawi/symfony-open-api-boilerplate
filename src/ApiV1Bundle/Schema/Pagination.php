@@ -2,11 +2,11 @@
 
 namespace App\ApiV1Bundle\Schema;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DetailedSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\IntegerSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\StringSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\Schema\DetailedSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\IntegerSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
+use App\OpenApiSpecification\ApiComponents\Schemas;
 
 final class Pagination extends AbstractSchema
 {

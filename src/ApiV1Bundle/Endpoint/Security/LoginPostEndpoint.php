@@ -2,19 +2,19 @@
 
 namespace App\ApiV1Bundle\Endpoint\Security;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\MediaType;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestBody;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestBody\DetailedRequestBody;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\DetailedResponse;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Responses;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaType;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\StringSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
-use App\ApiV1Bundle\ApiSpecification\ApiPath\PathOperation\OperationTags;
-use App\ApiV1Bundle\ApiSpecification\ApiPath\PathPartialUrl;
 use App\ApiV1Bundle\Endpoint\AbstractPostEndpoint;
 use App\ApiV1Bundle\Tag\Security;
+use App\OpenApiSpecification\ApiComponents\MediaType;
+use App\OpenApiSpecification\ApiComponents\RequestBody;
+use App\OpenApiSpecification\ApiComponents\RequestBody\DetailedRequestBody;
+use App\OpenApiSpecification\ApiComponents\Response\DetailedResponse;
+use App\OpenApiSpecification\ApiComponents\Responses;
+use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
+use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
+use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiPath\PathOperation\OperationTags;
+use App\OpenApiSpecification\ApiPath\PathPartialUrl;
 
 final class LoginPostEndpoint extends AbstractPostEndpoint
 {

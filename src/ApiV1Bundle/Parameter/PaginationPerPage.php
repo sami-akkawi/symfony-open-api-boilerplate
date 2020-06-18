@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\Parameter;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\DetailedParameter;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameter\IntegerParameter;
+use App\OpenApiSpecification\ApiComponents\Parameter\DetailedParameter;
+use App\OpenApiSpecification\ApiComponents\Parameter\IntegerParameter;
 
 final class PaginationPerPage extends AbstractParameter
 {

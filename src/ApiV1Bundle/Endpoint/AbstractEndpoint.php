@@ -2,18 +2,18 @@
 
 namespace App\ApiV1Bundle\Endpoint;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Parameters;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestBody;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Responses;
-use App\ApiV1Bundle\ApiSpecification\ApiInfo\Version;
-use App\ApiV1Bundle\ApiSpecification\ApiPath;
-use App\ApiV1Bundle\ApiSpecification\ApiPath\PathOperation;
-use App\ApiV1Bundle\ApiSpecification\ApiPath\PathOperation\OperationDescription;
-use App\ApiV1Bundle\ApiSpecification\ApiPath\PathOperation\OperationId;
-use App\ApiV1Bundle\ApiSpecification\ApiPath\PathOperation\OperationName;
-use App\ApiV1Bundle\ApiSpecification\ApiPath\PathOperation\OperationSummary;
-use App\ApiV1Bundle\ApiSpecification\ApiPath\PathOperation\OperationTags;
-use App\ApiV1Bundle\ApiSpecification\ApiPath\PathPartialUrl;
+use App\OpenApiSpecification\ApiComponents\Parameters;
+use App\OpenApiSpecification\ApiComponents\RequestBody;
+use App\OpenApiSpecification\ApiComponents\Responses;
+use App\OpenApiSpecification\ApiInfo\Version;
+use App\OpenApiSpecification\ApiPath;
+use App\OpenApiSpecification\ApiPath\PathOperation;
+use App\OpenApiSpecification\ApiPath\PathOperation\OperationDescription;
+use App\OpenApiSpecification\ApiPath\PathOperation\OperationId;
+use App\OpenApiSpecification\ApiPath\PathOperation\OperationName;
+use App\OpenApiSpecification\ApiPath\PathOperation\OperationSummary;
+use App\OpenApiSpecification\ApiPath\PathOperation\OperationTags;
+use App\OpenApiSpecification\ApiPath\PathPartialUrl;
 
 abstract class AbstractEndpoint
 {

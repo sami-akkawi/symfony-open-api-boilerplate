@@ -2,11 +2,11 @@
 
 namespace App\ApiV1Bundle\Response;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Response\DetailedResponse;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ArraySchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\StringSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\Response\DetailedResponse;
+use App\OpenApiSpecification\ApiComponents\Schema\ArraySchema;
+use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
+use App\OpenApiSpecification\ApiComponents\Schemas;
 use App\ApiV1Bundle\Schema\FieldMessage;
 use App\ApiV1Bundle\Schema\Message;
 

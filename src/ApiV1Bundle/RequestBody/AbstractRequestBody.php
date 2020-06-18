@@ -2,8 +2,8 @@
 
 namespace App\ApiV1Bundle\RequestBody;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestBody\DetailedRequestBody;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\RequestBody\ReferenceRequestBody;
+use App\OpenApiSpecification\ApiComponents\RequestBody\DetailedRequestBody;
+use App\OpenApiSpecification\ApiComponents\RequestBody\ReferenceRequestBody;
 
 abstract class AbstractRequestBody
 {

@@ -2,13 +2,13 @@
 
 namespace App\ApiV1Bundle\Schema;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DetailedSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DiscriminatorSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\MapSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\SchemaType;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\StringSchema;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\Schema\DetailedSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\DiscriminatorSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\MapSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
+use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
+use App\OpenApiSpecification\ApiComponents\Schemas;
 
 final class Message extends AbstractSchema
 {

@@ -2,7 +2,7 @@
 
 namespace App\ApiV1Bundle\Tag;
 
-use App\ApiV1Bundle\ApiSpecification\ApiTag;
+use App\OpenApiSpecification\ApiTag;
 
 final class Security extends AbstractTag
 {

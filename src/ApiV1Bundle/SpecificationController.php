@@ -2,20 +2,6 @@
 
 namespace App\ApiV1Bundle;
 
-use App\ApiV1Bundle\ApiSpecification\ApiComponents;
-use App\ApiV1Bundle\ApiSpecification\ApiComponents\SecurityScheme\HttpSecurityScheme;
-use App\ApiV1Bundle\ApiSpecification\ApiInfo;
-use App\ApiV1Bundle\ApiSpecification\ApiInfo\Contact;
-use App\ApiV1Bundle\ApiSpecification\ApiInfo\License;
-use App\ApiV1Bundle\ApiSpecification\ApiInfo\Version;
-use App\ApiV1Bundle\ApiSpecification\ApiPaths;
-use App\ApiV1Bundle\ApiSpecification\ApiSecurityRequirement;
-use App\ApiV1Bundle\ApiSpecification\ApiSecurityRequirements;
-use App\ApiV1Bundle\ApiSpecification\ApiServer;
-use App\ApiV1Bundle\ApiSpecification\ApiServers;
-use App\ApiV1Bundle\ApiSpecification\ApiServers\ServerVariable;
-use App\ApiV1Bundle\ApiSpecification\ApiTags;
-use App\ApiV1Bundle\ApiSpecification\OpenApiVersion;
 use App\ApiV1Bundle\Endpoint\AbstractEndpoint;
 use App\ApiV1Bundle\Example\AbstractExample;
 use App\ApiV1Bundle\Parameter\AbstractParameter;
@@ -24,17 +10,40 @@ use App\ApiV1Bundle\Response\AbstractResponse;
 use App\ApiV1Bundle\Schema\AbstractSchema;
 use App\ApiV1Bundle\Tag\AbstractTag;
 use App\Kernel;
+use App\OpenApiSpecification\ApiComponents;
+use App\OpenApiSpecification\ApiComponents\SecurityScheme\HttpSecurityScheme;
+use App\OpenApiSpecification\ApiInfo;
+use App\OpenApiSpecification\ApiInfo\Contact;
+use App\OpenApiSpecification\ApiInfo\License;
+use App\OpenApiSpecification\ApiPaths;
+use App\OpenApiSpecification\ApiSecurityRequirement;
+use App\OpenApiSpecification\ApiSecurityRequirements;
+use App\OpenApiSpecification\ApiServer;
+use App\OpenApiSpecification\ApiServers;
+use App\OpenApiSpecification\ApiServers\ServerVariable;
+use App\OpenApiSpecification\ApiSpecification;
+use App\OpenApiSpecification\ApiInfo\Version;
+use App\OpenApiSpecification\ApiTags;
+use App\OpenApiSpecification\OpenApiVersion;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Contracts\Cache\CacheInterface;
 
 final class SpecificationController
 {
-    public function show(): Response
-    {
+    private CacheInterface $cacheInterface;
 
-        $specification = new ApiSpecification(
+    public function __construct(CacheInterface $cacheInterface)
+    {
+        $this->cacheInterface = $cacheInterface;
+    }
+
+    private function getApiSpecification(): ApiSpecification
+    {
+        return new ApiSpecification(
             OpenApiVersion::generate(),
             $this->getInfo(),
             $this->getPaths(),
@@ -43,10 +52,16 @@ final class SpecificationController
             $this->getSecurityRequirements(),
             $this->getTags()
         );
+    }
 
-        // todo: insert json into swagger/openApi UI
-        // todo: cache file
-        return new Response('<pre>' . $specification->toJson() . '</pre>');
+    public function show(): Response
+    {
+        $cacheKey = $_ENV['APP_ENV'] === 'production' ? Version::getVersion() : Uuid::v4()->toRfc4122();
+        $specification = $this->cacheInterface->get($cacheKey, function () {
+            return $this->getApiSpecification();
+        });
+
+        return new Response($specification->toJson());
     }
 
     private function getPaths(): ApiPaths
