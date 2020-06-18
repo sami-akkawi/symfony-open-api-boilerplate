@@ -1,4 +1,4 @@
-<?php declare(strict=1);
+<?php declare(strict_types=1);
 
 namespace App\OpenApiSpecification;
 
@@ -53,6 +53,11 @@ final class ApiPaths
         }
 
         return new self(array_merge($this->paths, [$path]));
+    }
+
+    public function toArrayOfPaths(): array
+    {
+        return $this->paths;
     }
 
     public function toOpenApiSpecification(): array

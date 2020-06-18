@@ -1,4 +1,4 @@
-<?php declare(strict=1);
+<?php declare(strict_types=1);
 
 namespace App\OpenApiSpecification\ApiInfo;
 
@@ -36,18 +36,18 @@ final class Version
         return $this->majorVersion . "." . $this->minorVersion;
     }
 
-    public function getMajorVersion(): int
+    public function getMajorVersion(): string
     {
-        return $this->majorVersion;
+        return (string)$this->majorVersion;
     }
 
-    public function getMinorVersion(): int
+    public function getMinorVersion(): string
     {
-        return $this->minorVersion;
+        return (string)$this->minorVersion;
     }
 
-    public function getPatchLevel(): int
+    public function getPatchLevel(): string
     {
-        return $this->patchVersion;
+        return (string)$this->patchVersion;
     }
 }

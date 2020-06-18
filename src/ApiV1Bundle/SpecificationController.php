@@ -1,4 +1,4 @@
-<?php declare(strict=1);
+<?php declare(strict_types=1);
 
 namespace App\ApiV1Bundle;
 
@@ -41,7 +41,7 @@ final class SpecificationController
         $this->cacheInterface = $cacheInterface;
     }
 
-    private function getApiSpecification(): ApiSpecification
+    public function getApiSpecification(): ApiSpecification
     {
         return new ApiSpecification(
             OpenApiVersion::generate(),

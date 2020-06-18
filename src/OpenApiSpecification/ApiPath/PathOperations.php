@@ -1,4 +1,4 @@
-<?php declare(strict=1);
+<?php declare(strict_types=1);
 
 namespace App\OpenApiSpecification\ApiPath;
 
@@ -22,7 +22,7 @@ final class PathOperations
         $this->operations = $operations;
     }
 
-    public function toArray(): array
+    public function toArrayOfOperations(): array
     {
         return $this->operations;
     }

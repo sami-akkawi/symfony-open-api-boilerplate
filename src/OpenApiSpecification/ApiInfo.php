@@ -1,4 +1,4 @@
-<?php declare(strict=1);
+<?php declare(strict_types=1);
 
 namespace App\OpenApiSpecification;
 
@@ -78,6 +78,11 @@ final class ApiInfo
             $this->contact,
             $license
         );
+    }
+
+    public function getMajorVersion(): string
+    {
+        return $this->version->getMajorVersion();
     }
 
     public function setTermsOfService(string $termsOfService): self

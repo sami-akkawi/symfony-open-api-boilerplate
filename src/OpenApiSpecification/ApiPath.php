@@ -1,4 +1,4 @@
-<?php declare(strict=1);
+<?php declare(strict_types=1);
 
 namespace App\OpenApiSpecification;
 
@@ -53,7 +53,7 @@ final class ApiPath
     public function mergeOperations(PathOperations $newOperations): self
     {
         $operations = $this->operations;
-        foreach ($newOperations->toArray() as $operation) {
+        foreach ($newOperations->toArrayOfOperations() as $operation) {
             $operations = $operations->addOperation($operation);
         }
 

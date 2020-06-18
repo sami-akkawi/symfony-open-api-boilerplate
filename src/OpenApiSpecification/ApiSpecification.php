@@ -1,6 +1,9 @@
-<?php declare(strict=1);
+<?php declare(strict_types=1);
 
 namespace App\OpenApiSpecification;
+
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 final class ApiSpecification
 {
@@ -55,6 +58,39 @@ final class ApiSpecification
         }
 
         return $specifications;
+    }
+
+    public function toSymfonyRouteCollection(string $serviceMethodName): RouteCollection
+    {
+        $collection = new RouteCollection();
+        foreach ($this->paths->toArrayOfPaths() as $path) {
+            foreach ($path->getOperations()->toArrayOfOperations() as $operation) {
+                $method = $operation->getName()->toString();
+                $id = $operation->getId()->toString();
+                $url = 'v' . $this->info->getMajorVersion() . $path->getUrl()->toString();
+                $parameters = [];
+                $pathParts = explode('/', $url);
+
+                // todo: path parameters validation as requirement
+
+                $defaults = [
+                    '_controller' => "$id::$serviceMethodName"
+                ];
+
+                $requirements = [];
+                $options = [];
+                $host = '';
+                $schemes = ['http', 'https'];
+                $methods = [$method];
+
+                $collection->add(
+                    $id,
+                    new Route($url, $defaults, $requirements, $options, $host, $schemes, $methods)
+                );
+            }
+        }
+
+        return $collection;
     }
 
     public function toJson(): string
