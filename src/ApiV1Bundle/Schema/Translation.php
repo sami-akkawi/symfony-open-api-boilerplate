@@ -2,6 +2,8 @@
 
 namespace App\ApiV1Bundle\Schema;
 
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example;
+use App\ApiV1Bundle\ApiSpecification\ApiComponents\Example\DetailedExample;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\DetailedSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\MapSchema;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\ObjectSchema;
@@ -42,7 +44,8 @@ final class Translation extends AbstractSchema
                 ->addSchema(StringSchema::generate()->setName('defaultText'))
                 ->addSchema(MapSchema::generateStringMap()
                     ->setName('placeholders')
-                    ->makeNullable())
+                    ->makeNullable()
+                    ->setExample(DetailedExample::generate(['%placeholder%' => 'theOfficialTranslation'])))
         );
     }
 }

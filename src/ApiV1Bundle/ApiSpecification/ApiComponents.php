@@ -190,7 +190,7 @@ final class ApiComponents
         if ($this->examples->isDefined()) {
             $specifications['examples'] =  $this->examples->toOpenApiSpecification();
         }
-        if ($this->parameters->isDefined()) {
+        if ($this->requestBodies->isDefined()) {
             $specifications['requestBodies'] =  $this->requestBodies->toOpenApiSpecification();
         }
         if ($this->headers->isDefined()) {
