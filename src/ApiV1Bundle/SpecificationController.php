@@ -8,6 +8,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiInfo;
 use App\ApiV1Bundle\ApiSpecification\ApiInfo\Contact;
 use App\ApiV1Bundle\ApiSpecification\ApiInfo\License;
 use App\ApiV1Bundle\ApiSpecification\ApiInfo\Version;
+use App\ApiV1Bundle\ApiSpecification\ApiPaths;
 use App\ApiV1Bundle\ApiSpecification\ApiSecurityRequirement;
 use App\ApiV1Bundle\ApiSpecification\ApiSecurityRequirements;
 use App\ApiV1Bundle\ApiSpecification\ApiServer;
@@ -15,6 +16,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiServers;
 use App\ApiV1Bundle\ApiSpecification\ApiServers\ServerVariable;
 use App\ApiV1Bundle\ApiSpecification\ApiTags;
 use App\ApiV1Bundle\ApiSpecification\OpenApiVersion;
+use App\ApiV1Bundle\Endpoint\AbstractEndpoint;
 use App\ApiV1Bundle\Example\AbstractExample;
 use App\ApiV1Bundle\Parameter\AbstractParameter;
 use App\ApiV1Bundle\RequestBody\AbstractRequestBody;
@@ -35,6 +37,7 @@ final class SpecificationController
         $specification = new ApiSpecification(
             OpenApiVersion::generate(),
             $this->getInfo(),
+            $this->getPaths(),
             $this->getServers(),
             $this->getComponents(),
             $this->getSecurityRequirements(),
@@ -44,6 +47,28 @@ final class SpecificationController
         // todo: insert json into swagger/openApi UI
         // todo: cache file
         return new Response('<pre>' . $specification->toJson() . '</pre>');
+    }
+
+    private function getPaths(): ApiPaths
+    {
+        $paths = ApiPaths::generate();
+        $type = 'endpoint';
+        foreach ($this->getAutoLoadedClasses($type) as $file) {
+            if (
+                !$file->isFile() ||
+                is_int(strpos($file->getBaseName(), 'Abstract'))
+            ) {
+                continue;
+            }
+
+            /** @var AbstractEndpoint $endpointClass */
+            $endpointClass = $this->getFullyQualifiedClassName($file, $type);
+            $paths = $paths->addPath(
+                $endpointClass::getApiPath()
+            );
+        }
+
+        return $paths;
     }
 
     private function getComponents(): ApiComponents

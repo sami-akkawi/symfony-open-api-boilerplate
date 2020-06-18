@@ -55,7 +55,7 @@ final class Headers
         }
         $parameters = [];
         foreach ($this->headers as $header) {
-            $parameters[$header->getDocName()->toString()] = $header->toOpenApi3Specification();
+            $parameters[$header->getDocName()->toString()] = $header->toOpenApiSpecification();
         }
         return $parameters;
     }

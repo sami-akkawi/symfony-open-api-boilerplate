@@ -68,6 +68,19 @@ final class Responses
         return $responses;
     }
 
+    public function toOpenApiSpecificationForEndpoint(): array
+    {
+        if (!$this->isDefined()) {
+            throw SpecificationException::generateResponsesMustBeDefined();
+        }
+        $responses = [];
+        foreach ($this->responses as $response) {
+            $responses[$response->getCode()->toString()] = $response->toOpenApiSpecification();
+        }
+        ksort($responses);
+        return $responses;
+    }
+
     public function isDefined(): bool
     {
         return (bool)count($this->responses);

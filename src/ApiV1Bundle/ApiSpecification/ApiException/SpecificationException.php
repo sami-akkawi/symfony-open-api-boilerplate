@@ -9,6 +9,7 @@ use App\ApiV1Bundle\ApiSpecification\ApiComponents\Schema\Schema\DiscriminatorSc
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\ApiKeyLocation;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\HttpScheme;
 use App\ApiV1Bundle\ApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeType;
+use App\ApiV1Bundle\ApiSpecification\ApiPath\PathOperation\OperationName;
 use LogicException;
 
 final class SpecificationException extends LogicException
@@ -215,5 +216,20 @@ final class SpecificationException extends LogicException
     public static function generateRequireOnlyWorksOnlyOnAllOf(): self
     {
         return self::generate("Cannot requireOnly properties on a 'oneOf' or an 'anyOf'!");
+    }
+
+    public static function generateInvalidOperationName(string $invalidOperation): self
+    {
+        return self::generate("Invalid Operation: $invalidOperation. Please choose one of: " . implode(', ', OperationName::getValidOperations()) . '.');
+    }
+
+    public static function generateInvalidOperationTags(): self
+    {
+        return self::generate("Operation tags must be strings.");
+    }
+
+    public static function generatePathOperationAlreadyDefined(string $operation): self
+    {
+        return new self("The operation '$operation' was already defined on path.");
     }
 }

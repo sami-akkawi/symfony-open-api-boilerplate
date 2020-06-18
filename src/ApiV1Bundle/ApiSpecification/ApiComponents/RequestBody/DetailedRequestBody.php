@@ -59,7 +59,7 @@ final class DetailedRequestBody extends RequestBody
         return new self($this->content, $this->isRequired, RequestBodyDescription::fromString($description), $this->name);
     }
 
-    public function toOpenApi3Specification(): array
+    public function toOpenApiSpecification(): array
     {
         $specifications=[];
         if ($this->isRequired->toBool()) {

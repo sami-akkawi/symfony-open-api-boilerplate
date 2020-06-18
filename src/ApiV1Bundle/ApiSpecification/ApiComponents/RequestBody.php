@@ -23,5 +23,5 @@ abstract class RequestBody
 
     public abstract function toDetailedRequestBody(): DetailedRequestBody;
 
-    public abstract function toOpenApi3Specification(): array;
+    public abstract function toOpenApiSpecification(): array;
 }

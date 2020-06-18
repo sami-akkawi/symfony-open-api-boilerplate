@@ -46,7 +46,7 @@ final class RequestBodies
     {
         $requestBodies = [];
         foreach ($this->requestBodies as $requestBody) {
-            $requestBodies[$requestBody->getName()->toString()] = $requestBody->toOpenApi3Specification();
+            $requestBodies[$requestBody->getName()->toString()] = $requestBody->toOpenApiSpecification();
         }
         ksort($requestBodies);
         return $requestBodies;

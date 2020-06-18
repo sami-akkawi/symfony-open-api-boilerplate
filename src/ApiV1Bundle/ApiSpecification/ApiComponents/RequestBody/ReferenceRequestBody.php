@@ -34,7 +34,7 @@ final class ReferenceRequestBody
         return $this->requestBody;
     }
 
-    public function toOpenApi3Specification(): array
+    public function toOpenApiSpecification(): array
     {
         return $this->reference->toOpenApiSpecification();
     }

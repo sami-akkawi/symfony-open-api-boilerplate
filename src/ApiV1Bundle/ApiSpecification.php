@@ -4,6 +4,7 @@ namespace App\ApiV1Bundle;
 
 use App\ApiV1Bundle\ApiSpecification\ApiComponents;
 use App\ApiV1Bundle\ApiSpecification\ApiInfo;
+use App\ApiV1Bundle\ApiSpecification\ApiPaths;
 use App\ApiV1Bundle\ApiSpecification\OpenApiVersion;
 use App\ApiV1Bundle\ApiSpecification\ApiSecurityRequirements;
 use App\ApiV1Bundle\ApiSpecification\ApiServers;
@@ -13,22 +14,24 @@ final class ApiSpecification
 {
     private OpenApiVersion $openApiVersion;
     private ApiInfo $info;
-    // todo: private Paths $paths
-    private ?ApiServers $servers;
-    private ?ApiComponents $components;
-    private ?ApiSecurityRequirements $securityRequirements;
-    private ?ApiTags $tags;
+    private ApiPaths $paths;
+    private ApiServers $servers;
+    private ApiComponents $components;
+    private ApiSecurityRequirements $securityRequirements;
+    private ApiTags $tags;
 
     public function __construct(
         OpenApiVersion $openApiVersion,
         ApiInfo $info,
-        ?ApiServers $servers = null,
-        ?ApiComponents $components = null,
-        ?ApiSecurityRequirements $securityRequirements = null,
-        ?ApiTags $tags = null
+        ApiPaths $paths,
+        ApiServers $servers,
+        ApiComponents $components,
+        ApiSecurityRequirements $securityRequirements,
+        ApiTags $tags
     ) {
         $this->openApiVersion = $openApiVersion;
         $this->info = $info;
+        $this->paths = $paths;
         $this->servers = $servers;
         $this->components = $components;
         $this->securityRequirements = $securityRequirements;
@@ -40,7 +43,7 @@ final class ApiSpecification
         $specifications = [
             'openapi' => $this->openApiVersion->toString(),
             'info' => $this->info->toOpenApiSpecification(),
-            'paths' => []
+            'paths' => $this->paths->toOpenApiSpecification(),
         ];
 
         if ($this->components && $this->components->isDefined()) {
