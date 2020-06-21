@@ -2,6 +2,8 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Schema;
 
+use App\Message\FieldMessage;
+use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\Example;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\DiscriminatorSchemaType;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
@@ -9,6 +11,7 @@ use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
+use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 use App\OpenApiSpecification\ApiComponents\Schema;
 use App\OpenApiSpecification\ApiComponents\Schemas;
 use App\OpenApiSpecification\ApiException\SpecificationException;
@@ -76,6 +79,32 @@ final class DiscriminatorSchema extends DetailedSchema
         );
     }
 
+    public function requireOnly(array $fieldNames): self
+    {
+        if ($this->type->isOneOf() || $this->type->isAnyOf()) {
+            throw SpecificationException::generateRequireOnlyWorksOnlyOnAllOf();
+        }
+
+        $schemas = Schemas::generate();
+        /** @var ObjectSchema $schema */
+        foreach ($this->schemas->toArrayOfSchemas() as $schema) {
+            $schema = $schema->toDetailedSchema();
+            $newSchema = $schema->requireOnly($fieldNames)->setName(Uuid::v4()->toRfc4122());
+            $schemas = $schemas->addSchema($newSchema);
+        }
+
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $schemas,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->isDeprecated
+        );
+    }
+
     public function setDescription(string $description): self
     {
         return new self(
@@ -132,25 +161,13 @@ final class DiscriminatorSchema extends DetailedSchema
         );
     }
 
-    public function requireOnly(array $fieldNames): self
+    public function setName(string $name): self
     {
-        if ($this->type->isOneOf() || $this->type->isAnyOf()) {
-            throw SpecificationException::generateRequireOnlyWorksOnlyOnAllOf();
-        }
-
-        $schemas = Schemas::generate();
-        /** @var ObjectSchema $schema */
-        foreach ($this->schemas->toArrayOfSchemas() as $schema) {
-            $schema = $schema->toDetailedSchema();
-            $newSchema = $schema->requireOnly($fieldNames)->setName(Uuid::v4()->toRfc4122());
-            $schemas = $schemas->addSchema($newSchema);
-        }
-
         return new self(
             $this->type,
             $this->isRequired,
-            $schemas,
-            $this->name,
+            $this->schemas,
+            SchemaName::fromString($name),
             $this->description,
             $this->isNullable,
             $this->example,
@@ -169,20 +186,6 @@ final class DiscriminatorSchema extends DetailedSchema
             $this->isNullable,
             $this->example,
             SchemaIsDeprecated::generateTrue()
-        );
-    }
-
-    public function setName(string $name): self
-    {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->schemas,
-            SchemaName::fromString($name),
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->isDeprecated
         );
     }
 
@@ -205,8 +208,17 @@ final class DiscriminatorSchema extends DetailedSchema
         );
     }
 
+    public function getType(): ?SchemaType
+    {
+        return null;
+    }
+
     public function isValueValid($value): array
     {
+        if ($this->isNullable->toBool() && is_null($value)) {
+            return [];
+        }
+
         if ($this->type->isAllOf()) {
             return $this->isValueValidForAllOf($value);
         } elseif ($this->type->isAnyOf()) {
@@ -238,7 +250,23 @@ final class DiscriminatorSchema extends DetailedSchema
             }
         }
 
-        return $numberOfValid === 1 ? [] : ["Exactly ONE value should match, $numberOfValid matched"];
+        if ($numberOfValid === 0) {
+            return [];
+        }
+
+        $errorMessage = Message::generateError(
+            'limitation_one_of_not_met',
+            "Exactly ONE value should match, $numberOfValid matched",
+            [
+                '%numberOfValidFields%' => $numberOfValid
+            ]
+        );
+
+        if ($this->name) {
+            return [FieldMessage::generate([$this->name->toString()], $errorMessage)];
+        }
+
+        return [$errorMessage];
     }
 
     private function isValueValidForAnyOf($value): array
@@ -255,7 +283,44 @@ final class DiscriminatorSchema extends DetailedSchema
             }
         }
 
-        return $errors;
+        if (!$this->name) {
+            return array_values($errors);
+        }
+
+        $fieldErrors = [];
+        foreach ($errors as $error) {
+            if ($error instanceof FieldMessage) {
+                $fieldErrors[] = FieldMessage::generate(
+                    $error->getPath()->prepend($this->name->toString())->toArray(),
+                    $error->getMessage()
+                );
+                continue;
+            }
+
+            $fieldErrors[] = FieldMessage::generate(
+                [$this->name->toString()],
+                $error
+            );
+        }
+
+        return $fieldErrors;
+    }
+
+    private function getFirstSchemaByName(string $name): ?Schema
+    {
+        foreach ($this->schemas->toArrayOfSchemas() as $schema) {
+            if ($schema instanceof ObjectSchema) {
+                $foundSchema = $schema->getProperties()->getSchema($name);
+                if ($foundSchema) {
+                    return $foundSchema;
+                }
+            }
+            if ($schema->getName()->toString() === $name) {
+                return $schema;
+            }
+        }
+
+        return null;
     }
 
     public function toOpenApiSpecification(): array
@@ -270,11 +335,25 @@ final class DiscriminatorSchema extends DetailedSchema
         if ($this->isNullable()) {
             $specification['nullable'] = true;
         }
+        if ($this->isDeprecated->toBool()) {
+            $specification['deprecated'] = true;
+        }
         if ($this->example) {
             $specification['example'] = $this->example->getLiteralValue();
         }
         $specification[$this->type->toString()] = array_values($this->schemas->toOpenApiSpecification());
 
         return $specification;
+    }
+
+    protected function getValueFromTrimmedCastedString(string $value): array
+    {
+        $object = [];
+        $json = json_decode($value, true);
+        foreach ($json as $key => $entry) {
+            $foundSchema = $this->getFirstSchemaByName($key);
+            $object[$key] = $foundSchema ? $foundSchema->getValueFromCastedString(json_encode($entry)) : trim($value);
+        }
+        return $object;
     }
 }

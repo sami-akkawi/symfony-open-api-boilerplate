@@ -44,8 +44,6 @@ final class ApiTags
 
     public function toOpenApiSpecification(): array
     {
-        // todo: scan endpoints folder for all folders and add all not defined with no description.
-
         $specifications = [];
         foreach ($this->tags as $tag) {
             $specifications[] = $tag->toOpenApiSpecification();

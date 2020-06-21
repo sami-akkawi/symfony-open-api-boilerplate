@@ -7,7 +7,7 @@ use App\OpenApiSpecification\ApiComponents\Examples;
 use App\OpenApiSpecification\ApiComponents\Schema\NumberSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class NumberParameter extends SchemaParameter
+final class NumberParameter extends DetailedParameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
@@ -18,9 +18,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             ParameterName::fromString($name),
             $location,
+            NumberSchema::generate(),
             ParameterIsRequired::generateFalse(),
-            ParameterIsDeprecated::generateFalse(),
-            NumberSchema::generate()
+            ParameterIsDeprecated::generateFalse()
         );
     }
 
@@ -36,9 +36,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateMatrix(),
@@ -59,9 +59,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateLabel(),
@@ -82,9 +82,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateForm(),
@@ -150,9 +150,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema->setFormat($format),
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->setFormat($format),
             $this->description,
             $this->docName,
             $this->style,
@@ -166,9 +166,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             ParameterIsRequired::generateTrue(),
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             $this->style,
@@ -182,9 +182,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             ParameterIsDeprecated::generateTrue(),
-            $this->schema,
             $this->description,
             $this->docName,
             $this->style,
@@ -198,9 +198,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             ParameterDescription::fromString($description),
             $this->docName,
             $this->style,
@@ -214,9 +214,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema->makeNullable(),
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->makeNullable(),
             $this->description,
             $this->docName,
             $this->style,
@@ -230,9 +230,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema->setMinimum($minimum),
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->setMinimum($minimum),
             $this->description,
             $this->docName,
             $this->style,
@@ -246,9 +246,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema->setMaximum($maximum),
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->setMaximum($maximum),
             $this->description,
             $this->docName,
             $this->style,
@@ -262,9 +262,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             ParameterDocName::fromString($name),
             $this->style,
@@ -278,9 +278,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             $this->style,
@@ -303,9 +303,9 @@ final class NumberParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             $this->style,

@@ -2,6 +2,8 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Schema;
 
+use App\Message\FieldMessage;
+use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\Example;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
@@ -39,6 +41,11 @@ final class ObjectSchema extends DetailedSchema
         $this->description = $description;
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
         $this->example = $example;
+    }
+
+    public function getType(): SchemaType
+    {
+        return $this->type;
     }
 
     public function setName(string $name): self
@@ -106,17 +113,9 @@ final class ObjectSchema extends DetailedSchema
         );
     }
 
-    public function deprecate(): self
+    public function getProperties(): Schemas
     {
-        return new self(
-            $this->properties,
-            $this->isRequired,
-            $this->name,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            SchemaIsDeprecated::generateTrue()
-        );
+        return $this->properties;
     }
 
     public static function generate(Schemas $properties): self
@@ -162,27 +161,75 @@ final class ObjectSchema extends DetailedSchema
 
     public function isValueValid($object): array
     {
-        $errors = [];
-        foreach (array_keys($object) as $key) {
-            if (!$this->properties->hasSchema(SchemaName::fromString($key))) {
-                $errors[$key] = 'Key defined in object but not in schema!';
-            }
-            $schema = $this->properties->getSchema($key);
-            $subErrors = $schema->isValueValid($object[$key]);
-            if ($subErrors) {
-                $errors[] = $subErrors;
-            }
+        if ($this->isNullable->toBool() && is_null($object)) {
+            return [];
+        }
+        if (!is_array($object)) {
+            return [FieldMessage::generate(
+                $this->name ? [$this->name->toString()] : [],
+                Message::generateError(
+                    'not_an_object',
+                    'Value is not a JSON representation of the object! ' . ($object ? print_r($object, true) : 'NULL'),
+                    [
+                        '%suppliedObject%' => $object ? print_r($object, true) : 'NULL'
+                    ]
+
+                )
+            )];
         }
 
+        $errors = [];
         $requiredSchemaNames = $this->properties->getRequiredSchemaNames();
         foreach ($requiredSchemaNames as $name) {
-            if (!in_array(array_keys($object), $name)) {
-                $errors[$name] = 'Property is required, but never defined!';
+            if (!in_array($name, array_keys($object))) {
+                $errors[] = FieldMessage::generate(
+                    [$name],
+                    Message::generateError(
+                        'is_required_field',
+                        "This is a required field"
+                    )
+                );
+                continue;
             }
             $schema = $this->properties->getSchema($name);
             $subErrors = $schema->isValueValid($object[$name]);
             if ($subErrors) {
-                $errors[] = $subErrors;
+                foreach ($subErrors as $error) {
+                    if ($error instanceof FieldMessage) {
+                        $errors[] = $this->name ? $error->prependPath($this->name->toString()): $error;
+                        continue;
+                    }
+
+                    $errors[] = $error;
+                }
+            }
+        }
+
+        foreach (array_keys($object) as $key) {
+            if (!$this->properties->hasSchema(SchemaName::fromString($key))) {
+                $errors[] = Message::generateError(
+                    'key_not_part_of_object',
+                    "$key is not defined in object",
+                    [
+                        '%undefinedKey' => $key
+                    ]
+                );
+                continue;
+            }
+            $schema = $this->properties->getSchema($key);
+            if ($schema->isRequired()) {
+                continue;
+            }
+            $subErrors = $schema->isValueValid($object[$key]);
+            if ($subErrors) {
+                foreach ($subErrors as $error) {
+                    if ($error instanceof FieldMessage) {
+                        $errors[] = $this->name ? $error->prependPath($this->name->toString()): $error;
+                        continue;
+                    }
+
+                    $errors[] = $error;
+                }
             }
         }
 
@@ -199,6 +246,19 @@ final class ObjectSchema extends DetailedSchema
             SchemaIsNullable::generateTrue(),
             $this->example,
             $this->isDeprecated
+        );
+    }
+
+    public function deprecate(): self
+    {
+        return new self(
+            $this->properties,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            SchemaIsDeprecated::generateTrue()
         );
     }
 
@@ -223,9 +283,24 @@ final class ObjectSchema extends DetailedSchema
         if ($this->isNullable()) {
             $specification['nullable'] = true;
         }
+        if ($this->isDeprecated->toBool()) {
+            $specification['deprecated'] = true;
+        }
         if ($this->example) {
             $specification['example'] = $this->example->getLiteralValue();
         }
         return $specification;
     }
-}
+
+    protected function getValueFromTrimmedCastedString(string $value): array
+    {
+        $object = [];
+        $json = json_decode($value, true);
+        foreach ($json as $key => $entry) {
+            $schema = $this->properties->getSchema($key);
+            $entry = is_array($entry) ? json_encode($entry) : $entry;
+            $object[$key] = $schema ? $schema->getValueFromCastedString($entry) : $entry;
+        }
+
+        return $object;
+    }}

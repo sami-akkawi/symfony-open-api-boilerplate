@@ -129,7 +129,7 @@ final class SpecificationController
         foreach ($this->getAutoLoadedClasses($type) as $file) {
             if (
                 !$file->isFile() ||
-                is_int(strpos($file->getBaseName(), 'AbstractResponse'))
+                is_int(strpos($file->getBaseName(), 'Abstract'))
             ) {
                 continue;
             }
@@ -263,18 +263,8 @@ final class SpecificationController
         $majorVersion = $this->getVersion()->getMajorVersion();
         return ApiServers::generate()
             ->addServer(
-                ApiServer::generate('https://development.your-website.ch/v' . $majorVersion)
-                    ->setDescription('Development Server')
-                    ->addVariable(
-                        ServerVariable::generate('username', 'admin')
-                            ->addOptions(['support', 'SAA2020'])
-                    )->addVariable(
-                        ServerVariable::generate('port', '8888')
-                    )
-            )
-            ->addServer(
-                ApiServer::generate('https://platform-api.your-website.ch/v' . $majorVersion)
-                    ->setDescription('Live Server')
+                ApiServer::generate('/v' . $majorVersion)
+                    ->setDescription('Dev Server')
             );
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Schema;
 
+use App\Message\FieldMessage;
+use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\Example;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
@@ -15,7 +17,6 @@ use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class IntegerSchema extends PrimitiveSchema
 {
-    private SchemaType $type;
     protected ?SchemaName $name;
     private ?SchemaDescription $description;
     private ?SchemaMinimum $minimum;
@@ -206,12 +207,60 @@ final class IntegerSchema extends PrimitiveSchema
         return new self(SchemaType::generateInteger(), SchemaIsRequired::generateFalse());
     }
 
+    public function getMinimum(): ?SchemaMinimum
+    {
+        return $this->minimum;
+    }
+
+    private function isIntegerValueValid(int $value): ?Message
+    {
+        if ($this->minimum && $value < $this->minimum->toInt()) {
+            return Message::generateError(
+                'less_than_minimum',
+                "Supplied value $value, minimum allowed is: " . $this->minimum->toInt(),
+                [
+                    '%correctMinimum%' => (string)$this->minimum->toInt(),
+                    '%suppliedValue%' => (string)$value
+                ]
+            );
+        }
+        if ($this->maximum && $value > $this->maximum->toInt()) {
+            return Message::generateError(
+                'more_than_maximum_length',
+                "Supplied value $value, maximum allowed is: " . $this->maximum->toInt(),
+                [
+                    '%correctMaximum%' => (string)$this->maximum->toInt(),
+                    '%suppliedValue%' => (string)$value
+                ]
+            );
+        }
+        return null;
+    }
+
     public function isValueValid($value): array
     {
-        if (is_int($value)) {
+        $errors = [];
+        if ($this->isNullable->toBool() && is_null($value)) {
             return [];
         }
-        return [$this->getWrongTypeMessage('integer', $value)];
+
+        if (!is_int($value)) {
+            $errorMessage = $this->getWrongTypeMessage('integer', $value);
+            $errors[] = $this->name ?
+                FieldMessage::generate([$this->name->toString()], $errorMessage) :
+                $errorMessage;
+            return $errors;
+        }
+
+
+        $integerValueError = $this->isIntegerValueValid($value);
+        if ($integerValueError) {
+            $errors[] = $this->name ?
+                FieldMessage::generate([$this->name->toString()], $integerValueError) :
+                $integerValueError;
+        }
+
+        return $errors;
     }
 
     public function toOpenApiSpecification(): array
@@ -223,9 +272,6 @@ final class IntegerSchema extends PrimitiveSchema
         if ($this->description) {
             $specification['description'] = $this->description->toString();
         }
-        if ($this->example) {
-            $specification['example'] = $this->example->getLiteralValue();
-        }
         if ($this->minimum) {
             $specification['minimum'] = $this->minimum->toInt();
         }
@@ -235,6 +281,17 @@ final class IntegerSchema extends PrimitiveSchema
         if ($this->isNullable()) {
             $specification['nullable'] = true;
         }
+        if ($this->isDeprecated->toBool()) {
+            $specification['deprecated'] = true;
+        }
+        if ($this->example) {
+            $specification['example'] = $this->example->getLiteralValue();
+        }
         return $specification;
+    }
+
+    public function getValueFromTrimmedCastedString(string $value): int
+    {
+        return (int)$value;
     }
 }

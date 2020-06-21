@@ -7,6 +7,7 @@ use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
+use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 /**
@@ -63,26 +64,31 @@ abstract class Schema
     {
         $errors = $this->isValueValid($value);
         if ($errors) {
-            return new SpecificationException($this->getKeyErrorAndValues($errors));
+            $defaultTexts = [];
+            foreach ($errors as $error) {
+                $defaultTexts[] = $error->getDefaultText()->toString();
+            }
+            return new SpecificationException(implode(PHP_EOL, $defaultTexts));
         }
         return null;
     }
 
-    private function getKeyErrorAndValues(array $errors): string
+    public abstract function toDetailedSchema(): DetailedSchema;
+
+    public abstract function getType(): ?SchemaType;
+
+    public function getValueFromCastedString(string $value)
     {
-        $string = '';
-        foreach ($errors as $key => $error) {
-            $string .= "$key: ";
-            if (is_array($error)) {
-                $string .= $this->getKeyErrorAndValues($error);
-            } else {
-                $string .= $error;
-            }
-            $string .= PHP_EOL;
+        $cleanValue = trim($value);
+        if (
+            $this->isNullable->toBool()
+            && (strlen($cleanValue) === 0 || strcasecmp($value, 'null') === 0)
+        ) {
+            return null;
         }
 
-        return $string;
+        return $this->getValueFromTrimmedCastedString($cleanValue);
     }
 
-    public abstract function toDetailedSchema(): DetailedSchema;
+    protected abstract function getValueFromTrimmedCastedString(string $value);
 }

@@ -3,6 +3,7 @@
 namespace App\OpenApiSpecification\ApiComponents;
 
 use App\OpenApiSpecification\ApiComponents\Response\DetailedResponse;
+use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseDescription;
 use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseHttpCode;
 use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseName;
 
@@ -37,4 +38,10 @@ abstract class Response
     public abstract function toOpenApiSpecification(): array;
 
     public abstract function toDetailedResponse(): DetailedResponse;
+
+    public abstract function getDefinedMimeTypes(): array;
+
+    public abstract function isValueValidByMimeType(string $mimeType, $value): array;
+
+    public abstract function getDescription(): ResponseDescription;
 }

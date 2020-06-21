@@ -20,6 +20,28 @@ final class MediaTypes
         return new self([]);
     }
 
+    public function getByMimeType(string $mimeType): ?MediaType
+    {
+        foreach ($this->mediaTypes as $mediaType) {
+            if ($mediaType->getMimeType()->toString() === $mimeType) {
+                return $mediaType;
+            }
+        }
+
+        return null;
+    }
+
+    public function getMimeTypes(): array
+    {
+        $mimeTypes = [];
+
+        foreach ($this->mediaTypes as $mediaType) {
+            $mimeTypes[] = $mediaType->getMimeType()->toString();
+        }
+
+        return $mimeTypes;
+    }
+
     private function hasMediaType(MediaTypeMimeType $mimeType): bool
     {
         foreach ($this->mediaTypes as $mediaType) {

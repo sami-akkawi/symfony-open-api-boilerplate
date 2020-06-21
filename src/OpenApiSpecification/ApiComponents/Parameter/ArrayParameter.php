@@ -9,7 +9,7 @@ use App\OpenApiSpecification\ApiComponents\Schema\ArraySchema;
 use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class ArrayParameter extends SchemaParameter
+final class ArrayParameter extends DetailedParameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
@@ -20,9 +20,9 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             ParameterName::fromString($name),
             $location,
+            ArraySchema::generate(StringSchema::generate()),
             $location->isInPath() ? ParameterIsRequired::generateTrue() : ParameterIsRequired::generateFalse(),
             ParameterIsDeprecated::generateFalse(),
-            ArraySchema::generate(StringSchema::generate())
         );
     }
 
@@ -31,9 +31,9 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            ArraySchema::generate($itemSchema),
             $this->isRequired,
             $this->isDeprecated,
-            ArraySchema::generate($itemSchema),
             $this->description,
             $this->docName,
             $this->style,
@@ -54,9 +54,9 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateMatrix(),
@@ -77,9 +77,9 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateLabel(),
@@ -100,9 +100,9 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateForm(),
@@ -123,9 +123,9 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateSimple(),
@@ -146,9 +146,9 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateSpaceDelimited(),
@@ -169,9 +169,9 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generatePipeDelimited(),
@@ -213,94 +213,14 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
-            $this->isRequired,
-            $this->isDeprecated,
             $this->schema->makeNullable(),
-            $this->description,
-            $this->docName,
-            $this->style,
-            $this->example,
-            $this->examples
-        );
-    }
-
-    public function require(): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            ParameterIsRequired::generateTrue(),
-            $this->isDeprecated,
-            $this->schema,
-            $this->description,
-            $this->docName,
-            $this->style,
-            $this->example,
-            $this->examples
-        );
-    }
-
-    public function deprecate(): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->isRequired,
-            ParameterIsDeprecated::generateTrue(),
-            $this->schema,
-            $this->description,
-            $this->docName,
-            $this->style,
-            $this->example,
-            $this->examples
-        );
-    }
-
-    public function setDescription(string $description): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
-            ParameterDescription::fromString($description),
+            $this->description,
             $this->docName,
             $this->style,
             $this->example,
             $this->examples
-        );
-    }
-
-    public function setDocName(string $name): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema,
-            $this->description,
-            ParameterDocName::fromString($name),
-            $this->style,
-            $this->example,
-            $this->examples
-        );
-    }
-
-    public function setExample(Example $example): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema,
-            $this->description,
-            $this->docName,
-            $this->style,
-            $example,
-            null
         );
     }
 
@@ -309,9 +229,9 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema->setMinimumItems($minItems),
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->setMinimumItems($minItems),
             $this->description,
             $this->docName,
             $this->style,
@@ -325,14 +245,94 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema->setMaximumItems($maxItems),
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->setMaximumItems($maxItems),
             $this->description,
             $this->docName,
             $this->style,
             $this->example,
             $this->examples
+        );
+    }
+
+    public function require(): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            ParameterIsRequired::generateTrue(),
+            $this->isDeprecated,
+            $this->description,
+            $this->docName,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function deprecate(): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            ParameterIsDeprecated::generateTrue(),
+            $this->description,
+            $this->docName,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setDescription(string $description): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            ParameterDescription::fromString($description),
+            $this->docName,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setDocName(string $name): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            ParameterDocName::fromString($name),
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setExample(Example $example): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->docName,
+            $this->style,
+            $example,
+            null
         );
     }
 
@@ -350,9 +350,9 @@ final class ArrayParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             $this->style,

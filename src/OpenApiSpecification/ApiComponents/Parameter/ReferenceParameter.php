@@ -4,6 +4,7 @@ namespace App\OpenApiSpecification\ApiComponents\Parameter;
 
 use App\OpenApiSpecification\ApiComponents\Parameter;
 use App\OpenApiSpecification\ApiComponents\Reference;
+use App\OpenApiSpecification\ApiComponents\Schema;
 
 final class ReferenceParameter extends Parameter
 {
@@ -37,8 +38,23 @@ final class ReferenceParameter extends Parameter
         return $this->reference->toOpenApiSpecification();
     }
 
-    public function getName(): string
+    public function getName(): ParameterName
     {
-        return $this->reference->getStringName();
+        return $this->parameter->getName();
+    }
+
+    public function isRequired(): bool
+    {
+        return $this->parameter->isRequired();
+    }
+
+    public function isValueValid($value): array
+    {
+        return $this->parameter->isValueValid($value);
+    }
+
+    public function getSchema(): Schema
+    {
+        return $this->parameter->getSchema();
     }
 }

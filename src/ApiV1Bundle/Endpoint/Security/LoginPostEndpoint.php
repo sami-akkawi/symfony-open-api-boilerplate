@@ -15,9 +15,23 @@ use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
 use App\OpenApiSpecification\ApiComponents\Schemas;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationTags;
 use App\OpenApiSpecification\ApiPath\PathPartialUrl;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Uid\Uuid;
 
 final class LoginPostEndpoint extends AbstractPostEndpoint
 {
+
+    protected function subHandle(array $pathParams, array $requestBody, array $queryParams, array $headerParams, array $cookieParams): Response
+    {
+        $data = [
+            'id' => Uuid::v4()->toRfc4122(),
+            'email' => 'someemail@example.com',
+            'username' => 'mockeUsername'
+        ];
+
+        return new Response(json_encode($data));
+    }
+
     public static function getPartialPath(): PathPartialUrl
     {
         return PathPartialUrl::fromString('login');
@@ -25,27 +39,25 @@ final class LoginPostEndpoint extends AbstractPostEndpoint
 
     public static function getRequestBody(): ?RequestBody
     {
-        return DetailedRequestBody::generate()->addMediaType(
-            MediaType::generateJson(
-                ObjectSchema::generate(
-                    Schemas::generate()
-                    ->addSchema(StringSchema::generate()
-                        ->setName('email')
-                        ->setFormat(SchemaType::STRING_EMAIL_FORMAT)
-                        ->require())
-                    ->addSchema(StringSchema::generate()
-                        ->setName('password')
-                        ->setFormat(SchemaType::STRING_PASSWORD_FORMAT)
-                        ->require())
-                )
-            )
+        return DetailedRequestBody::generate(
+            ObjectSchema::generate(
+            Schemas::generate()
+                ->addSchema(StringSchema::generate()
+                    ->setName('email')
+                    ->setFormat(SchemaType::STRING_EMAIL_FORMAT)
+                    ->require())
+                ->addSchema(StringSchema::generate()
+                    ->setName('password')
+                    ->setFormat(SchemaType::STRING_PASSWORD_FORMAT)
+                    ->require())
+        )
         )->require();
     }
 
-    public static function getResponses(): Responses
+    protected static function getResponses(): Responses
     {
         return Responses::generate()->addResponse(
-            DetailedResponse::generateOkJson(
+            DetailedResponse::generateOk(
                 ObjectSchema::generateDataSchema(
                     Schemas::generate()
                     ->addSchema(StringSchema::generate()->setName('id')->setFormat(SchemaType::STRING_UUID_FORMAT))

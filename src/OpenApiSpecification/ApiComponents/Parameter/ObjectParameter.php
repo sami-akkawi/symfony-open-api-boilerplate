@@ -8,7 +8,7 @@ use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
 use App\OpenApiSpecification\ApiComponents\Schemas;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class ObjectParameter extends SchemaParameter
+final class ObjectParameter extends DetailedParameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
@@ -19,9 +19,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             ParameterName::fromString($name),
             $location,
+            ObjectSchema::generate(Schemas::generate()),
             ParameterIsRequired::generateFalse(),
-            ParameterIsDeprecated::generateFalse(),
-            ObjectSchema::generate(Schemas::generate())
+            ParameterIsDeprecated::generateFalse()
         );
     }
 
@@ -37,9 +37,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateMatrix(),
@@ -60,9 +60,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateLabel(),
@@ -83,9 +83,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateForm(),
@@ -130,9 +130,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateDeepObject(),
@@ -166,9 +166,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             ParameterIsRequired::generateTrue(),
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             $this->style,
@@ -182,9 +182,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             ParameterIsDeprecated::generateTrue(),
-            $this->schema,
             $this->description,
             $this->docName,
             $this->style,
@@ -198,9 +198,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             ParameterDescription::fromString($description),
             $this->docName,
             $this->style,
@@ -214,9 +214,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             ParameterDocName::fromString($name),
             $this->style,
@@ -230,9 +230,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema->makeNullable(),
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->makeNullable(),
             $this->description,
             $this->docName,
             $this->style,
@@ -246,9 +246,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->makeNullable(),
             $this->description,
             $this->docName,
             $this->style,
@@ -271,9 +271,9 @@ final class ObjectParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->makeNullable(),
             $this->description,
             $this->docName,
             $this->style,

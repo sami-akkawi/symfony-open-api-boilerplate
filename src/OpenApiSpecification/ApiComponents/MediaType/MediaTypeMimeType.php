@@ -37,6 +37,11 @@ final class MediaTypeMimeType
         return new self(self::JSON);
     }
 
+    public static function generateXml(): self
+    {
+        return new self(self::XML);
+    }
+
     public function toString(): string
     {
         return $this->mimeType;

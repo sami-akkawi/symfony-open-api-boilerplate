@@ -2,6 +2,8 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Schema;
 
+use App\Message\FieldMessage;
+use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\Example;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
@@ -15,7 +17,6 @@ use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class StringSchema extends PrimitiveSchema
 {
-    private SchemaType $type;
     protected ?SchemaName $name;
     private ?SchemaDescription $description;
     private ?SchemaMinimumLength $minimumLength;
@@ -88,24 +89,14 @@ final class StringSchema extends PrimitiveSchema
         );
     }
 
-    public function deprecate(): self
-    {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->name,
-            $this->description,
-            $this->example,
-            $this->isNullable,
-            $this->minimumLength,
-            $this->maximumLength,
-            SchemaIsDeprecated::generateTrue()
-        );
-    }
-
     public static function generate(): self
     {
         return new self(SchemaType::generateString(), SchemaIsRequired::generateFalse());
+    }
+
+    public static function generateUuid(): self
+    {
+        return new self(SchemaType::generateUuidString(), SchemaIsRequired::generateFalse());
     }
 
     public function setFormat(string $format): self
@@ -188,6 +179,21 @@ final class StringSchema extends PrimitiveSchema
         );
     }
 
+    public function deprecate(): self
+    {
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->isNullable,
+            $this->minimumLength,
+            $this->maximumLength,
+            SchemaIsDeprecated::generateTrue()
+        );
+    }
+
     private function areLengthSettingsValid(
         ?SchemaMinimumLength $minimumLength,
         ?SchemaMaximumLength $maximumLength
@@ -247,34 +253,65 @@ final class StringSchema extends PrimitiveSchema
         );
     }
 
-    public function isStringLengthValid(string $value): ?string
+    public function isValueLengthValid(string $value): ?Message
     {
         $stringLength = strlen($value);
-        if ($this->minimumLength && $value < $this->minimumLength->toInt()) {
-            return "$value has length $stringLength, minimum allowed is: " . $this->minimumLength->toInt();
+        if ($this->minimumLength && $stringLength < $this->minimumLength->toInt()) {
+            return Message::generateError(
+                'less_than_minimum_length',
+                "String has length $stringLength, minimum allowed is: " . $this->minimumLength->toInt(),
+                [
+                    '%correctMinimum%' => (string)$this->minimumLength->toInt(),
+                    '%suppliedMinimum%' => (string)$stringLength
+                ]
+            );
         }
-        if ($this->maximumLength && $value > $this->maximumLength->toInt()) {
-            return "$value has length $stringLength, maximum allowed is: " . $this->maximumLength->toInt();
+        if ($this->maximumLength && $stringLength > $this->maximumLength->toInt()) {
+            return Message::generateError(
+                'more_than_maximum_length',
+                "String has length $stringLength, maximum allowed is: " . $this->maximumLength->toInt(),
+                [
+                    '%correctMaximum%' => (string)$this->maximumLength->toInt(),
+                    '%suppliedMaximum%' => (string)$stringLength
+                ]
+            );
         }
 
         return null;
     }
 
+    public function getValueFromTrimmedCastedString(string $value): string
+    {
+        $decodedString = json_decode($value);
+        return $decodedString ?? $value;
+    }
+
     public function isValueValid($value): array
     {
+        if ($this->isNullable->toBool() && is_null($value)) {
+            return [];
+        }
+        $errors = [];
         if (!is_string($value)) {
-            return [$this->getWrongTypeMessage('string', $value)];
+            $errorMessage = $this->getWrongTypeMessage('string', $value);
+            $errors[] = $this->name ?
+                FieldMessage::generate([$this->name->toString()], $errorMessage) :
+                $errorMessage;
+            return $errors;
         }
 
-        $errors = [];
-        $lengthError = $this->isStringLengthValid($value);
+        $lengthError = $this->isValueLengthValid($value);
         if ($lengthError) {
-            $errors[] = $lengthError;
+            $errors[] = $this->name ?
+                FieldMessage::generate([$this->name->toString()], $lengthError) :
+                $lengthError;
         }
 
         $typeError = $this->type->isStringValueValid($value);
         if ($typeError) {
-            $errors[] = $typeError;
+            $errors[] = $this->name ?
+                FieldMessage::generate([$this->name->toString()], $typeError) :
+                $typeError;
         }
 
         return $errors;
@@ -287,11 +324,11 @@ final class StringSchema extends PrimitiveSchema
         }
 
         if ($this->type->isAtomTime()) {
-            return '2020-05-14T18:53:23+02:00';
+            return '2018-11-19T08:53:23+02:00';
         }
 
-        if ($this->type->isUrl()) {
-            return 'https://www.openapis.org/';
+        if ($this->type->isStringUrl()) {
+            return 'https://www.easycharter.ch/';
         }
 
         return null;
@@ -304,23 +341,20 @@ final class StringSchema extends PrimitiveSchema
         if ($this->type->hasFormat()) {
             $specification['format'] = $this->type->getFormat();
         }
-        if ($this->type->isEnum()) {
+        if ($this->type->isStringEnum()) {
             $specification['enum'] = $this->type->getEnum();
         }
         if ($this->description) {
             $specification['description'] = $this->description->toString();
         }
-        if ($this->minimumLength) {
-            $specification['minLength'] = $this->minimumLength->toInt();
+        if ($this->isNullable()) {
+            $specification['nullable'] = true;
         }
-        if ($this->maximumLength) {
-            $specification['maxLength'] = $this->maximumLength->toInt();
+        if ($this->isDeprecated->toBool()) {
+            $specification['deprecated'] = true;
         }
         if ($example) {
             $specification['example'] = $example;
-        }
-        if ($this->isNullable()) {
-            $specification['nullable'] = true;
         }
         return $specification;
     }

@@ -2,6 +2,7 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
+use App\OpenApiSpecification\ApiComponents\Parameter\DetailedParameter;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class Parameters
@@ -78,5 +79,62 @@ final class Parameters
     public function isDefined(): bool
     {
         return (bool)count($this->parameters);
+    }
+
+    public function getPathParameter(string $name): ?DetailedParameter
+    {
+        foreach ($this->parameters as $parameter) {
+            $detailedParameter = $parameter->toDetailedParameter();
+            if (
+                $detailedParameter->isInPath()
+                && $detailedParameter->getName()->toString() === $name
+            ) {
+                return $detailedParameter;
+            }
+        }
+
+        return null;
+    }
+
+    /** @return Parameter[] */
+    public function getAllQueryParameters(): array
+    {
+        $parameters = [];
+
+        foreach ($this->parameters as $parameter) {
+            if ($parameter->isQueryParameter()) {
+                $parameters[] = $parameter;
+            }
+        }
+
+        return $parameters;
+    }
+
+    /** @return Parameter[] */
+    public function getAllHeaderParameters(): array
+    {
+        $parameters = [];
+
+        foreach ($this->parameters as $parameter) {
+            if ($parameter->isHeaderParameter()) {
+                $parameters[] = $parameter;
+            }
+        }
+
+        return $parameters;
+    }
+
+    /** @return Parameter[] */
+    public function getAllCookieParameters(): array
+    {
+        $parameters = [];
+
+        foreach ($this->parameters as $parameter) {
+            if ($parameter->isCookieParameter()) {
+                $parameters[] = $parameter;
+            }
+        }
+
+        return $parameters;
     }
 }

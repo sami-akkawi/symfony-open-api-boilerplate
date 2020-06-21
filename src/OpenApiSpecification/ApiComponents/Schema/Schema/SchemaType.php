@@ -2,6 +2,7 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Schema\Schema;
 
+use App\Message\Message;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 use DateTimeImmutable;
 use LogicException;
@@ -88,7 +89,7 @@ final class SchemaType
         return new self($this->type, $format, $this->enum);
     }
 
-    public function isStringValueValid(string $value): ?string
+    public function isStringValueValid(string $value): ?Message
     {
         if (!$this->format && !$this->enum) {
             return null;
@@ -107,7 +108,14 @@ final class SchemaType
                 return null;
             }
 
-            return "$value not defined in string enum";
+            return Message::generateError(
+                'value_not_allowed',
+                "$value not allowed, allowed are: " . implode(', ', $this->enum),
+                [
+                    '%suppliedValue%' => $value,
+                    '%allowedValues%' => implode(', ', $this->enum)
+                ]
+            );
         }
 
         if ($this->format === self::STRING_EMAIL_FORMAT) {
@@ -164,7 +172,7 @@ final class SchemaType
                 return null;
             }
 
-            return $this->getInvalidStringFormatErrorMessage(self::STRING_DATE_TIME_FORMAT, $value);
+            return $this->getInvalidStringFormatErrorMessage(self::STRING_DATE_TIME_ATOM_FORMAT, $value);
         }
 
         if ($this->format === self::STRING_URL_FORMAT) {
@@ -172,7 +180,7 @@ final class SchemaType
                 return null;
             }
 
-            return $this->getInvalidStringFormatErrorMessage(self::STRING_DATE_TIME_FORMAT, $value);
+            return $this->getInvalidStringFormatErrorMessage(self::STRING_URL_FORMAT, $value);
         }
 
         throw new LogicException("Missing String validation case for format " . $this->format);
@@ -183,7 +191,7 @@ final class SchemaType
         return $this->format === self::STRING_DATE_TIME_ATOM_FORMAT;
     }
 
-    public function isUrl(): bool
+    public function isStringUrl(): bool
     {
         return $this->format === self::STRING_URL_FORMAT;
     }
@@ -206,9 +214,16 @@ final class SchemaType
         return $dateTime->format(DATE_ATOM) === $value;
     }
 
-    private function getInvalidStringFormatErrorMessage(string $format, string $invalidValue): string
+    private function getInvalidStringFormatErrorMessage(string $format, string $invalidValue): Message
     {
-        return "$invalidValue is not a valid $format";
+        return Message::generateError(
+            'invalid_format',
+            "$invalidValue is not a valid $format",
+            [
+                '%invalidValue%' => $invalidValue,
+                '%correctFormat%' => $format
+            ]
+        );
     }
 
     private function isEnumValid(?array $enum): bool
@@ -293,7 +308,7 @@ final class SchemaType
         return (bool)$this->format;
     }
 
-    public function isEnum(): bool
+    public function isStringEnum(): bool
     {
         return self::STRING_TYPE === $this->type && !empty($this->enum);
     }
@@ -313,8 +328,22 @@ final class SchemaType
         return self::ARRAY_TYPE === $this->type;
     }
 
-    public function isObject(): bool
+    public function isStringUuid(): bool
     {
-        return self::OBJECT_TYPE === $this->type;
+        return $this->format === self::STRING_UUID_FORMAT;
+    }
+
+    public function isStringDate(): bool
+    {
+        return $this->format === self::STRING_DATE_FORMAT;
+    }
+
+    public function isCompatibleWithRoute(): bool
+    {
+        return $this->type === self::INTEGER_TYPE
+            || ($this->type === self::STRING_TYPE && $this->format === null)
+            || $this->format === self::STRING_UUID_FORMAT
+            || $this->format === self::STRING_EMAIL_FORMAT
+            || $this->format === self::STRING_DATE_FORMAT;
     }
 }

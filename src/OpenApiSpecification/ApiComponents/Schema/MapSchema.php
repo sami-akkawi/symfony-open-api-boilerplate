@@ -2,12 +2,14 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Schema;
 
+use App\Message\FieldMessage;
 use App\OpenApiSpecification\ApiComponents\Example;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaAdditionalProperty;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
+use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 
 final class MapSchema extends DetailedSchema
 {
@@ -22,11 +24,16 @@ final class MapSchema extends DetailedSchema
         ?SchemaIsDeprecated $isDeprecated = null
     ) {
         $this->additionalProperty = $additionalProperty;
-        $this->isRequired = $isRequired;
         $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
+        $this->isRequired = $isRequired;
         $this->name = $name;
         $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
         $this->example = $example;
+    }
+
+    public function getType(): ?SchemaType
+    {
+        return null;
     }
 
     public static function generateStringMap(): self
@@ -42,14 +49,37 @@ final class MapSchema extends DetailedSchema
     public function isValueValid($values): array
     {
         $errors = [];
-        if (!is_array($values)) {
-            $errors[] = $this->getWrongTypeMessage('array', $values);
-            return $errors;
+        if ($this->isNullable->toBool() && is_null($values)) {
+            return [];
         }
+        if (!is_array($values)) {
+            $errorMessage = $this->getWrongTypeMessage('map (array)', $values);
+            return $this->name ?
+                [FieldMessage::generate([$this->name->toString()], $errorMessage)] :
+                [$errorMessage];
+        }
+
         foreach (array_values($values) as $value) {
-            $subError = $this->additionalProperty->getSchema()->isValueValid($value);
-            if ($subError) {
-                $errors[] = $subError;
+            $subErrors = $this->additionalProperty->getSchema()->isValueValid($value);
+            if ($subErrors) {
+                if (!$this->name) {
+                    $errors = array_merge($errors, $subErrors);
+                }
+
+                foreach ($subErrors as $error) {
+                    if ($error instanceof FieldMessage) {
+                        $errors[] = FieldMessage::generate(
+                            $error->getPath()->prepend($this->name->toString())->toArray(),
+                            $error->getMessage()
+                        );
+                        continue;
+                    }
+
+                    $errors[] = FieldMessage::generate(
+                        [$this->name->toString()],
+                        $error
+                    );
+                }
             }
         }
 
@@ -92,18 +122,6 @@ final class MapSchema extends DetailedSchema
         );
     }
 
-    public function deprecate(): self
-    {
-        return new self(
-            $this->additionalProperty,
-            $this->isRequired,
-            $this->name,
-            $this->isNullable,
-            $this->example,
-            SchemaIsDeprecated::generateTrue()
-        );
-    }
-
     public function setName(string $name): self
     {
         return new self(
@@ -113,6 +131,18 @@ final class MapSchema extends DetailedSchema
             $this->isNullable,
             $this->example,
             $this->isDeprecated
+        );
+    }
+
+    public function deprecate(): self
+    {
+        return new self(
+            $this->additionalProperty,
+            $this->isRequired,
+            $this->name,
+            $this->isNullable,
+            $this->example,
+            SchemaIsDeprecated::generateTrue()
         );
     }
 
@@ -142,9 +172,23 @@ final class MapSchema extends DetailedSchema
         if ($this->isNullable()) {
             $specification['nullable'] = true;
         }
+        if ($this->isDeprecated->toBool()) {
+            $specification['deprecated'] = true;
+        }
         if ($this->example) {
             $specification['example'] = $this->example->getLiteralValue();
         }
         return $specification;
+    }
+
+    protected function getValueFromTrimmedCastedString(string $value): array
+    {
+        $object = [];
+        $json = json_decode($value, true);
+        foreach ($json as $key => $entry) {
+            $object[$key] = $this->additionalProperty->getSchema()->getValueFromCastedString(json_encode($entry));
+        }
+
+        return $object;
     }
 }

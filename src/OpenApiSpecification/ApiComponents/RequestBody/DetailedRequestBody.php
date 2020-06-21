@@ -2,9 +2,12 @@
 
 namespace App\OpenApiSpecification\ApiComponents\RequestBody;
 
+use App\Message\FieldMessage;
+use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\MediaType;
 use App\OpenApiSpecification\ApiComponents\MediaTypes;
 use App\OpenApiSpecification\ApiComponents\RequestBody;
+use App\OpenApiSpecification\ApiComponents\Schema;
 
 /**
  * Describes a single request body.
@@ -29,14 +32,49 @@ final class DetailedRequestBody extends RequestBody
         $this->name = $name;
     }
 
-    public static function generate(): self
+    public static function generateEmpty(): self
     {
         return new self(MediaTypes::generate());
+    }
+
+    public static function generate(Schema $schema): self
+    {
+        return new self(MediaTypes::generate()
+            ->addMediaType(MediaType::generateJson($schema))
+            ->addMediaType(MediaType::generateXml($schema)));
     }
 
     public function addMediaType(MediaType $mediaType): self
     {
         return new self($this->content->addMediaType($mediaType), $this->isRequired, $this->description, $this->name);
+    }
+
+    public function isValueValidByMimeType(string $mimeType, $value): array
+    {
+        $mediaType = $this->content->getByMimeType($mimeType);
+        if (!$mimeType) {
+            $message = Message::generateError(
+                'mime_not_supported_for_request_body',
+                "$mimeType not supported in request body",
+                ['%submittedMimeType%' => $mimeType]
+            );
+            if ($this->name) {
+                return [FieldMessage::generate([$this->name->toString()], $message)];
+            }
+            return [$message];
+        }
+
+        return $mediaType->isValueValid($value);
+    }
+
+    public function getSchemaByMimeType(string $mimeType): Schema
+    {
+        return $this->content->getByMimeType($mimeType)->getSchema();
+    }
+
+    public function getDefinedMimeTypes(): array
+    {
+        return $this->content->getMimeTypes();
     }
 
     public function setName(string $name): self

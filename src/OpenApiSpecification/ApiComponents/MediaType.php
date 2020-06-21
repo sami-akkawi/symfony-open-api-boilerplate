@@ -29,6 +29,21 @@ final class MediaType
         return new self(MediaTypeMimeType::generateJson(), $schema);
     }
 
+    public static function generateXml(Schema $schema): self
+    {
+        return new self(MediaTypeMimeType::generateXml(), $schema);
+    }
+
+    public function getSchema(): Schema
+    {
+        return $this->schema;
+    }
+
+    public function isValueValid($value): array
+    {
+        return $this->schema->isValueValid($value);
+    }
+
     public function addExample(Example $example): self
     {
         if (!$example->hasName()) {

@@ -2,6 +2,8 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Schema;
 
+use App\Message\FieldMessage;
+use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\Example;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
@@ -36,7 +38,8 @@ final class ArraySchema extends DetailedSchema
         ?SchemaMinimumItems $minimumItems = null,
         ?SchemaMaximumItems $maximumItems = null,
         ?SchemaIsDeprecated $isDeprecated = null
-    ) {
+    )
+    {
         $this->itemType = $itemType;
         $this->isRequired = $isRequired;
         $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
@@ -48,6 +51,11 @@ final class ArraySchema extends DetailedSchema
         $this->example = $example;
         $this->minimumItems = $minimumItems;
         $this->maximumItems = $maximumItems;
+    }
+
+    public function getType(): SchemaType
+    {
+        return $this->type;
     }
 
     public function getItemType(): Schema
@@ -92,30 +100,24 @@ final class ArraySchema extends DetailedSchema
         return new self($itemType, SchemaIsRequired::generateFalse());
     }
 
-    public function isArrayLengthValid(array $array): ?string
-    {
-        $arrayLength = count($array);
-        if ($this->minimumItems && $arrayLength < $this->minimumItems->toInt()) {
-            return "Array has $arrayLength items, minimum allowed is: " . $this->minimumItems->toInt();
-        }
-
-        if ($this->maximumItems && $arrayLength > $this->maximumItems->toInt()) {
-            return "Array has $arrayLength items, maximum allowed is: " . $this->minimumItems->toInt();
-        }
-
-        return null;
-    }
-
     public function isValueValid($value): array
     {
         $errors = [];
-        if (!is_array($value)) {
-            $errors[] = $this->getWrongTypeMessage('array', $value);
+        if ($this->isNullable->toBool() && is_null($value)) {
             return $errors;
         }
-        $lengthError = $this->isArrayLengthValid($value);
-        if ($lengthError) {
-            $errors[] = $lengthError;
+        if (!is_array($value)) {
+            $errorMessage = $this->getWrongTypeMessage('array', $value);
+            $errors[] = $this->name ?
+                FieldMessage::generate([$this->name->toString()], $errorMessage) :
+                $errorMessage;
+            return $errors;
+        }
+        $lengthErrorMessage = $this->isArrayLengthValid($value);
+        if ($lengthErrorMessage) {
+            $errors[] = $this->name ?
+                FieldMessage::generate([$this->name->toString()], $lengthErrorMessage) :
+                $lengthErrorMessage;
         }
         foreach ($value as $item) {
             $subErrors = $this->itemType->isValueValid($item);
@@ -142,6 +144,22 @@ final class ArraySchema extends DetailedSchema
         );
     }
 
+    public function deprecate(): self
+    {
+        return new self(
+            $this->itemType,
+            $this->isRequired,
+            $this->name,
+            $this->itemsAreUnique,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->minimumItems,
+            $this->maximumItems,
+            SchemaIsDeprecated::generateTrue()
+        );
+    }
+
     public function setExample(Example $example): self
     {
         $exception = $this->validateValue($example->toDetailedExample()->getLiteralValue());
@@ -159,22 +177,6 @@ final class ArraySchema extends DetailedSchema
             $this->minimumItems,
             $this->maximumItems,
             $this->isDeprecated
-        );
-    }
-
-    public function deprecate(): self
-    {
-        return new self(
-            $this->itemType,
-            $this->isRequired,
-            $this->name,
-            $this->itemsAreUnique,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->minimumItems,
-            $this->maximumItems,
-            SchemaIsDeprecated::generateTrue()
         );
     }
 
@@ -229,7 +231,8 @@ final class ArraySchema extends DetailedSchema
     private function areLengthSettingsValid(
         ?SchemaMinimumItems $minimumItems,
         ?SchemaMaximumItems $maximumItems
-    ): bool {
+    ): bool
+    {
         if (!$minimumItems || !$maximumItems) {
             return true;
         }
@@ -287,13 +290,41 @@ final class ArraySchema extends DetailedSchema
         );
     }
 
+    public function isArrayLengthValid(array $array): ?Message
+    {
+        $arrayLength = count($array);
+        if ($this->minimumItems && $arrayLength < $this->minimumItems->toInt()) {
+            return Message::generateError(
+                'less_than_minimum',
+                "Array has $arrayLength items, minimum allowed is: " . $this->minimumItems->toInt(),
+                [
+                    '%correctMinimum%' => (string)$this->minimumItems->toInt(),
+                    '%suppliedMinimum%' => (string)$arrayLength
+                ]
+            );
+        }
+
+        if ($this->maximumItems && $arrayLength > $this->maximumItems->toInt()) {
+            return Message::generateError(
+                'more_than_maximum',
+                "Array has $arrayLength items, maximum allowed is: " . $this->maximumItems->toInt(),
+                [
+                    '%correctMaximum%' => (string)$this->minimumItems->toInt(),
+                    '%suppliedMaximum%' => (string)$arrayLength
+                ]
+            );
+        }
+
+        return null;
+    }
+
     public function toOpenApiSpecification(): array
     {
         $specification = [
             'type' => $this->type->getType(),
             'items' => $this->itemType->toOpenApiSpecification()
         ];
-        if ($this->itemsAreUnique->toBool()) {
+        if ($this->itemsAreUnique) {
             $specification['uniqueItems'] = true;
         }
         if ($this->minimumItems) {
@@ -308,9 +339,23 @@ final class ArraySchema extends DetailedSchema
         if ($this->isNullable()) {
             $specification['nullable'] = true;
         }
+        if ($this->isDeprecated->toBool()) {
+            $specification['deprecated'] = true;
+        }
         if ($this->example) {
             $specification['example'] = $this->example->getLiteralValue();
         }
         return $specification;
+    }
+
+    public function getValueFromTrimmedCastedString(string $value): array
+    {
+        $array = [];
+        $json = json_decode($value, true);
+        foreach ($json as $entry) {
+            $array[] = $this->itemType->getValueFromCastedString(json_encode($entry));
+        }
+
+        return $array;
     }
 }

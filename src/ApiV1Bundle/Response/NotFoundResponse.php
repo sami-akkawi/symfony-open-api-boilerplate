@@ -2,35 +2,32 @@
 
 namespace App\ApiV1Bundle\Response;
 
+use App\ApiV1Bundle\Schema\ErrorResponseSchema;
+use App\Message\FieldMessage;
+use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\Response\DetailedResponse;
-use App\OpenApiSpecification\ApiComponents\Schema\ArraySchema;
-use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
-use App\OpenApiSpecification\ApiComponents\Schemas;
-use App\ApiV1Bundle\Schema\FieldMessage;
-use App\ApiV1Bundle\Schema\Message;
 
-final class NotFoundResponse extends AbstractResponse
+final class NotFoundResponse extends AbstractErrorResponse
 {
+    public static function generate(array $headers): self
+    {
+        return new self([], [], $headers);
+    }
+
+    public function addMessage(Message $message): self
+    {
+        return new self(array_merge($this->messages, [$message]), $this->fieldMessages, $this->headers);
+    }
+
+    public function addFieldMessage(FieldMessage $fieldMessage): self
+    {
+        return new self($this->messages, array_merge($this->fieldMessages, [$fieldMessage]), $this->headers);
+    }
+
     protected static function getOpenApiResponseWithoutName(): DetailedResponse
     {
-        return DetailedResponse::generateNotFoundJson(
-            ObjectSchema::generate(
-                Schemas::generate()
-                ->addSchema(ObjectSchema::generate(
-                    Schemas::generate()
-                        ->addSchema(StringSchema::generate()->setName('errorType'))
-                )
-                    ->setName('data'))
-                ->addSchema(ArraySchema::generate(Message::getReferenceSchema())
-                    ->setName('messages')
-                    ->makeValuesUnique()
-                    ->makeNullable())
-                ->addSchema(ArraySchema::generate(FieldMessage::getReferenceSchema())
-                    ->setName('fieldMessages')
-                    ->makeValuesUnique()
-                    ->makeNullable())
-            )
+        return DetailedResponse::generateNotFoundResponse(
+            ErrorResponseSchema::getReferenceSchema()
         );
     }
 }

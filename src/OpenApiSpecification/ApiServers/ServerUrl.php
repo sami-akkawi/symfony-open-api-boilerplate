@@ -17,7 +17,7 @@ final class ServerUrl
 
     private function __construct(string $url)
     {
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+        if (!filter_var($url, FILTER_VALIDATE_URL) && substr($url, 0, 1) !== '/') {
             throw SpecificationException::generateInvalidUrlException($url);
         }
         $this->url = $url;

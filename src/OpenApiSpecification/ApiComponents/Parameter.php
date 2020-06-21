@@ -4,6 +4,7 @@ namespace App\OpenApiSpecification\ApiComponents;
 
 use App\OpenApiSpecification\ApiComponents\Parameter\DetailedParameter;
 use App\OpenApiSpecification\ApiComponents\Parameter\ParameterDocName;
+use App\OpenApiSpecification\ApiComponents\Parameter\ParameterName;
 
 /**
  * Describes a single operation parameter.
@@ -16,6 +17,10 @@ abstract class Parameter
     protected ?ParameterDocName $docName;
 
     public abstract function setDocName(string $name);
+
+    public abstract function getName(): ParameterName;
+
+    public abstract function isRequired(): bool;
 
     public abstract function toDetailedParameter(): DetailedParameter;
 
@@ -30,4 +35,23 @@ abstract class Parameter
     }
 
     public abstract function toOpenApiSpecification(): array;
+
+    public function isQueryParameter(): bool
+    {
+        return $this->toDetailedParameter()->getLocation()->isInQuery();
+    }
+
+    public function isHeaderParameter(): bool
+    {
+        return $this->toDetailedParameter()->getLocation()->isInHeader();
+    }
+
+    public function isCookieParameter(): bool
+    {
+        return $this->toDetailedParameter()->getLocation()->isInCookie();
+    }
+
+    public abstract function isValueValid($value): array;
+
+    public abstract function getSchema(): Schema;
 }

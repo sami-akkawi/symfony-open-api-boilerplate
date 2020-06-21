@@ -41,6 +41,31 @@ final class Responses
         return false;
     }
 
+    public function getResponseByHttpCode(string $code): ?Response
+    {
+        foreach ($this->responses as $response) {
+            if ($response->getCode()->toString() === $code) {
+                return $response;
+            }
+        }
+
+        $code[2] = 'X';
+        foreach ($this->responses as $response) {
+            if (strcasecmp($response->getCode()->toString(), $code)) {
+                return $response;
+            }
+        }
+
+        $code[1] = 'X';
+        foreach ($this->responses as $response) {
+            if (strcasecmp($response->getCode()->toString(), $code)) {
+                return $response;
+            }
+        }
+
+        return null;
+    }
+
     public function addResponse(Response $response): self
     {
         if ($this->hasHttpCode($response->getCode())) {

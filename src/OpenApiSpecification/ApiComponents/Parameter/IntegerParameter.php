@@ -7,16 +7,16 @@ use App\OpenApiSpecification\ApiComponents\Examples;
 use App\OpenApiSpecification\ApiComponents\Schema\IntegerSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class IntegerParameter extends SchemaParameter
+final class IntegerParameter extends DetailedParameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
         return new self(
             ParameterName::fromString($name),
             $location,
+            IntegerSchema::generate(),
             $location->isInPath() ? ParameterIsRequired::generateTrue() : ParameterIsRequired::generateFalse(),
-            ParameterIsDeprecated::generateFalse(),
-            IntegerSchema::generate()
+            ParameterIsDeprecated::generateFalse()
         );
     }
 
@@ -32,9 +32,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateMatrix(),
@@ -55,9 +55,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateLabel(),
@@ -78,9 +78,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             ParameterStyle::generateForm(),
@@ -146,9 +146,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema->setFormat($format),
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->setFormat($format),
             $this->description,
             $this->docName,
             $this->style,
@@ -162,9 +162,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             ParameterIsRequired::generateTrue(),
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             $this->style,
@@ -178,9 +178,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             ParameterIsDeprecated::generateTrue(),
-            $this->schema,
             $this->description,
             $this->docName,
             $this->style,
@@ -194,9 +194,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             ParameterDescription::fromString($description),
             $this->docName,
             $this->style,
@@ -210,9 +210,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema->makeNullable(),
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->makeNullable(),
             $this->description,
             $this->docName,
             $this->style,
@@ -226,9 +226,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema->setMinimum($minimum),
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->setMinimum($minimum),
             $this->description,
             $this->docName,
             $this->style,
@@ -242,9 +242,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema->setMaximum($maximum),
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->setMaximum($maximum),
             $this->description,
             $this->docName,
             $this->style,
@@ -258,9 +258,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             ParameterDocName::fromString($name),
             $this->style,
@@ -274,9 +274,9 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             $this->style,
@@ -299,14 +299,29 @@ final class IntegerParameter extends SchemaParameter
         return new self(
             $this->name,
             $this->location,
+            $this->schema,
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
             $this->description,
             $this->docName,
             $this->style,
             null,
             $examples->addExample($example, $example->getName()->toString())
         );
+    }
+
+    public function getRouteRequirements(): ?string
+    {
+        $minimum = $this->schema->getMinimum();
+
+        if (!$minimum || $minimum->toInt() < 0) {
+            return '^(\-?)\d*';
+        }
+
+        if ($minimum->toInt() > 0) {
+            return '^[1-9]\d*';
+        }
+
+        return '^\d*';
     }
 }

@@ -82,4 +82,19 @@ final class ReferenceSchema extends Schema
     {
         return $this->schema;
     }
+
+    public function getValueFromCastedString(string $value)
+    {
+        return $this->schema->getValueFromCastedString($value);
+    }
+
+    protected function getValueFromTrimmedCastedString(string $value)
+    {
+        return $this->schema->getValueFromCastedString($value);
+    }
+
+    public function getType(): Schema\Schema\SchemaType
+    {
+        return $this->schema->getType();
+    }
 }

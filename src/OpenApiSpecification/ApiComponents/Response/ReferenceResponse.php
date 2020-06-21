@@ -2,6 +2,7 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Response;
 
+use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseDescription;
 use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseName;
 use App\OpenApiSpecification\ApiComponents\Reference;
 use App\OpenApiSpecification\ApiComponents\Response;
@@ -42,5 +43,20 @@ final class ReferenceResponse extends Response
     public function toDetailedResponse(): DetailedResponse
     {
         return $this->response;
+    }
+
+    public function getDefinedMimeTypes(): array
+    {
+        return $this->response->getDefinedMimeTypes();
+    }
+
+    public function isValueValidByMimeType(string $mimeType, $value): array
+    {
+        return $this->response->isValueValidByMimeType($mimeType, $value);
+    }
+
+    public function getDescription(): ResponseDescription
+    {
+        return $this->response->getDescription();
     }
 }

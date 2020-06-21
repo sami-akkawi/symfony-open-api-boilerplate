@@ -24,6 +24,16 @@ final class ReferenceRequestBody
         return new self(Reference::generateRequestBodyReference($objectName), $requestBody);
     }
 
+    public function getDefinedMimeTypes(): array
+    {
+        return $this->requestBody->getDefinedMimeTypes();
+    }
+
+    public function isValueValidByMimeType(string $mimeType, $value): array
+    {
+        return $this->requestBody->isValueValidByMimeType($mimeType, $value);
+    }
+
     public function setName(string $name): self
     {
         return new self($this->reference, $this->requestBody, RequestBodyName::fromString($name));

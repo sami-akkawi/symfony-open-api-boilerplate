@@ -18,18 +18,7 @@ final class TagName
         if (empty($name)) {
             throw SpecificationException::generateEmptyStringException(self::class);
         }
-        if (!$this->isTagValid($name)) {
-            throw SpecificationException::generateTagNotValidException($name);
-        }
         $this->name = $name;
-    }
-
-    private function isTagValid(string $name): bool
-    {
-        $capitalCamelCase = str_replace(' ', '', $name);
-        // todo: scan folders in the Endpoints folder to check if this exists.
-
-        return true;
     }
 
     public static function fromString(string $name): self

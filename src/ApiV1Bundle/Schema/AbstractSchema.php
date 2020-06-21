@@ -28,6 +28,6 @@ abstract class AbstractSchema
     private static function getClassName(): string
     {
         $path = explode('\\', static::class);
-        return array_pop($path);
+        return str_replace('Schema', '', array_pop($path));
     }
 }

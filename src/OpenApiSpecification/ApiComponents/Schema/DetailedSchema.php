@@ -2,6 +2,7 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Schema;
 
+use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\Schema;
 
 abstract class DetailedSchema extends Schema
@@ -11,8 +12,15 @@ abstract class DetailedSchema extends Schema
         return $this;
     }
 
-    protected function getWrongTypeMessage(string $correctType, $value): string
+    protected function getWrongTypeMessage(string $correctType, $value): Message
     {
-        return "Should be $correctType, " . gettype($value) . ' supplied.';
+        return Message::generateError(
+            'incorrect_type_supplied',
+            "Should be $correctType, " . gettype($value) . ' supplied.',
+            [
+                '%correctType%' => $correctType,
+                '%suppliedType' => gettype($value)
+            ]
+        );
     }
 }

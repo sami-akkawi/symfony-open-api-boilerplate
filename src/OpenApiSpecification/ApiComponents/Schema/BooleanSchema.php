@@ -2,6 +2,7 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Schema;
 
+use App\Message\FieldMessage;
 use App\OpenApiSpecification\ApiComponents\Example;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
@@ -12,7 +13,6 @@ use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 
 final class BooleanSchema extends PrimitiveSchema
 {
-    private SchemaType $type;
     private ?SchemaDescription $description;
 
     private function __construct(
@@ -90,19 +90,6 @@ final class BooleanSchema extends PrimitiveSchema
         );
     }
 
-    public function deprecate(): self
-    {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->name,
-            $this->description,
-            $this->example,
-            $this->isNullable,
-            SchemaIsDeprecated::generateTrue()
-        );
-    }
-
     public function setExample(Example $example): self
     {
         $exception = $this->validateValue($example->toDetailedExample()->getLiteralValue());
@@ -134,12 +121,35 @@ final class BooleanSchema extends PrimitiveSchema
         );
     }
 
+    public function deprecate(): self
+    {
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->isNullable,
+            SchemaIsDeprecated::generateTrue()
+        );
+    }
+
     public function isValueValid($value): array
     {
         if (is_bool($value)) {
             return [];
         }
-        return [$this->getWrongTypeMessage('bool', $value)];
+        if ($this->isNullable->toBool() && is_null($value)) {
+            return [];
+        }
+
+        $errors = [];
+
+        $errorMessage = $this->getWrongTypeMessage('bool', $value);
+        $errors[] = $this->name ?
+            FieldMessage::generate([$this->name->toString()], $errorMessage) :
+            $errorMessage;
+        return $errors;
     }
 
     public function toOpenApiSpecification(): array
@@ -148,12 +158,24 @@ final class BooleanSchema extends PrimitiveSchema
         if ($this->description) {
             $specification['description'] = $this->description->toString();
         }
-        if ($this->example) {
-            $specification['example'] = $this->example->getLiteralValue();
+        if ($this->isDeprecated->toBool()) {
+            $specification['deprecated'] = true;
         }
         if ($this->isNullable()) {
             $specification['nullable'] = true;
         }
+        if ($this->example) {
+            $specification['example'] = $this->example->getLiteralValue();
+        }
         return $specification;
+    }
+
+    public function getValueFromTrimmedCastedString(string $value): bool
+    {
+        if (strcasecmp($value, 'false') === 0) {
+            return false;
+        }
+
+        return (bool)$value;
     }
 }

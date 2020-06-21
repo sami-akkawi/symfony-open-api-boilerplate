@@ -20,6 +20,8 @@ final class ResponseHttpCode
     private const OK        = '200';
     private const CREATED   = '201';
     private const NOT_FOUND = '404';
+    private const UNPROCESSABLE_ENTITY = '422';
+    private const CORRUPT_DATA = '588';
 
     private string $statusCode;
 
@@ -49,6 +51,16 @@ final class ResponseHttpCode
     public static function generateNotFound(): self
     {
         return new self(self::NOT_FOUND);
+    }
+
+    public static function generateUnprocessableEntity(): self
+    {
+        return new self(self::UNPROCESSABLE_ENTITY);
+    }
+
+    public static function generateCorruptData(): self
+    {
+        return new self(self::CORRUPT_DATA);
     }
 
     public function toString(): string

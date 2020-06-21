@@ -68,21 +68,29 @@ final class ApiSpecification
                 $method = $operation->getName()->toString();
                 $id = $operation->getId()->toString();
                 $url = 'v' . $this->info->getMajorVersion() . $path->getUrl()->toString();
-                $parameters = [];
-                $pathParts = explode('/', $url);
 
-                // todo: path parameters validation as requirement
+                $requirements = [];
+                $pathParts = explode('/', $url);
+                foreach ($pathParts as $part) {
+                    if (strpos($part, '{') === 0 && strpos($part, '}') === strlen($part) - 1) {
+                        $part = str_replace('{', '', $part);
+                        $parameterName = str_replace('}', '', $part);
+                        $parameter = $operation->getPathParameter($parameterName);
+                        $parameterRouteRequirements = $parameter->getRouteRequirements();
+                        if ($parameterRouteRequirements) {
+                            $requirements[$parameterName] = "$parameterRouteRequirements";
+                        }
+                    }
+                }
 
                 $defaults = [
                     '_controller' => "$id::$serviceMethodName"
                 ];
 
-                $requirements = [];
                 $options = [];
                 $host = '';
                 $schemes = ['http', 'https'];
                 $methods = [$method];
-
                 $collection->add(
                     $id,
                     new Route($url, $defaults, $requirements, $options, $host, $schemes, $methods)

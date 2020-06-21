@@ -21,6 +21,10 @@ abstract class RequestBody
         return $this->name;
     }
 
+    public abstract function getDefinedMimeTypes(): array;
+
+    public abstract function isValueValidByMimeType(string $mimeType, $value): array;
+
     public abstract function toDetailedRequestBody(): DetailedRequestBody;
 
     public abstract function toOpenApiSpecification(): array;
