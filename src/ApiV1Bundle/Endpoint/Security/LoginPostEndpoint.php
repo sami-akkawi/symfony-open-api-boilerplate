@@ -4,7 +4,6 @@ namespace App\ApiV1Bundle\Endpoint\Security;
 
 use App\ApiV1Bundle\Endpoint\AbstractPostEndpoint;
 use App\ApiV1Bundle\Tag\Security;
-use App\OpenApiSpecification\ApiComponents\MediaType;
 use App\OpenApiSpecification\ApiComponents\RequestBody;
 use App\OpenApiSpecification\ApiComponents\RequestBody\DetailedRequestBody;
 use App\OpenApiSpecification\ApiComponents\Response\DetailedResponse;

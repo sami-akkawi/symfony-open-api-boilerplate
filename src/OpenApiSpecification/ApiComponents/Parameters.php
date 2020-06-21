@@ -137,4 +137,18 @@ final class Parameters
 
         return $parameters;
     }
+
+    /** @return Parameter[] */
+    public function getAllPathParameters(): array
+    {
+        $parameters = [];
+
+        foreach ($this->parameters as $parameter) {
+            if ($parameter->isPathParameter()) {
+                $parameters[] = $parameter;
+            }
+        }
+
+        return $parameters;
+    }
 }

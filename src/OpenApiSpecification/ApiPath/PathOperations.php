@@ -46,7 +46,7 @@ final class PathOperations
     public function addOperation(PathOperation $operation): self
     {
         if ($this->hasOperation($operation->getName())) {
-            throw SpecificationException::generatePathOperationAlreadyDefined($operation->getName());
+            throw SpecificationException::generatePathOperationAlreadyDefined($operation->getName()->toString());
         }
         return new self(array_merge($this->operations, [$operation]));
     }

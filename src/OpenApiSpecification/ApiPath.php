@@ -2,6 +2,7 @@
 
 namespace App\OpenApiSpecification;
 
+use App\OpenApiSpecification\ApiException\SpecificationException;
 use App\OpenApiSpecification\ApiPath\PathOperation;
 use App\OpenApiSpecification\ApiPath\PathOperations;
 use App\OpenApiSpecification\ApiPath\PathPartialUrl;
@@ -40,8 +41,38 @@ final class ApiPath
 
     public function toOpenApiSpecification(): array
     {
+        $partialUrl = $this->url->toString();
+
+        $cleanString = substr_replace($partialUrl,"",0, 1);
+        $urlParts = explode('/', $cleanString);
+        $pathVariables = [];
+        foreach ($urlParts as $part) {
+            if (strpos($part, '{') === 0 && strpos($part, '}') === strlen($part) - 1) {
+                $part = str_replace('{', '', $part);
+                $part = str_replace('}', '', $part);
+                $pathVariables[] = $part;
+            }
+        }
+
+        foreach ($this->operations->toArrayOfOperations() as $operation) {
+            foreach ($operation->getAllPathParameters() as $parameter) {
+                $parameterName = $parameter->getName()->toString();
+                if (!in_array($parameterName, $pathVariables)) {
+                    throw SpecificationException::generatePathParameterNotDefinedInUrl($parameterName, $operation->getId()->toString());
+                }
+            }
+
+
+            foreach ($pathVariables as $variable) {
+                $parameter = $operation->getPathParameter($variable);
+                if (!$parameter) {
+                    throw SpecificationException::generatePathParameterNotDefinedAsSuch($variable, $operation->getId()->toString());
+                }
+            }
+        }
+
         return [
-            $this->url->toString() => $this->operations->toOpenApiSpecification()
+            $partialUrl => $this->operations->toOpenApiSpecification()
         ];
     }
 

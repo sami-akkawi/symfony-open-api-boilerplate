@@ -51,6 +51,11 @@ abstract class Parameter
         return $this->toDetailedParameter()->getLocation()->isInCookie();
     }
 
+    public function isPathParameter(): bool
+    {
+        return $this->toDetailedParameter()->getLocation()->isInPath();
+    }
+
     public abstract function isValueValid($value): array;
 
     public abstract function getSchema(): Schema;

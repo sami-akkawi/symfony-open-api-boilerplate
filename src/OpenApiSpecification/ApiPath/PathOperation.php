@@ -2,6 +2,7 @@
 
 namespace App\OpenApiSpecification\ApiPath;
 
+use App\OpenApiSpecification\ApiComponents\Parameter;
 use App\OpenApiSpecification\ApiComponents\Parameter\DetailedParameter;
 use App\OpenApiSpecification\ApiComponents\Parameters;
 use App\OpenApiSpecification\ApiComponents\RequestBody;
@@ -194,6 +195,12 @@ final class PathOperation
     public function getPathParameter(string $name): ?DetailedParameter
     {
         return $this->parameters->getPathParameter($name);
+    }
+
+    /** @return Parameter[] */
+    public function getAllPathParameters(): array
+    {
+        return $this->parameters->getAllPathParameters();
     }
 
     public function toOpenApiSpecification(): array

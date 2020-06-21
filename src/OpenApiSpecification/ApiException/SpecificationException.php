@@ -232,4 +232,19 @@ final class SpecificationException extends LogicException
     {
         return new self("The operation '$operation' was already defined on path.");
     }
+
+    public static function generateInvalidOperationPartialUrl(string $invalidUrl, string $urlEncodedUrl): self
+    {
+        return self::generate("The Operation Partial URL '$invalidUrl' is invalid as it would be encoded to '$urlEncodedUrl', try to use latin letters only.");
+    }
+
+    public static function generatePathParameterNotDefinedInUrl(string $pathParameter, string $operationId): self
+    {
+        return self::generate("The path parameter '$pathParameter' was not defined in the url of the operation '$operationId'.");
+    }
+
+    public static function generatePathParameterNotDefinedAsSuch(string $pathParameter, string $operationId): self
+    {
+        return self::generate("The parameter '$pathParameter' found in the path was not defined as such oin the operation '$operationId'.");
+    }
 }

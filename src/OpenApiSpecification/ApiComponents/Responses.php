@@ -49,14 +49,14 @@ final class Responses
             }
         }
 
-        $code[2] = 'X';
+        $code = substr_replace($code,"x",-1);
         foreach ($this->responses as $response) {
             if (strcasecmp($response->getCode()->toString(), $code)) {
                 return $response;
             }
         }
 
-        $code[1] = 'X';
+        $code = substr_replace($code,"xx",-2);
         foreach ($this->responses as $response) {
             if (strcasecmp($response->getCode()->toString(), $code)) {
                 return $response;
