@@ -247,4 +247,9 @@ final class SpecificationException extends LogicException
     {
         return self::generate("The parameter '$pathParameter' found in the path was not defined as such oin the operation '$operationId'.");
     }
+
+    public static function generateCannotAddPrimitiveSchemaToAllOfDiscriminator(): self
+    {
+        return self::generate("Cannot add a primitive Schema to an 'allOf' Discriminator Schema, make sure to wrap all the primitives in one or more Schema(s).");
+    }
 }

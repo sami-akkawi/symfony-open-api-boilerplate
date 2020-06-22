@@ -2,6 +2,7 @@
 
 namespace App\ApiV1Bundle\Endpoint;
 
+use App\ApiV1Bundle\Helpers\ApiDependencies;
 use App\ApiV1Bundle\Helpers\FormatValidator;
 use App\ApiV1Bundle\Helpers\JsonToXmlConverter;
 use App\ApiV1Bundle\Response\CorruptDataResponse;
@@ -29,16 +30,21 @@ abstract class AbstractEndpoint
 
     protected FormatValidator $validator;
 
-    public function __construct(FormatValidator $validator)
+    public function __construct(ApiDependencies $dependencies)
     {
-        $this->validator = $validator;
+        $this->validator = $dependencies->getFormatValidator();
     }
 
     public function handle(Request $request): Response
     {
+        $contentType = $request->headers->get('content-type');
+        if (empty($contentType)) {
+            $contentType = 'application/json';
+        }
+
         $headers = [
             'accept' => $request->headers->get('accept'),
-            'content-type' => $request->headers->get('content-type'),
+            'content-type' => $contentType,
             'origin' => $request->headers->get('origin')
         ];
 
@@ -162,7 +168,7 @@ abstract class AbstractEndpoint
             static::getOperationName(),
             static::getOperationId(),
             static::getParameters(),
-            static::getResponses()
+            static::getAllResponses()
         )
             ->addTags(static::getTags());
 

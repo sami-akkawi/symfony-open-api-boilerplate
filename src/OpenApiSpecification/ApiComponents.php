@@ -98,7 +98,7 @@ final class ApiComponents
 
         return new self(
             $this->schemas,
-            $this->responses->addResponse($response),
+            $this->responses->addResponseToComponents($response),
             $this->parameters,
             $this->examples,
             $this->requestBodies,

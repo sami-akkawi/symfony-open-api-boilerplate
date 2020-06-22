@@ -43,25 +43,28 @@ final class SpecificationController
 
     public function getApiSpecification(): ApiSpecification
     {
-        return new ApiSpecification(
-            OpenApiVersion::generate(),
-            $this->getInfo(),
-            $this->getPaths(),
-            $this->getServers(),
-            $this->getComponents(),
-            $this->getSecurityRequirements(),
-            $this->getTags()
-        );
+        $cacheKey = $_ENV['APP_ENV'] === 'production' ? $this->getVersion()->getFullVersion() : Uuid::v4()->toRfc4122();
+        return $this->cacheInterface->get($cacheKey, function () {
+            return new ApiSpecification(
+                OpenApiVersion::generate(),
+                $this->getInfo(),
+                $this->getPaths(),
+                $this->getServers(),
+                $this->getComponents(),
+                $this->getSecurityRequirements(),
+                $this->getTags()
+            );
+        });
     }
 
     public function show(): Response
     {
-        $cacheKey = $_ENV['APP_ENV'] === 'production' ? $this->getVersion()->getFullVersion() : Uuid::v4()->toRfc4122();
-        $specification = $this->cacheInterface->get($cacheKey, function () {
-            return $this->getApiSpecification();
-        });
+        return new Response($this->getApiSpecification()->toJson());
+    }
 
-        return new Response($specification->toJson());
+    public function showReadableJson(): Response
+    {
+        return new Response('<pre>' . $this->getApiSpecification()->toJson() . '</pre>');
     }
 
     private function getPaths(): ApiPaths

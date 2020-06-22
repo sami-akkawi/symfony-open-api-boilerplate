@@ -103,6 +103,6 @@ final class ApiSpecification
 
     public function toJson(): string
     {
-        return json_encode($this->toOpenApiSpecification());
+        return json_encode($this->toOpenApiSpecification(), JSON_PRETTY_PRINT);
     }
 }

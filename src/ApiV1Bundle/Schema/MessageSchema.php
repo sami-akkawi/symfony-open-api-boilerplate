@@ -41,20 +41,22 @@ final class MessageSchema extends AbstractSchema
 
     protected static function getOpenApiSchemaWithoutName(): DetailedSchema
     {
-        return DiscriminatorSchema::generateAllOf()
-            ->addSchema(StringSchema::generateUuid()
-                ->setName(Message::ID))
-            ->addSchema(StringSchema::generate()
-                ->setName(Message::TYPE)
-                ->setOptions(MessageType::getValidTypes()))
-            ->addSchema(StringSchema::generate()
-                ->setName(Message::TRANSLATION_KEY))
-            ->addSchema(StringSchema::generate()
-                ->setName(Message::DEFAULT_TEXT))
-            ->addSchema(MapSchema::generateStringMap()
-                ->setName(Message::PLACEHOLDERS)
-                ->makeNullable()
-                ->setExample(DetailedExample::generate(['%placeholder%' => 'myTranslation']))
-            );
+        return ObjectSchema::generate(
+            Schemas::generate()
+                ->addSchema(StringSchema::generateUuid()
+                    ->setName(Message::ID))
+                ->addSchema(StringSchema::generate()
+                    ->setName(Message::TYPE)
+                    ->setOptions(MessageType::getValidTypes()))
+                ->addSchema(StringSchema::generate()
+                    ->setName(Message::TRANSLATION_KEY))
+                ->addSchema(StringSchema::generate()
+                    ->setName(Message::DEFAULT_TEXT))
+                ->addSchema(MapSchema::generateStringMap()
+                    ->setName(Message::PLACEHOLDERS)
+                    ->makeNullable()
+                    ->setExample(DetailedExample::generate(['%placeholder%' => 'myTranslation']))
+                )
+        );
     }
 }

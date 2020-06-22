@@ -220,7 +220,6 @@ final class FormatValidator
             return;
         }
 
-
         $this->errors = $endpointResponse->isValueValidByMimeType($responseContentType, json_decode($response->getContent(), true));
     }
 }

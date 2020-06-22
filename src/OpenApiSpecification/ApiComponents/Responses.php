@@ -66,11 +66,20 @@ final class Responses
         return null;
     }
 
+
     public function addResponse(Response $response): self
     {
         if ($this->hasHttpCode($response->getCode())) {
             throw SpecificationException::generateDuplicateDefinitionException($response->getCode()->toString());
         }
+        if ($response->hasName() && $this->hasKey($response->getName())) {
+            throw SpecificationException::generateDuplicateDefinitionException($response->getName()->toString());
+        }
+        return new self(array_merge($this->responses, [$response]));
+    }
+
+    public function addResponseToComponents(Response $response): self
+    {
         if ($response->hasName() && $this->hasKey($response->getName())) {
             throw SpecificationException::generateDuplicateDefinitionException($response->getName()->toString());
         }

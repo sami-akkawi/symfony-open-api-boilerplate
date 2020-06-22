@@ -63,14 +63,14 @@ final class DiscriminatorSchema extends DetailedSchema
     public function addSchema(Schema $schema): self
     {
         if ($this->type->isAllOf() && $schema instanceof PrimitiveSchema) {
-            $name = $schema->getName() ?? SchemaName::fromString(Uuid::v4()->toRfc4122());
-            $schema = ObjectSchema::generate(Schemas::generate()->addSchema($schema->setName($name->toString())));
+            SpecificationException::generateCannotAddPrimitiveSchemaToAllOfDiscriminator();
         }
+        $name = $schema->getName() ?? SchemaName::fromString(Uuid::v4()->toRfc4122());
 
         return new self(
             $this->type,
             $this->isRequired,
-            $this->schemas->addSchema($schema->setName(Uuid::v4()->toRfc4122())),
+            $this->schemas->addSchema($schema->setName($name->toString())),
             $this->name,
             $this->description,
             $this->isNullable,
