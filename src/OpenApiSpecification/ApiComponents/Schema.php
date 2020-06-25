@@ -21,7 +21,7 @@ abstract class Schema
     protected SchemaIsNullable $isNullable;
     protected ?SchemaName $name;
     protected SchemaIsRequired $isRequired;
-    protected ?Example $example;
+    protected ?ComponentsExample $example;
     protected SchemaIsDeprecated $isDeprecated;
 
     public abstract function toOpenApiSpecification(): array;
@@ -56,7 +56,7 @@ abstract class Schema
 
     public abstract function makeNullable();
 
-    public abstract function setExample(Example $example);
+    public abstract function setExample(ComponentsExample $example);
 
     public abstract function isValueValid($value): array;
 

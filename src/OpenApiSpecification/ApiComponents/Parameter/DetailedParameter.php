@@ -3,8 +3,8 @@
 namespace App\OpenApiSpecification\ApiComponents\Parameter;
 
 use App\Message\FieldMessage;
-use App\OpenApiSpecification\ApiComponents\Example;
-use App\OpenApiSpecification\ApiComponents\Examples;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample;
+use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
 use App\OpenApiSpecification\ApiComponents\Parameter;
 use App\OpenApiSpecification\ApiComponents\Schema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
@@ -31,8 +31,8 @@ abstract class DetailedParameter extends Parameter
     protected ParameterIsRequired $isRequired;
     protected ParameterIsDeprecated $isDeprecated;
     protected ?ParameterDescription $description;
-    protected ?Example $example;
-    protected ?Examples $examples;
+    protected ?ComponentsExample $example;
+    protected ?ComponentsExamples $examples;
     protected Schema $schema;
     protected ?ParameterStyle $style;
 
@@ -45,8 +45,8 @@ abstract class DetailedParameter extends Parameter
         ?ParameterDescription $description =null,
         ?ParameterDocName $docName = null,
         ?ParameterStyle $style = null,
-        ?Example $example = null,
-        ?Examples $examples = null
+        ?ComponentsExample $example = null,
+        ?ComponentsExamples $examples = null
     ) {
         if ($location->isInHeader() && in_array($name->toString(), self::INVALID_NAMES_IN_HEADER)) {
             throw SpecificationException::generateInvalidNameInHeader($name->toString());
@@ -111,9 +111,9 @@ abstract class DetailedParameter extends Parameter
 
     public abstract function setDescription(string $description);
 
-    public abstract function addExample(Example $example);
+    public abstract function addExample(ComponentsExample $example);
 
-    public abstract function setExample(Example $example);
+    public abstract function setExample(ComponentsExample $example);
 
     public abstract function makeNullable();
 

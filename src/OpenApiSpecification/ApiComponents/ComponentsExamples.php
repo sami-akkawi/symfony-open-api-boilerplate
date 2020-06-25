@@ -2,12 +2,12 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\Example\ExampleName;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample\Example\ExampleName;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class Examples
+final class ComponentsExamples
 {
-    /** @var Example[] */
+    /** @var ComponentsExample[] */
     private array $examples;
 
     private function __construct(array $examples)
@@ -31,7 +31,7 @@ final class Examples
         return false;
     }
 
-    public function addExample(Example $example, string $name): self
+    public function addExample(ComponentsExample $example, string $name): self
     {
         if ($this->hasExample($name)) {
             throw SpecificationException::generateDuplicateExamples();

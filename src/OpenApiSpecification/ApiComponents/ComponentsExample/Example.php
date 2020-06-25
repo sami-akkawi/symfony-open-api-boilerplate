@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Example;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsExample;
 
-use App\OpenApiSpecification\ApiComponents\Example;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample\Example\ExampleDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample\Example\ExampleName;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample\Example\ExampleSummary;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample\Example\ExampleValue;
 
-final class DetailedExample extends Example
+final class Example extends ComponentsExample
 {
     private ExampleValue $value;
     private ?ExampleSummary $summary;
@@ -37,7 +41,7 @@ final class DetailedExample extends Example
         return new self($this->value, $this->name, $this->summary, ExampleDescription::fromString($description));
     }
 
-    public function toDetailedExample(): DetailedExample
+    public function toExample(): Example
     {
         return $this;
     }

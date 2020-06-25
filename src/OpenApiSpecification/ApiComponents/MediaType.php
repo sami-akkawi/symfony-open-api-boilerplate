@@ -9,14 +9,14 @@ final class MediaType
 {
     private MediaTypeMimeType $mimeType;
     private Schema $schema;
-    private ?Example $example;
-    private ?Examples $examples;
+    private ?ComponentsExample $example;
+    private ?ComponentsExamples $examples;
 
     private function __construct(
         MediaTypeMimeType $mimeType,
         Schema $schema,
-        ?Example $example = null,
-        ?Examples $examples = null
+        ?ComponentsExample $example = null,
+        ?ComponentsExamples $examples = null
     ) {
         $this->mimeType = $mimeType;
         $this->schema = $schema;
@@ -44,7 +44,7 @@ final class MediaType
         return $this->schema->isValueValid($value);
     }
 
-    public function addExample(Example $example): self
+    public function addExample(ComponentsExample $example): self
     {
         if (!$example->hasName()) {
             throw SpecificationException::generateMustHaveKeyInComponents();
@@ -52,13 +52,13 @@ final class MediaType
 
         $examples = $this->examples;
         if (!$examples) {
-            $examples = Examples::generate();
+            $examples = ComponentsExamples::generate();
         }
 
         return new self($this->mimeType, $this->schema, null, $examples->addExample($example, $example->getName()->toString()));
     }
 
-    public function setExample(Example $example): self
+    public function setExample(ComponentsExample $example): self
     {
         return new self($this->mimeType, $this->schema, $example, null);
     }

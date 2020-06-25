@@ -3,7 +3,7 @@
 namespace App\OpenApiSpecification\ApiComponents\Schema;
 
 use App\Message\FieldMessage;
-use App\OpenApiSpecification\ApiComponents\Example;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaAdditionalProperty;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
@@ -20,7 +20,7 @@ final class MapSchema extends DetailedSchema
         SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaIsNullable $isNullable = null,
-        ?Example $example = null,
+        ?ComponentsExample $example = null,
         ?SchemaIsDeprecated $isDeprecated = null
     ) {
         $this->additionalProperty = $additionalProperty;
@@ -146,9 +146,9 @@ final class MapSchema extends DetailedSchema
         );
     }
 
-    public function setExample(Example $example): self
+    public function setExample(ComponentsExample $example): self
     {
-        $exception = $this->validateValue($example->toDetailedExample()->getLiteralValue());
+        $exception = $this->validateValue($example->toExample()->getLiteralValue());
         if ($exception) {
             throw $exception;
         }

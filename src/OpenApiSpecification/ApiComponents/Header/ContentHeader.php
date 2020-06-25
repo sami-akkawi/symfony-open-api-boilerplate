@@ -2,8 +2,8 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Header;
 
-use App\OpenApiSpecification\ApiComponents\Example;
-use App\OpenApiSpecification\ApiComponents\Examples;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample;
+use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
 use App\OpenApiSpecification\ApiComponents\MediaType;
 use App\OpenApiSpecification\ApiComponents\MediaTypes;
 use App\OpenApiSpecification\ApiException\SpecificationException;
@@ -18,8 +18,8 @@ final class ContentHeader extends DetailedHeader
         ?HeaderIsDeprecated $isDeprecated = null,
         ?HeaderDescription $description = null,
         ?HeaderDocName $docName = null,
-        ?Example $example = null,
-        ?Examples $examples = null
+        ?ComponentsExample $example = null,
+        ?ComponentsExamples $examples = null
     ) {
         parent::__construct($isRequired, $isDeprecated, $description, $docName, $example, $examples);
         $this->mediaTypes = $mediaTypes;
@@ -133,7 +133,7 @@ final class ContentHeader extends DetailedHeader
         return $specification;
     }
 
-    public function setExample(Example $example): self
+    public function setExample(ComponentsExample $example): self
     {
         return new self(
             $this->mediaTypes,
@@ -146,7 +146,7 @@ final class ContentHeader extends DetailedHeader
         );
     }
 
-    public function addExample(Example $example): self
+    public function addExample(ComponentsExample $example): self
     {
         if (!$example->hasName()) {
             throw SpecificationException::generateMustHaveKeyInComponents();
@@ -154,7 +154,7 @@ final class ContentHeader extends DetailedHeader
 
         $examples = $this->examples;
         if (!$examples) {
-            $examples = Examples::generate();
+            $examples = ComponentsExamples::generate();
         }
 
         return new self(

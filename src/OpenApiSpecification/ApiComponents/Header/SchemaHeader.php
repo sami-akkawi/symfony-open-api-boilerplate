@@ -2,8 +2,8 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Header;
 
-use App\OpenApiSpecification\ApiComponents\Example;
-use App\OpenApiSpecification\ApiComponents\Examples;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample;
+use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
 use App\OpenApiSpecification\ApiComponents\Schema;
 
 abstract class SchemaHeader extends DetailedHeader
@@ -16,8 +16,8 @@ abstract class SchemaHeader extends DetailedHeader
         Schema $schema,
         ?HeaderDescription $description = null,
         ?HeaderDocName $docName = null,
-        ?Example $example = null,
-        ?Examples $examples = null
+        ?ComponentsExample $example = null,
+        ?ComponentsExamples $examples = null
     ) {
         parent::__construct($isRequired, $isDeprecated, $description, $docName, $example, $examples);
         $this->schema = $schema;

@@ -2,8 +2,8 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Header;
 
-use App\OpenApiSpecification\ApiComponents\Example;
-use App\OpenApiSpecification\ApiComponents\Examples;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample;
+use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
 use App\OpenApiSpecification\ApiComponents\Header;
 
 /**
@@ -17,16 +17,16 @@ abstract class DetailedHeader extends Header
     protected HeaderIsRequired $isRequired;
     protected HeaderIsDeprecated $isDeprecated;
     protected ?HeaderDescription $description;
-    protected ?Example $example;
-    protected ?Examples $examples;
+    protected ?ComponentsExample $example;
+    protected ?ComponentsExamples $examples;
 
     protected function __construct(
         ?HeaderIsRequired $isRequired,
         ?HeaderIsDeprecated $isDeprecated,
         ?HeaderDescription $description,
         ?HeaderDocName $docName,
-        ?Example $example,
-        ?Examples $examples
+        ?ComponentsExample $example,
+        ?ComponentsExamples $examples
     ) {
         $this->isRequired = $isRequired ?? HeaderIsRequired::generateFalse();
         $this->isDeprecated = $isDeprecated ?? HeaderIsDeprecated::generateFalse();
@@ -52,7 +52,7 @@ abstract class DetailedHeader extends Header
 
     public abstract function setDescription(string $description);
 
-    public abstract function addExample(Example $example);
+    public abstract function addExample(ComponentsExample $example);
 
-    public abstract function setExample(Example $example);
+    public abstract function setExample(ComponentsExample $example);
 }

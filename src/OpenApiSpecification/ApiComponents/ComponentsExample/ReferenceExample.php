@@ -1,18 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Example;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsExample;
 
-use App\OpenApiSpecification\ApiComponents\Example;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample\Example\ExampleName;
 use App\OpenApiSpecification\ApiComponents\Reference;
 
-final class ReferenceExample extends Example
+final class ReferenceExample extends ComponentsExample
 {
     private Reference $reference;
-    private DetailedExample $example;
+    private Example $example;
 
     private function __construct(
         Reference $reference,
-        DetailedExample $example,
+        Example $example,
         ?ExampleName $name = null
     ) {
         $this->reference = $reference;
@@ -20,7 +21,7 @@ final class ReferenceExample extends Example
         $this->name = $name;
     }
 
-    public static function generate(string $objectName, DetailedExample $example): self
+    public static function generate(string $objectName, Example $example): self
     {
         return new self(Reference::generateExampleReference($objectName), $example);
     }
@@ -30,7 +31,7 @@ final class ReferenceExample extends Example
         return new self($this->reference, $this->example, ExampleName::fromString($name));
     }
 
-    public function toDetailedExample(): DetailedExample
+    public function toExample(): Example
     {
         return $this->example;
     }

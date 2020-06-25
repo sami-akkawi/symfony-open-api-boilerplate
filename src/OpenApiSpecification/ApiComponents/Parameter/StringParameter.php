@@ -2,8 +2,8 @@
 
 namespace App\OpenApiSpecification\ApiComponents\Parameter;
 
-use App\OpenApiSpecification\ApiComponents\Example;
-use App\OpenApiSpecification\ApiComponents\Examples;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample;
+use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
 use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
@@ -286,7 +286,7 @@ final class StringParameter extends DetailedParameter
         );
     }
 
-    public function setExample(Example $example): self
+    public function setExample(ComponentsExample $example): self
     {
         return new self(
             $this->name,
@@ -302,7 +302,7 @@ final class StringParameter extends DetailedParameter
         );
     }
 
-    public function addExample(Example $example): self
+    public function addExample(ComponentsExample $example): self
     {
         if (!$example->hasName()) {
             throw SpecificationException::generateMustHaveKeyInComponents();
@@ -310,7 +310,7 @@ final class StringParameter extends DetailedParameter
 
         $examples = $this->examples;
         if (!$examples) {
-            $examples = Examples::generate();
+            $examples = ComponentsExamples::generate();
         }
 
         return new self(

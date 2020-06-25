@@ -4,7 +4,7 @@
 
 api-specification:
   path:       /api/v1/
-  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController::show' }
+  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController::showReadableJson' }
 
 openApi:
   path:       /api/v1/specifications.json

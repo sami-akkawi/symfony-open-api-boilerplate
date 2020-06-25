@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Example;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsExample\Example;
 
 use App\OpenApiSpecification\ApiException\SpecificationException;
 

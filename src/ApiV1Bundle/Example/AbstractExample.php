@@ -2,17 +2,17 @@
 
 namespace App\ApiV1Bundle\Example;
 
-use App\OpenApiSpecification\ApiComponents\Example\DetailedExample;
-use App\OpenApiSpecification\ApiComponents\Example\ReferenceExample;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample\Example;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample\ReferenceExample;
 
 abstract class AbstractExample
 {
-    public static function getOpenApiExample(): DetailedExample
+    public static function getOpenApiExample(): Example
     {
         return static::getOpenApiExampleWithoutName()->setName(static::getClassName());
     }
 
-    protected abstract static function getOpenApiExampleWithoutName(): DetailedExample;
+    protected abstract static function getOpenApiExampleWithoutName(): Example;
 
     public static function getReferenceExample(): ReferenceExample
     {

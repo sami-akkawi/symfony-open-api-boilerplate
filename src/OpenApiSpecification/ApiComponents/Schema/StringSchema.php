@@ -4,7 +4,7 @@ namespace App\OpenApiSpecification\ApiComponents\Schema;
 
 use App\Message\FieldMessage;
 use App\Message\Message;
-use App\OpenApiSpecification\ApiComponents\Example;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
@@ -27,7 +27,7 @@ final class StringSchema extends PrimitiveSchema
         SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
-        ?Example $example = null,
+        ?ComponentsExample $example = null,
         ?SchemaIsNullable $isNullable = null,
         ?SchemaMinimumLength $minimumLength = null,
         ?SchemaMaximumLength $maximumLength = null,
@@ -144,9 +144,9 @@ final class StringSchema extends PrimitiveSchema
         );
     }
 
-    public function setExample(Example $example): self
+    public function setExample(ComponentsExample $example): self
     {
-        $exception = $this->validateValue($example->toDetailedExample()->getLiteralValue());
+        $exception = $this->validateValue($example->toExample()->getLiteralValue());
         if ($exception) {
             throw $exception;
         }

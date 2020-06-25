@@ -2,8 +2,8 @@
 
 namespace App\OpenApiSpecification;
 
-use App\OpenApiSpecification\ApiComponents\Example;
-use App\OpenApiSpecification\ApiComponents\Examples;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample;
+use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
 use App\OpenApiSpecification\ApiComponents\Header;
 use App\OpenApiSpecification\ApiComponents\Headers;
 use App\OpenApiSpecification\ApiComponents\Parameter;
@@ -23,7 +23,7 @@ final class ApiComponents
     private Schemas $schemas;
     private Responses $responses;
     private Parameters $parameters;
-    private Examples $examples;
+    private ComponentsExamples $examples;
     private RequestBodies $requestBodies;
     private Headers $headers;
     private SecuritySchemes $securitySchemes;
@@ -33,7 +33,7 @@ final class ApiComponents
         Schemas $schemas,
         Responses $responses,
         Parameters $parameters,
-        Examples $examples,
+        ComponentsExamples $examples,
         RequestBodies $requestBodies,
         Headers $headers,
         SecuritySchemes $securitySchemes
@@ -53,7 +53,7 @@ final class ApiComponents
             Schemas::generate(),
             Responses::generate(),
             Parameters::generate(),
-            Examples::generate(),
+            ComponentsExamples::generate(),
             RequestBodies::generate(),
             Headers::generate(),
             SecuritySchemes::generate()
@@ -124,7 +124,7 @@ final class ApiComponents
         );
     }
 
-    public function addExample(Example $example): self
+    public function addExample(ComponentsExample $example): self
     {
         if (!$example->hasName()) {
             throw SpecificationException::generateMustHaveKeyInComponents();

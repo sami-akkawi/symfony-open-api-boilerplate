@@ -2,20 +2,20 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\Example\DetailedExample;
-use App\OpenApiSpecification\ApiComponents\Example\ExampleName;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample\Example;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample\Example\ExampleName;
 
-abstract class Example
+abstract class ComponentsExample
 {
     protected ?ExampleName $name;
 
-    public abstract function toDetailedExample(): DetailedExample;
+    public abstract function toExample(): Example;
 
     public abstract function setName(string $name);
 
     public function isValidForSchema(Schema $schema): array
     {
-        return $schema->isValueValid($this->toDetailedExample()->getLiteralValue());
+        return $schema->isValueValid($this->toExample()->getLiteralValue());
     }
 
     public function getName(): ?ExampleName

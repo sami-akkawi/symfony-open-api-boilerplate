@@ -4,7 +4,7 @@ namespace App\ApiV1Bundle\Schema;
 
 use App\Message\Message;
 use App\Message\MessageType;
-use App\OpenApiSpecification\ApiComponents\Example\DetailedExample;
+use App\OpenApiSpecification\ApiComponents\ComponentsExample\Example;
 use App\OpenApiSpecification\ApiComponents\Schema\DetailedSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\DiscriminatorSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\MapSchema;
@@ -55,7 +55,7 @@ final class MessageSchema extends AbstractSchema
                 ->addSchema(MapSchema::generateStringMap()
                     ->setName(Message::PLACEHOLDERS)
                     ->makeNullable()
-                    ->setExample(DetailedExample::generate(['%placeholder%' => 'myTranslation']))
+                    ->setExample(Example::generate(['%placeholder%' => 'myTranslation']))
                 )
         );
     }
