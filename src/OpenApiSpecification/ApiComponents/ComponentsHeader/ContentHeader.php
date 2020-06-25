@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Header;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
@@ -17,22 +17,22 @@ final class ContentHeader extends DetailedHeader
         ?HeaderIsRequired $isRequired = null,
         ?HeaderIsDeprecated $isDeprecated = null,
         ?HeaderDescription $description = null,
-        ?HeaderDocName $docName = null,
+        ?HeaderKey $key = null,
         ?ComponentsExample $example = null,
         ?ComponentsExamples $examples = null
     ) {
-        parent::__construct($isRequired, $isDeprecated, $description, $docName, $example, $examples);
+        parent::__construct($isRequired, $isDeprecated, $description, $key, $example, $examples);
         $this->mediaTypes = $mediaTypes;
     }
 
-    public function setDocName(string $name): self
+    public function setKey(string $name): self
     {
         return new self(
             $this->mediaTypes,
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            HeaderDocName::fromString($name),
+            HeaderKey::fromString($name),
             $this->example,
             $this->examples
         );
@@ -45,7 +45,7 @@ final class ContentHeader extends DetailedHeader
             $this->isRequired,
             $this->isDeprecated,
             HeaderDescription::fromString($description),
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -58,7 +58,7 @@ final class ContentHeader extends DetailedHeader
             $this->isRequired,
             HeaderIsDeprecated::generateTrue(),
             $this->description,
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -76,7 +76,7 @@ final class ContentHeader extends DetailedHeader
             HeaderIsRequired::generateTrue(),
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -89,7 +89,7 @@ final class ContentHeader extends DetailedHeader
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -140,7 +140,7 @@ final class ContentHeader extends DetailedHeader
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $example,
             null
         );
@@ -162,7 +162,7 @@ final class ContentHeader extends DetailedHeader
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             null,
             $examples->addExample($example, $example->getName()->toString())
         );

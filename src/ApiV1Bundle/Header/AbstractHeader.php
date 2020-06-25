@@ -2,14 +2,14 @@
 
 namespace App\ApiV1Bundle\Header;
 
-use App\OpenApiSpecification\ApiComponents\Header\DetailedHeader;
-use App\OpenApiSpecification\ApiComponents\Header\ReferenceHeader;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\DetailedHeader;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\ReferenceHeader;
 
 abstract class AbstractHeader
 {
     public static function getOpenApiHeader(): DetailedHeader
     {
-        return static::getOpenApiHeaderWithoutName()->setDocName(static::getClassName());
+        return static::getOpenApiHeaderWithoutName()->setKey(static::getClassName());
     }
 
     protected abstract static function getOpenApiHeaderWithoutName(): DetailedHeader;

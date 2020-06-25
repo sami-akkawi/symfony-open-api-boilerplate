@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Header;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Header;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
 /**
  * Describes a single operation header.
@@ -12,7 +12,7 @@ use App\OpenApiSpecification\ApiComponents\Header;
  * http://spec.openapis.org/oas/v3.0.3#header-object
  */
 
-abstract class DetailedHeader extends Header
+abstract class DetailedHeader extends ComponentsHeader
 {
     protected HeaderIsRequired $isRequired;
     protected HeaderIsDeprecated $isDeprecated;
@@ -24,14 +24,14 @@ abstract class DetailedHeader extends Header
         ?HeaderIsRequired $isRequired,
         ?HeaderIsDeprecated $isDeprecated,
         ?HeaderDescription $description,
-        ?HeaderDocName $docName,
+        ?HeaderKey $key,
         ?ComponentsExample $example,
         ?ComponentsExamples $examples
     ) {
         $this->isRequired = $isRequired ?? HeaderIsRequired::generateFalse();
         $this->isDeprecated = $isDeprecated ?? HeaderIsDeprecated::generateFalse();
         $this->description = $description;
-        $this->docName = $docName;
+        $this->key = $key;
         $this->example = $example;
         $this->examples = $examples;
     }

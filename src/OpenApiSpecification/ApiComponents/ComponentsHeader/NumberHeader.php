@@ -1,21 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Header;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\Schema\NumberSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class ObjectHeader extends SchemaHeader
+final class NumberHeader extends SchemaHeader
 {
     public static function generate(): self
     {
         return new self(
             HeaderIsRequired::generateFalse(),
             HeaderIsDeprecated::generateFalse(),
-            ObjectSchema::generate(Schemas::generate())
+            NumberSchema::generate()
         );
     }
 
@@ -26,7 +25,7 @@ final class ObjectHeader extends SchemaHeader
             $this->isDeprecated,
             $this->schema,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -39,7 +38,7 @@ final class ObjectHeader extends SchemaHeader
             HeaderIsDeprecated::generateTrue(),
             $this->schema,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -52,20 +51,20 @@ final class ObjectHeader extends SchemaHeader
             $this->isDeprecated,
             $this->schema,
             HeaderDescription::fromString($description),
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
     }
 
-    public function setDocName(string $name): self
+    public function setFormat(string $format): self
     {
         return new self(
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
+            $this->schema->setFormat($format),
             $this->description,
-            HeaderDocName::fromString($name),
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -78,7 +77,20 @@ final class ObjectHeader extends SchemaHeader
             $this->isDeprecated,
             $this->schema->makeNullable(),
             $this->description,
-            $this->docName,
+            $this->key,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setKey(string $name): self
+    {
+        return new self(
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema,
+            $this->description,
+            HeaderKey::fromString($name),
             $this->example,
             $this->examples
         );
@@ -89,9 +101,9 @@ final class ObjectHeader extends SchemaHeader
         return new self(
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->makeNullable(),
+            $this->schema,
             $this->description,
-            $this->docName,
+            $this->key,
             $example,
             null
         );
@@ -111,9 +123,9 @@ final class ObjectHeader extends SchemaHeader
         return new self(
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->makeNullable(),
+            $this->schema,
             $this->description,
-            $this->docName,
+            $this->key,
             null,
             $examples->addExample($example, $example->getName()->toString())
         );

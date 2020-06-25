@@ -4,8 +4,8 @@ namespace App\OpenApiSpecification;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Header;
-use App\OpenApiSpecification\ApiComponents\Headers;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeaders;
 use App\OpenApiSpecification\ApiComponents\Parameter;
 use App\OpenApiSpecification\ApiComponents\Parameters;
 use App\OpenApiSpecification\ApiComponents\RequestBodies;
@@ -25,7 +25,7 @@ final class ApiComponents
     private Parameters $parameters;
     private ComponentsExamples $examples;
     private RequestBodies $requestBodies;
-    private Headers $headers;
+    private ComponentsHeaders $headers;
     private SecuritySchemes $securitySchemes;
     // todo: private Links $links
 
@@ -35,7 +35,7 @@ final class ApiComponents
         Parameters $parameters,
         ComponentsExamples $examples,
         RequestBodies $requestBodies,
-        Headers $headers,
+        ComponentsHeaders $headers,
         SecuritySchemes $securitySchemes
     ) {
         $this->schemas = $schemas;
@@ -55,7 +55,7 @@ final class ApiComponents
             Parameters::generate(),
             ComponentsExamples::generate(),
             RequestBodies::generate(),
-            Headers::generate(),
+            ComponentsHeaders::generate(),
             SecuritySchemes::generate()
         );
     }
@@ -158,7 +158,7 @@ final class ApiComponents
         );
     }
 
-    public function addHeader(Header $header): self
+    public function addHeader(ComponentsHeader $header): self
     {
         if (!$header->hasDocName()) {
             throw SpecificationException::generateMustHaveKeyInComponents();

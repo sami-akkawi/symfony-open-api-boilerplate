@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Header;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
@@ -15,11 +15,11 @@ abstract class SchemaHeader extends DetailedHeader
         HeaderIsDeprecated $isDeprecated,
         Schema $schema,
         ?HeaderDescription $description = null,
-        ?HeaderDocName $docName = null,
+        ?HeaderKey $key = null,
         ?ComponentsExample $example = null,
         ?ComponentsExamples $examples = null
     ) {
-        parent::__construct($isRequired, $isDeprecated, $description, $docName, $example, $examples);
+        parent::__construct($isRequired, $isDeprecated, $description, $key, $example, $examples);
         $this->schema = $schema;
     }
 

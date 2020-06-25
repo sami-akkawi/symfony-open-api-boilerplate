@@ -2,12 +2,12 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\Header\HeaderDocName;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\HeaderKey;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class Headers
+final class ComponentsHeaders
 {
-    /** @var Header[] */
+    /** @var ComponentsHeader[] */
     private array $headers;
 
     private function __construct(array $headers)
@@ -20,10 +20,10 @@ final class Headers
         return new self([]);
     }
 
-    private function hasHeader(HeaderDocName $name): bool
+    private function hasHeader(HeaderKey $name): bool
     {
         foreach ($this->headers as $header) {
-            if ($header->getDocName()->isIdenticalTo($name)) {
+            if ($header->getKey()->isIdenticalTo($name)) {
                 return true;
             }
         }
@@ -31,12 +31,12 @@ final class Headers
         return false;
     }
 
-    public function addHeader(Header $header): self
+    public function addHeader(ComponentsHeader $header): self
     {
         if (!$header->hasDocName()) {
             throw SpecificationException::generateHeaderInHeadersNeedsAName();
         }
-        if ($this->hasHeader($header->getDocName())) {
+        if ($this->hasHeader($header->getKey())) {
             throw SpecificationException::generateDuplicateHeadersException();
         }
 
@@ -55,7 +55,7 @@ final class Headers
         }
         $parameters = [];
         foreach ($this->headers as $header) {
-            $parameters[$header->getDocName()->toString()] = $header->toOpenApiSpecification();
+            $parameters[$header->getKey()->toString()] = $header->toOpenApiSpecification();
         }
         return $parameters;
     }

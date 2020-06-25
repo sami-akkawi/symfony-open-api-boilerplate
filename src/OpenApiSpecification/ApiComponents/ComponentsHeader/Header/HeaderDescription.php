@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Header;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header;
+
 /**
  * A brief description of the Header. This could contain examples of use.
  * http://spec.openapis.org/oas/v3.0.3#Header-object

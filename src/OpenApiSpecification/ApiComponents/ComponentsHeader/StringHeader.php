@@ -1,20 +1,33 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Header;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Schema\NumberSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class NumberHeader extends SchemaHeader
+final class StringHeader extends SchemaHeader
 {
     public static function generate(): self
     {
         return new self(
             HeaderIsRequired::generateFalse(),
             HeaderIsDeprecated::generateFalse(),
-            NumberSchema::generate()
+            StringSchema::generate()
+        );
+    }
+
+    public function makeNullable(): self
+    {
+        return new self(
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->makeNullable(),
+            $this->description,
+            $this->key,
+            $this->example,
+            $this->examples
         );
     }
 
@@ -25,7 +38,7 @@ final class NumberHeader extends SchemaHeader
             $this->isDeprecated,
             $this->schema,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -38,20 +51,7 @@ final class NumberHeader extends SchemaHeader
             HeaderIsDeprecated::generateTrue(),
             $this->schema,
             $this->description,
-            $this->docName,
-            $this->example,
-            $this->examples
-        );
-    }
-
-    public function setDescription(string $description): self
-    {
-        return new self(
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema,
-            HeaderDescription::fromString($description),
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -64,33 +64,73 @@ final class NumberHeader extends SchemaHeader
             $this->isDeprecated,
             $this->schema->setFormat($format),
             $this->description,
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
     }
 
-    public function makeNullable(): self
+    /** @param string[] $options */
+    public function setOptions(array $options): self
     {
         return new self(
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema->makeNullable(),
+            $this->schema->setOptions($options),
             $this->description,
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
     }
 
-    public function setDocName(string $name): self
+    public function setMinimumLength(int $minLength): self
+    {
+        return new self(
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->setMinimumLength($minLength),
+            $this->description,
+            $this->key,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setMaximumLength(int $maxLength): self
+    {
+        return new self(
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->setMaximumLength($maxLength),
+            $this->description,
+            $this->key,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setDescription(string $description): self
+    {
+        return new self(
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema,
+            HeaderDescription::fromString($description),
+            $this->key,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setKey(string $name): self
     {
         return new self(
             $this->isRequired,
             $this->isDeprecated,
             $this->schema,
             $this->description,
-            HeaderDocName::fromString($name),
+            HeaderKey::fromString($name),
             $this->example,
             $this->examples
         );
@@ -103,7 +143,7 @@ final class NumberHeader extends SchemaHeader
             $this->isDeprecated,
             $this->schema,
             $this->description,
-            $this->docName,
+            $this->key,
             $example,
             null
         );
@@ -125,9 +165,9 @@ final class NumberHeader extends SchemaHeader
             $this->isDeprecated,
             $this->schema,
             $this->description,
-            $this->docName,
+            $this->key,
             null,
-            $examples->addExample($example, $example->getName()->toString())
+            $examples
         );
     }
 }

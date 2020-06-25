@@ -1,33 +1,21 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Header;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Schema\BooleanSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
+use App\OpenApiSpecification\ApiComponents\Schemas;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class BooleanHeader extends SchemaHeader
+final class ObjectHeader extends SchemaHeader
 {
     public static function generate(): self
     {
         return new self(
             HeaderIsRequired::generateFalse(),
             HeaderIsDeprecated::generateFalse(),
-            BooleanSchema::generate()
-        );
-    }
-
-    public function makeNullable(): self
-    {
-        return new self(
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->schema->makeNullable(),
-            $this->description,
-            $this->docName,
-            $this->example,
-            $this->examples
+            ObjectSchema::generate(Schemas::generate())
         );
     }
 
@@ -38,7 +26,7 @@ final class BooleanHeader extends SchemaHeader
             $this->isDeprecated,
             $this->schema,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -51,7 +39,7 @@ final class BooleanHeader extends SchemaHeader
             HeaderIsDeprecated::generateTrue(),
             $this->schema,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -64,20 +52,33 @@ final class BooleanHeader extends SchemaHeader
             $this->isDeprecated,
             $this->schema,
             HeaderDescription::fromString($description),
-            $this->docName,
+            $this->key,
             $this->example,
             $this->examples
         );
     }
 
-    public function setDocName(string $name): self
+    public function setKey(string $name): self
     {
         return new self(
             $this->isRequired,
             $this->isDeprecated,
             $this->schema,
             $this->description,
-            HeaderDocName::fromString($name),
+            HeaderKey::fromString($name),
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function makeNullable(): self
+    {
+        return new self(
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->schema->makeNullable(),
+            $this->description,
+            $this->key,
             $this->example,
             $this->examples
         );
@@ -88,9 +89,9 @@ final class BooleanHeader extends SchemaHeader
         return new self(
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
+            $this->schema->makeNullable(),
             $this->description,
-            $this->docName,
+            $this->key,
             $example,
             null
         );
@@ -110,11 +111,11 @@ final class BooleanHeader extends SchemaHeader
         return new self(
             $this->isRequired,
             $this->isDeprecated,
-            $this->schema,
+            $this->schema->makeNullable(),
             $this->description,
-            $this->docName,
+            $this->key,
             null,
-            $examples
+            $examples->addExample($example, $example->getName()->toString())
         );
     }
 }

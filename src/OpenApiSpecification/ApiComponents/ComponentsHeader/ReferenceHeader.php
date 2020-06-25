@@ -1,20 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Header;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
-use App\OpenApiSpecification\ApiComponents\Header;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 use App\OpenApiSpecification\ApiComponents\Reference;
 
-final class ReferenceHeader extends Header
+final class ReferenceHeader extends ComponentsHeader
 {
     private Reference $reference;
     private DetailedHeader $Header;
 
-    private function __construct(Reference $reference, DetailedHeader $Header, ?HeaderDocName $docName = null)
+    private function __construct(Reference $reference, DetailedHeader $Header, ?HeaderKey $key = null)
     {
         $this->reference = $reference;
         $this->Header = $Header;
-        $this->docName = $docName;
+        $this->key = $key;
     }
 
     public static function generate(string $objectName, DetailedHeader $Header): self
@@ -22,9 +22,9 @@ final class ReferenceHeader extends Header
         return new self(Reference::generateHeaderReference($objectName), $Header);
     }
 
-    public function setDocName(string $name): self
+    public function setKey(string $name): self
     {
-        return new self($this->reference, $this->Header, HeaderDocName::fromString($name));
+        return new self($this->reference, $this->Header, HeaderKey::fromString($name));
     }
 
     public function toDetailedHeader(): DetailedHeader

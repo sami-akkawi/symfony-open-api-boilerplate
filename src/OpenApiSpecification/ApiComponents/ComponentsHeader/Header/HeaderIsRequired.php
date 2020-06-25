@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Header;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header;
+
 /**
  * Determines whether this Header is mandatory. If the Header location is "path", this property is REQUIRED and
  * its value MUST be true. Otherwise, the property MAY be included and its default value is false.
