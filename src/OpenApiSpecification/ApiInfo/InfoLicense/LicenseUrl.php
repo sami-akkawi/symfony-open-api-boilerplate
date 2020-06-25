@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiInfo\License;
+namespace App\OpenApiSpecification\ApiInfo\InfoLicense;
 
 use App\OpenApiSpecification\ApiException\SpecificationException;
 

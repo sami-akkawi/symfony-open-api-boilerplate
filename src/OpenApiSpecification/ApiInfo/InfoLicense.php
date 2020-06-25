@@ -2,15 +2,15 @@
 
 namespace App\OpenApiSpecification\ApiInfo;
 
-use App\OpenApiSpecification\ApiInfo\License\LicenseName;
-use App\OpenApiSpecification\ApiInfo\License\LicenseUrl;
+use App\OpenApiSpecification\ApiInfo\InfoLicense\LicenseName;
+use App\OpenApiSpecification\ApiInfo\InfoLicense\LicenseUrl;
 
 /**
  * The license information for the exposed API.
  * http://spec.openapis.org/oas/v3.0.3#info-object
  */
 
-final class License
+final class InfoLicense
 {
     private LicenseName $name;
     private ?LicenseUrl $url;

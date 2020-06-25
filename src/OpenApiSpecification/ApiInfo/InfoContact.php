@@ -2,16 +2,16 @@
 
 namespace App\OpenApiSpecification\ApiInfo;
 
-use App\OpenApiSpecification\ApiInfo\Contact\ContactEmail;
-use App\OpenApiSpecification\ApiInfo\Contact\ContactName;
-use App\OpenApiSpecification\ApiInfo\Contact\ContactUrl;
+use App\OpenApiSpecification\ApiInfo\InfoContact\ContactEmail;
+use App\OpenApiSpecification\ApiInfo\InfoContact\ContactName;
+use App\OpenApiSpecification\ApiInfo\InfoContact\ContactUrl;
 
 /**
  * The contact information for the exposed API.
  * http://spec.openapis.org/oas/v3.0.3#info-object
  */
 
-final class Contact
+final class InfoContact
 {
     private ?ContactName $name;
     private ?ContactEmail $email;

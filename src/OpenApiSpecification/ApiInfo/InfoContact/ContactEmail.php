@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiInfo\Contact;
+namespace App\OpenApiSpecification\ApiInfo\InfoContact;
 
 use App\OpenApiSpecification\ApiException\SpecificationException;
 

@@ -7,7 +7,7 @@ namespace App\OpenApiSpecification\ApiInfo;
  * http://spec.openapis.org/oas/v3.0.3#info-object
  */
 
-final class Description
+final class InfoDescription
 {
     private string $description;
 

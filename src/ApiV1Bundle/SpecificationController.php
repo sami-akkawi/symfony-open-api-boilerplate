@@ -13,8 +13,8 @@ use App\Kernel;
 use App\OpenApiSpecification\ApiComponents;
 use App\OpenApiSpecification\ApiComponents\SecurityScheme\HttpSecurityScheme;
 use App\OpenApiSpecification\ApiInfo;
-use App\OpenApiSpecification\ApiInfo\Contact;
-use App\OpenApiSpecification\ApiInfo\License;
+use App\OpenApiSpecification\ApiInfo\InfoContact;
+use App\OpenApiSpecification\ApiInfo\InfoLicense;
 use App\OpenApiSpecification\ApiPaths;
 use App\OpenApiSpecification\ApiSecurityRequirement;
 use App\OpenApiSpecification\ApiSecurityRequirements;
@@ -22,7 +22,7 @@ use App\OpenApiSpecification\ApiServer;
 use App\OpenApiSpecification\ApiServers;
 use App\OpenApiSpecification\ApiServers\ServerVariable;
 use App\OpenApiSpecification\ApiSpecification;
-use App\OpenApiSpecification\ApiInfo\Version;
+use App\OpenApiSpecification\ApiInfo\InfoVersion;
 use App\OpenApiSpecification\ApiTags;
 use App\OpenApiSpecification\OpenApiVersion;
 use RecursiveDirectoryIterator;
@@ -73,8 +73,8 @@ final class SpecificationController
         $type = 'endpoint';
         foreach ($this->getAutoLoadedClasses($type) as $file) {
             if (
-                !$file->isFile() ||
-                is_int(strpos($file->getBaseName(), 'Abstract'))
+                !$file->isFile()
+                || is_int(strpos($file->getBaseName(), 'Abstract'))
             ) {
                 continue;
             }
@@ -110,8 +110,8 @@ final class SpecificationController
         $type = 'schema';
         foreach ($this->getAutoLoadedClasses($type) as $file) {
             if (
-                !$file->isFile() ||
-                is_int(strpos($file->getBaseName(), 'AbstractSchema'))
+                !$file->isFile()
+                || is_int(strpos($file->getBaseName(), 'AbstractSchema'))
             ) {
                 continue;
             }
@@ -131,8 +131,8 @@ final class SpecificationController
         $type = 'response';
         foreach ($this->getAutoLoadedClasses($type) as $file) {
             if (
-                !$file->isFile() ||
-                is_int(strpos($file->getBaseName(), 'Abstract'))
+                !$file->isFile()
+                || is_int(strpos($file->getBaseName(), 'Abstract'))
             ) {
                 continue;
             }
@@ -152,8 +152,8 @@ final class SpecificationController
         $type = 'parameter';
         foreach ($this->getAutoLoadedClasses($type) as $file) {
             if (
-                !$file->isFile() ||
-                is_int(strpos($file->getBaseName(), 'AbstractParameter'))
+                !$file->isFile()
+                || is_int(strpos($file->getBaseName(), 'AbstractParameter'))
             ) {
                 continue;
             }
@@ -173,8 +173,8 @@ final class SpecificationController
         $type = 'example';
         foreach ($this->getAutoLoadedClasses($type) as $file) {
             if (
-                !$file->isFile() ||
-                is_int(strpos($file->getBaseName(), 'AbstractExample'))
+                !$file->isFile()
+                || is_int(strpos($file->getBaseName(), 'AbstractExample'))
             ) {
                 continue;
             }
@@ -194,8 +194,8 @@ final class SpecificationController
         $type = 'requestBody';
         foreach ($this->getAutoLoadedClasses($type) as $file) {
             if (
-                !$file->isFile() ||
-                is_int(strpos($file->getBaseName(), 'AbstractRequestBody'))
+                !$file->isFile()
+                || is_int(strpos($file->getBaseName(), 'AbstractRequestBody'))
             ) {
                 continue;
             }
@@ -220,14 +220,14 @@ final class SpecificationController
     {
         $type = ucfirst($type);
         $normalizedPathName = str_replace(DIRECTORY_SEPARATOR, '\\', $file->getPathName());
-        $relativePath = explode("\\ApiV1Bundle\\$type\\", $normalizedPathName)[1];
+        $relativePath = explode("\\$type\\", $normalizedPathName)[1];
         $className = explode('.', $relativePath)[0];
         return $this->getNamespaceByType($type) . $className;
     }
 
     private function getNamespaceByType(string $type): string
     {
-        return "App\\ApiV1Bundle\\$type\\";
+        return __NAMESPACE__ . "\\$type\\";
     }
 
     private function getDirectory(string $type): string
@@ -245,8 +245,8 @@ final class SpecificationController
     {
         return ApiInfo::generate('Boilerplate API', $this->getVersion())
             ->setDescription('This is a boilerplate API description.')
-            ->setContact(Contact::generate()->setEmail('something@your-website.ch'))
-            ->setLicense(License::generate('Apache 2.0'))
+            ->setContact(InfoContact::generate()->setEmail('something@your-website.ch'))
+            ->setLicense(InfoLicense::generate('Apache 2.0'))
             ->setTermsOfService('https://www.your-website.ch/api-terms-of-service');
     }
 
@@ -256,9 +256,9 @@ final class SpecificationController
             ->addRequirement(ApiSecurityRequirement::generate('JsonWebToken'));
     }
 
-    public function getVersion(): Version
+    public function getVersion(): InfoVersion
     {
-        return Version::generate(1, 0, 0);
+        return InfoVersion::generate(1, 0, 0);
     }
 
     private function getServers(): ApiServers
@@ -277,8 +277,8 @@ final class SpecificationController
         $type = 'tag';
         foreach ($this->getAutoLoadedClasses($type) as $file) {
             if (
-                !$file->isFile() ||
-                is_int(strpos($file->getBaseName(), 'Abstract'))
+                !$file->isFile()
+                || is_int(strpos($file->getBaseName(), 'Abstract'))
             ) {
                 continue;
             }

@@ -2,12 +2,12 @@
 
 namespace App\OpenApiSpecification;
 
-use App\OpenApiSpecification\ApiInfo\Contact;
-use App\OpenApiSpecification\ApiInfo\Description;
-use App\OpenApiSpecification\ApiInfo\License;
-use App\OpenApiSpecification\ApiInfo\TermsOfService;
-use App\OpenApiSpecification\ApiInfo\Title;
-use App\OpenApiSpecification\ApiInfo\Version;
+use App\OpenApiSpecification\ApiInfo\InfoContact;
+use App\OpenApiSpecification\ApiInfo\InfoDescription;
+use App\OpenApiSpecification\ApiInfo\InfoLicense;
+use App\OpenApiSpecification\ApiInfo\InfoTermsOfService;
+use App\OpenApiSpecification\ApiInfo\InfoTitle;
+use App\OpenApiSpecification\ApiInfo\InfoVersion;
 
 /**
  * REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
@@ -16,20 +16,20 @@ use App\OpenApiSpecification\ApiInfo\Version;
 
 final class ApiInfo
 {
-    private Version $version;
-    private Title $title;
-    private ?Description $description;
-    private ?TermsOfService $termsOfService;
-    private ?Contact $contact;
-    private ?License $license;
+    private InfoVersion $version;
+    private InfoTitle $title;
+    private ?InfoDescription $description;
+    private ?InfoTermsOfService $termsOfService;
+    private ?InfoContact $contact;
+    private ?InfoLicense $license;
 
     private function __construct(
-        Version $version,
-        Title $title,
-        ?Description $description = null,
-        ?TermsOfService $termsOfService = null,
-        ?Contact $contact = null,
-        ?License $license = null
+        InfoVersion $version,
+        InfoTitle $title,
+        ?InfoDescription $description = null,
+        ?InfoTermsOfService $termsOfService = null,
+        ?InfoContact $contact = null,
+        ?InfoLicense $license = null
     ) {
         $this->version = $version;
         $this->title = $title;
@@ -39,12 +39,12 @@ final class ApiInfo
         $this->license = $license;
     }
 
-    public static function generate(string $title, Version $version): self
+    public static function generate(string $title, InfoVersion $version): self
     {
-        return new self($version, Title::fromString($title));
+        return new self($version, InfoTitle::fromString($title));
     }
 
-    public function setContact(Contact $contact): self
+    public function setContact(InfoContact $contact): self
     {
         return new self(
             $this->version,
@@ -61,14 +61,14 @@ final class ApiInfo
         return new self(
             $this->version,
             $this->title,
-            Description::fromString($description),
+            InfoDescription::fromString($description),
             $this->termsOfService,
             $this->contact,
             $this->license
         );
     }
 
-    public function setLicense(License $license): self
+    public function setLicense(InfoLicense $license): self
     {
         return new self(
             $this->version,
@@ -91,7 +91,7 @@ final class ApiInfo
             $this->version,
             $this->title,
             $this->description,
-            TermsOfService::fromString($termsOfService),
+            InfoTermsOfService::fromString($termsOfService),
             $this->contact,
             $this->license
         );

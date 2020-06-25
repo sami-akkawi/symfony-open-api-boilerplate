@@ -9,7 +9,7 @@ use App\OpenApiSpecification\ApiException\SpecificationException;
  * http://spec.openapis.org/oas/v3.0.3#info-object
  */
 
-final class TermsOfService
+final class InfoTermsOfService
 {
     private string $termsOfService;
 

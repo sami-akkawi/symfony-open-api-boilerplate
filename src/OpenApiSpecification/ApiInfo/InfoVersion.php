@@ -8,7 +8,7 @@ namespace App\OpenApiSpecification\ApiInfo;
  * http://spec.openapis.org/oas/v3.0.3#info-object
  */
 
-final class Version
+final class InfoVersion
 {
     private int $majorVersion;
     private int $minorVersion;
