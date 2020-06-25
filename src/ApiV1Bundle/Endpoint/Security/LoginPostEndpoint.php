@@ -25,7 +25,7 @@ final class LoginPostEndpoint extends AbstractPostEndpoint
         $data = [
             'id' => Uuid::v4()->toRfc4122(),
             'email' => 'someemail@example.com',
-            'username' => 'mockeUsername'
+            'username' => 'mockUsername'
         ];
 
         return new Response(json_encode($data));

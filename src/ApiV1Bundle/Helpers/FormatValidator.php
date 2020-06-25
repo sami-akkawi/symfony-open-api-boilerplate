@@ -180,7 +180,7 @@ final class FormatValidator
             return $cleanRequestBody;
         }
 
-        throw new \LogicException("Missing Handling of Request of Content Ty e $requestContentType");
+        throw new \LogicException("Missing Handling of Request of Content Type $requestContentType");
     }
 
 
