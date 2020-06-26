@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Parameter;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter;
 
 /**
  * Specifies that a parameter is deprecated and SHOULD be transitioned out of usage. Default value is false.

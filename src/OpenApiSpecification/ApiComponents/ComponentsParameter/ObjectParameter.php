@@ -1,24 +1,32 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Parameter;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsParameter;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Schema\NumberSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterIsDeprecated;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterIsRequired;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterKey;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterLocation;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterName;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterStyle;
+use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
+use App\OpenApiSpecification\ApiComponents\Schemas;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class NumberParameter extends DetailedParameter
+final class ObjectParameter extends Parameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
         if ($location->isInPath()) {
-            throw SpecificationException::generateCannotBeInPath('NumberParameter');
+            throw SpecificationException::generateCannotBeInPath('ObjectParameter');
         }
 
         return new self(
             ParameterName::fromString($name),
             $location,
-            NumberSchema::generate(),
+            ObjectSchema::generate(Schemas::generate()),
             ParameterIsRequired::generateFalse(),
             ParameterIsDeprecated::generateFalse()
         );
@@ -40,7 +48,7 @@ final class NumberParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateMatrix(),
             $this->example,
             $this->examples
@@ -63,7 +71,7 @@ final class NumberParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateLabel(),
             $this->example,
             $this->examples
@@ -86,7 +94,7 @@ final class NumberParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateForm(),
             $this->example,
             $this->examples
@@ -119,15 +127,25 @@ final class NumberParameter extends DetailedParameter
 
     public function styleAsDeepObject(): self
     {
-        throw SpecificationException::generateStyleNotSupportedForType(
-            ParameterStyle::DEEP_OBJECT,
-            $this->getParameterType()
-        );
-    }
+        if (!$this->location->isInQuery()) {
+            throw SpecificationException::generateStyleNotSupportedForLocation(
+                ParameterStyle::DEEP_OBJECT,
+                $this->location->toString()
+            );
+        }
 
-    public static function generateInCookie(string $name): self
-    {
-        return self::generate($name, ParameterLocation::generateCookie());
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            ParameterStyle::generateDeepObject(),
+            $this->example,
+            $this->examples
+        );
     }
 
     public static function generateInQuery(string $name): self
@@ -142,23 +160,12 @@ final class NumberParameter extends DetailedParameter
 
     public static function generateInPath(string $name): self
     {
-        throw SpecificationException::generateCannotBeInPath('NumberParameter');
+        throw SpecificationException::generateCannotBeInPath('ObjectParameter');
     }
 
-    public function setFormat(string $format): self
+    public static function generateInCookie(string $name): self
     {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->schema->setFormat($format),
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->description,
-            $this->docName,
-            $this->style,
-            $this->example,
-            $this->examples
-        );
+        return self::generate($name, ParameterLocation::generateCookie());
     }
 
     public function require(): self
@@ -170,7 +177,7 @@ final class NumberParameter extends DetailedParameter
             ParameterIsRequired::generateTrue(),
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -186,7 +193,7 @@ final class NumberParameter extends DetailedParameter
             $this->isRequired,
             ParameterIsDeprecated::generateTrue(),
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -202,7 +209,23 @@ final class NumberParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             ParameterDescription::fromString($description),
-            $this->docName,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setKey(string $key): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            ParameterKey::fromString($key),
             $this->style,
             $this->example,
             $this->examples
@@ -218,55 +241,7 @@ final class NumberParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
-            $this->style,
-            $this->example,
-            $this->examples
-        );
-    }
-
-    public function setMinimum(float $minimum): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->schema->setMinimum($minimum),
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->description,
-            $this->docName,
-            $this->style,
-            $this->example,
-            $this->examples
-        );
-    }
-
-    public function setMaximum(float $maximum): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->schema->setMaximum($maximum),
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->description,
-            $this->docName,
-            $this->style,
-            $this->example,
-            $this->examples
-        );
-    }
-
-    public function setDocName(string $name): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->schema,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->description,
-            ParameterDocName::fromString($name),
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -282,7 +257,7 @@ final class NumberParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $example,
             null
@@ -307,7 +282,7 @@ final class NumberParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             null,
             $examples->addExample($example, $example->getName()->toString())

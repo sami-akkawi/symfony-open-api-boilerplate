@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Parameter;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter;
 
 /**
  * Determines whether this parameter is mandatory. If the parameter location is "path", this property is REQUIRED and

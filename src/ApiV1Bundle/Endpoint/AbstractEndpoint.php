@@ -8,7 +8,7 @@ use App\ApiV1Bundle\Helpers\JsonToXmlConverter;
 use App\ApiV1Bundle\Response\CorruptDataResponse;
 use App\ApiV1Bundle\Response\UnprocessableEntityResponse;
 use App\Message\FieldMessage;
-use App\OpenApiSpecification\ApiComponents\Parameters;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
 use App\OpenApiSpecification\ApiComponents\RequestBody;
 use App\OpenApiSpecification\ApiComponents\Responses;
 use App\OpenApiSpecification\ApiPath;
@@ -134,9 +134,9 @@ abstract class AbstractEndpoint
 
     protected abstract static function getResponses(): Responses;
 
-    public static function getParameters(): Parameters
+    public static function getParameters(): ComponentsParameters
     {
-        return Parameters::generate();
+        return ComponentsParameters::generate();
     }
 
     public static function getDescription(): ?OperationDescription

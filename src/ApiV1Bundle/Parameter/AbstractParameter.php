@@ -2,17 +2,17 @@
 
 namespace App\ApiV1Bundle\Parameter;
 
-use App\OpenApiSpecification\ApiComponents\Parameter\DetailedParameter;
-use App\OpenApiSpecification\ApiComponents\Parameter\ReferenceParameter;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\ReferenceParameter;
 
 abstract class AbstractParameter
 {
-    public static function getOpenApiParameter(): DetailedParameter
+    public static function getOpenApiParameter(): Parameter
     {
-        return static::getOpenApiResponseWithoutName()->setDocName(static::getClassName());
+        return static::getOpenApiResponseWithoutName()->setKey(static::getClassName());
     }
 
-    protected abstract static function getOpenApiResponseWithoutName(): DetailedParameter;
+    protected abstract static function getOpenApiResponseWithoutName(): Parameter;
 
     public static function getReferenceParameter(): ReferenceParameter
     {

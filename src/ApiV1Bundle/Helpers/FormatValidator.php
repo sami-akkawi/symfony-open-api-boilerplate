@@ -4,7 +4,7 @@ namespace App\ApiV1Bundle\Helpers;
 
 use App\ApiV1Bundle\Endpoint\AbstractEndpoint;
 use App\Message\Message;
-use App\OpenApiSpecification\ApiComponents\Parameters;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
 use App\OpenApiSpecification\ApiComponents\RequestBody;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,7 +49,7 @@ final class FormatValidator
         ];
     }
 
-    private function getQueryParameters(Parameters $parameters, Request $request): array
+    private function getQueryParameters(ComponentsParameters $parameters, Request $request): array
     {
         $queryBag = $request->query->all();
         $queryParameterSchemas = $parameters->getAllQueryParameters();
@@ -73,7 +73,7 @@ final class FormatValidator
         return $queryBag;
     }
 
-    private function getHeaderParameters(Parameters $parameters, Request $request): array
+    private function getHeaderParameters(ComponentsParameters $parameters, Request $request): array
     {
         $headersBag = $request->headers->all();
         $headerParameterSchemas = $parameters->getAllHeaderParameters();
@@ -97,7 +97,7 @@ final class FormatValidator
         return $headersBag;
     }
 
-    private function getCookieParameters(Parameters $parameters, Request $request): array
+    private function getCookieParameters(ComponentsParameters $parameters, Request $request): array
     {
         $cookiesBag = $request->cookies->all();
         $cookieParameterSchemas = $parameters->getAllCookieParameters();

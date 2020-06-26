@@ -1,26 +1,28 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Parameter;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsParameter;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterIsDeprecated;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterIsRequired;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterKey;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterLocation;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterName;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterStyle;
+use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class ObjectParameter extends DetailedParameter
+final class StringParameter extends Parameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
-        if ($location->isInPath()) {
-            throw SpecificationException::generateCannotBeInPath('ObjectParameter');
-        }
-
         return new self(
             ParameterName::fromString($name),
             $location,
-            ObjectSchema::generate(Schemas::generate()),
-            ParameterIsRequired::generateFalse(),
+            StringSchema::generate(),
+            $location->isInPath() ? ParameterIsRequired::generateTrue() : ParameterIsRequired::generateFalse(),
             ParameterIsDeprecated::generateFalse()
         );
     }
@@ -41,7 +43,7 @@ final class ObjectParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateMatrix(),
             $this->example,
             $this->examples
@@ -64,7 +66,7 @@ final class ObjectParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateLabel(),
             $this->example,
             $this->examples
@@ -87,7 +89,7 @@ final class ObjectParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateForm(),
             $this->example,
             $this->examples
@@ -120,25 +122,15 @@ final class ObjectParameter extends DetailedParameter
 
     public function styleAsDeepObject(): self
     {
-        if (!$this->location->isInQuery()) {
-            throw SpecificationException::generateStyleNotSupportedForLocation(
-                ParameterStyle::DEEP_OBJECT,
-                $this->location->toString()
-            );
-        }
-
-        return new self(
-            $this->name,
-            $this->location,
-            $this->schema,
-            $this->isRequired,
-            $this->isDeprecated,
-            $this->description,
-            $this->docName,
-            ParameterStyle::generateDeepObject(),
-            $this->example,
-            $this->examples
+        throw SpecificationException::generateStyleNotSupportedForType(
+            ParameterStyle::DEEP_OBJECT,
+            $this->getParameterType()
         );
+    }
+
+    public static function generateInCookie(string $name): self
+    {
+        return self::generate($name, ParameterLocation::generateCookie());
     }
 
     public static function generateInQuery(string $name): self
@@ -153,72 +145,36 @@ final class ObjectParameter extends DetailedParameter
 
     public static function generateInPath(string $name): self
     {
-        throw SpecificationException::generateCannotBeInPath('ObjectParameter');
+        return self::generate($name, ParameterLocation::generatePath());
     }
 
-    public static function generateInCookie(string $name): self
-    {
-        return self::generate($name, ParameterLocation::generateCookie());
-    }
-
-    public function require(): self
+    public function setFormat(string $format): self
     {
         return new self(
             $this->name,
             $this->location,
-            $this->schema,
-            ParameterIsRequired::generateTrue(),
+            $this->schema->setFormat($format),
+            $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
         );
     }
 
-    public function deprecate(): self
+    /** @param string[] $options */
+    public function setOptions(array $options): self
     {
         return new self(
             $this->name,
             $this->location,
-            $this->schema,
-            $this->isRequired,
-            ParameterIsDeprecated::generateTrue(),
-            $this->description,
-            $this->docName,
-            $this->style,
-            $this->example,
-            $this->examples
-        );
-    }
-
-    public function setDescription(string $description): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->schema,
-            $this->isRequired,
-            $this->isDeprecated,
-            ParameterDescription::fromString($description),
-            $this->docName,
-            $this->style,
-            $this->example,
-            $this->examples
-        );
-    }
-
-    public function setDocName(string $name): self
-    {
-        return new self(
-            $this->name,
-            $this->location,
-            $this->schema,
+            $this->schema->setOptions($options),
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            ParameterDocName::fromString($name),
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -234,7 +190,103 @@ final class ObjectParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function require(): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            ParameterIsRequired::generateTrue(),
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function deprecate(): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            ParameterIsDeprecated::generateTrue(),
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setDescription(string $description): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            ParameterDescription::fromString($description),
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setKey(string $key): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            ParameterKey::fromString($key),
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setMinimumLength(int $minLength): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema->setMinimumLength($minLength),
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setMaximumLength(int $maxLength): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema->setMaximumLength($maxLength),
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -250,7 +302,7 @@ final class ObjectParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $example,
             null
@@ -275,10 +327,25 @@ final class ObjectParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             null,
-            $examples->addExample($example, $example->getName()->toString())
+            $examples
         );
+    }
+
+    public function getRouteRequirements(): ?string
+    {
+        $schemaType = $this->schema->getType();
+
+        if ($schemaType->isStringUuid()) {
+            return '[a-f\d]{8}(\-[a-f\d]{4}){3}\-[a-f\d]{12}';
+        }
+
+        if ($schemaType->isStringDate()) {
+            return '[12]\d{3}\-(0[1-9]|1[0-2])\-(0[1-9]|[12]\d|3[01])';
+        }
+
+        return null;
     }
 }

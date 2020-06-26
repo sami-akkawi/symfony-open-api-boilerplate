@@ -2,12 +2,12 @@
 
 namespace App\ApiV1Bundle\Parameter;
 
-use App\OpenApiSpecification\ApiComponents\Parameter\DetailedParameter;
-use App\OpenApiSpecification\ApiComponents\Parameter\IntegerParameter;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\IntegerParameter;
 
 final class PaginationCurrentPage extends AbstractParameter
 {
-    protected static function getOpenApiResponseWithoutName(): DetailedParameter
+    protected static function getOpenApiResponseWithoutName(): Parameter
     {
         return IntegerParameter::generateInQuery('currentPage')
             ->setDescription('Page of data to show.')

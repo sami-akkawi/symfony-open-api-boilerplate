@@ -2,12 +2,12 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\Parameter\DetailedParameter;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class Parameters
+final class ComponentsParameters
 {
-    /** @var Parameter[] */
+    /** @var ComponentsParameter[] */
     private array $parameters;
 
     private function __construct(array $parameters)
@@ -20,11 +20,11 @@ final class Parameters
         return new self([]);
     }
 
-    private function hasParameter(Parameter $parameter): bool
+    private function hasParameter(ComponentsParameter $parameter): bool
     {
         foreach ($this->parameters as $thisParameter) {
-            $thisParameter = $thisParameter->toDetailedParameter();
-            $thatParameter = $parameter->toDetailedParameter();
+            $thisParameter = $thisParameter->toParameter();
+            $thatParameter = $parameter->toParameter();
 
             if ($thisParameter->isIdenticalTo($thatParameter)) {
                 return true;
@@ -33,7 +33,7 @@ final class Parameters
         return false;
     }
 
-    public function addParameter(Parameter $parameter): self
+    public function addParameter(ComponentsParameter $parameter): self
     {
         if ($this->hasParameter($parameter)) {
             throw SpecificationException::generateDuplicateParameters();
@@ -49,10 +49,10 @@ final class Parameters
         }
         $parameters = [];
         foreach ($this->parameters as $parameter) {
-            if (!$parameter->hasDocName()) {
+            if (!$parameter->hasKey()) {
                 throw SpecificationException::generateMustHaveKeyInComponents();
             }
-            $parameters[$parameter->getDocName()->toString()] = $parameter->toOpenApiSpecification();
+            $parameters[$parameter->getKey()->toString()] = $parameter->toOpenApiSpecification();
         }
         return $parameters;
     }
@@ -81,10 +81,10 @@ final class Parameters
         return (bool)count($this->parameters);
     }
 
-    public function getPathParameter(string $name): ?DetailedParameter
+    public function getPathParameter(string $name): ?Parameter
     {
         foreach ($this->parameters as $parameter) {
-            $detailedParameter = $parameter->toDetailedParameter();
+            $detailedParameter = $parameter->toParameter();
             if (
                 $detailedParameter->isInPath()
                 && $detailedParameter->getName()->toString() === $name
@@ -96,7 +96,7 @@ final class Parameters
         return null;
     }
 
-    /** @return Parameter[] */
+    /** @return ComponentsParameter[] */
     public function getAllQueryParameters(): array
     {
         $parameters = [];
@@ -110,7 +110,7 @@ final class Parameters
         return $parameters;
     }
 
-    /** @return Parameter[] */
+    /** @return ComponentsParameter[] */
     public function getAllHeaderParameters(): array
     {
         $parameters = [];
@@ -124,7 +124,7 @@ final class Parameters
         return $parameters;
     }
 
-    /** @return Parameter[] */
+    /** @return ComponentsParameter[] */
     public function getAllCookieParameters(): array
     {
         $parameters = [];
@@ -138,7 +138,7 @@ final class Parameters
         return $parameters;
     }
 
-    /** @return Parameter[] */
+    /** @return ComponentsParameter[] */
     public function getAllPathParameters(): array
     {
         $parameters = [];

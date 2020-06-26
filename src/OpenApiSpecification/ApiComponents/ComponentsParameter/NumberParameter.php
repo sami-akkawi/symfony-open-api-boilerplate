@@ -1,21 +1,32 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Parameter;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsParameter;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Schema\IntegerSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterIsDeprecated;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterIsRequired;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterKey;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterLocation;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterName;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterStyle;
+use App\OpenApiSpecification\ApiComponents\Schema\NumberSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class IntegerParameter extends DetailedParameter
+final class NumberParameter extends Parameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
+        if ($location->isInPath()) {
+            throw SpecificationException::generateCannotBeInPath('NumberParameter');
+        }
+
         return new self(
             ParameterName::fromString($name),
             $location,
-            IntegerSchema::generate(),
-            $location->isInPath() ? ParameterIsRequired::generateTrue() : ParameterIsRequired::generateFalse(),
+            NumberSchema::generate(),
+            ParameterIsRequired::generateFalse(),
             ParameterIsDeprecated::generateFalse()
         );
     }
@@ -36,7 +47,7 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateMatrix(),
             $this->example,
             $this->examples
@@ -59,7 +70,7 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateLabel(),
             $this->example,
             $this->examples
@@ -82,7 +93,7 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateForm(),
             $this->example,
             $this->examples
@@ -121,24 +132,24 @@ final class IntegerParameter extends DetailedParameter
         );
     }
 
-    public static function generateInCookie(string $name, ?string $docName = null): self
+    public static function generateInCookie(string $name): self
     {
         return self::generate($name, ParameterLocation::generateCookie());
     }
 
-    public static function generateInQuery(string $name, ?string $docName = null): self
+    public static function generateInQuery(string $name): self
     {
         return self::generate($name, ParameterLocation::generateQuery());
     }
 
-    public static function generateInHeader(string $name, ?string $docName = null): self
+    public static function generateInHeader(string $name): self
     {
         return self::generate($name, ParameterLocation::generateHeader());
     }
 
-    public static function generateInPath(string $name, ?string $docName = null): self
+    public static function generateInPath(string $name): self
     {
-        return self::generate($name, ParameterLocation::generatePath());
+        throw SpecificationException::generateCannotBeInPath('NumberParameter');
     }
 
     public function setFormat(string $format): self
@@ -150,7 +161,7 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -166,7 +177,7 @@ final class IntegerParameter extends DetailedParameter
             ParameterIsRequired::generateTrue(),
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -182,7 +193,7 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             ParameterIsDeprecated::generateTrue(),
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -198,7 +209,7 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             ParameterDescription::fromString($description),
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -214,14 +225,14 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
         );
     }
 
-    public function setMinimum(int $minimum): self
+    public function setMinimum(float $minimum): self
     {
         return new self(
             $this->name,
@@ -230,14 +241,14 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
         );
     }
 
-    public function setMaximum(int $maximum): self
+    public function setMaximum(float $maximum): self
     {
         return new self(
             $this->name,
@@ -246,14 +257,14 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
         );
     }
 
-    public function setDocName(string $name): self
+    public function setKey(string $key): self
     {
         return new self(
             $this->name,
@@ -262,7 +273,7 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            ParameterDocName::fromString($name),
+            ParameterKey::fromString($key),
             $this->style,
             $this->example,
             $this->examples
@@ -278,7 +289,7 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $example,
             null
@@ -303,25 +314,10 @@ final class IntegerParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             null,
             $examples->addExample($example, $example->getName()->toString())
         );
-    }
-
-    public function getRouteRequirements(): ?string
-    {
-        $minimum = $this->schema->getMinimum();
-
-        if (!$minimum || $minimum->toInt() < 0) {
-            return '^(\-?)\d*';
-        }
-
-        if ($minimum->toInt() > 0) {
-            return '^[1-9]\d*';
-        }
-
-        return '^\d*';
     }
 }

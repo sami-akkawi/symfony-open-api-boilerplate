@@ -1,11 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Parameter;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsParameter;
 
 use App\Message\FieldMessage;
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Parameter;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterIsDeprecated;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterIsRequired;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterKey;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterLocation;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterName;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterStyle;
 use App\OpenApiSpecification\ApiComponents\Schema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
@@ -15,7 +22,7 @@ use App\OpenApiSpecification\ApiException\SpecificationException;
  * http://spec.openapis.org/oas/v3.0.3#parameter-object
  */
 
-abstract class DetailedParameter extends Parameter
+abstract class Parameter extends ComponentsParameter
 {
     private const PRIMITIVE_PARAMETERS = [
         BooleanParameter::class,
@@ -43,7 +50,7 @@ abstract class DetailedParameter extends Parameter
         ?ParameterIsRequired $isRequired = null,
         ?ParameterIsDeprecated $isDeprecated = null,
         ?ParameterDescription $description =null,
-        ?ParameterDocName $docName = null,
+        ?ParameterKey $docName = null,
         ?ParameterStyle $style = null,
         ?ComponentsExample $example = null,
         ?ComponentsExamples $examples = null
@@ -58,7 +65,7 @@ abstract class DetailedParameter extends Parameter
         $this->isRequired = $isRequired ?? ParameterIsRequired::generateFalse();
         $this->isDeprecated = $isDeprecated ?? ParameterIsDeprecated::generateFalse();
         $this->description = $description;
-        $this->docName = $docName;
+        $this->key = $docName;
         $this->example = $example;
         $this->examples = $examples;
         $this->style = $style;
@@ -84,7 +91,7 @@ abstract class DetailedParameter extends Parameter
         return $this->location->isInPath();
     }
 
-    public function toDetailedParameter(): self
+    public function toParameter(): self
     {
         return $this;
     }

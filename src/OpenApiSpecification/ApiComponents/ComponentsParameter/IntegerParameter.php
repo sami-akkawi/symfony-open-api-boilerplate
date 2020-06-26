@@ -1,24 +1,27 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Parameter;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsParameter;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Schema\BooleanSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterIsDeprecated;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterIsRequired;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterKey;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterLocation;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterName;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterStyle;
+use App\OpenApiSpecification\ApiComponents\Schema\IntegerSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class BooleanParameter extends DetailedParameter
+final class IntegerParameter extends Parameter
 {
     private static function generate(string $name, ParameterLocation $location): self
     {
-        if ($location->isInPath()) {
-            throw SpecificationException::generateCannotBeInPath('BooleanParameter');
-        }
-
         return new self(
             ParameterName::fromString($name),
             $location,
-            BooleanSchema::generate(),
+            IntegerSchema::generate(),
             $location->isInPath() ? ParameterIsRequired::generateTrue() : ParameterIsRequired::generateFalse(),
             ParameterIsDeprecated::generateFalse()
         );
@@ -40,7 +43,7 @@ final class BooleanParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateMatrix(),
             $this->example,
             $this->examples
@@ -63,7 +66,7 @@ final class BooleanParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateLabel(),
             $this->example,
             $this->examples
@@ -86,7 +89,7 @@ final class BooleanParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             ParameterStyle::generateForm(),
             $this->example,
             $this->examples
@@ -125,36 +128,36 @@ final class BooleanParameter extends DetailedParameter
         );
     }
 
-    public static function generateInCookie(string $name): self
+    public static function generateInCookie(string $name, ?string $docName = null): self
     {
         return self::generate($name, ParameterLocation::generateCookie());
     }
 
-    public static function generateInQuery(string $name): self
+    public static function generateInQuery(string $name, ?string $docName = null): self
     {
         return self::generate($name, ParameterLocation::generateQuery());
     }
 
-    public static function generateInHeader(string $name): self
+    public static function generateInHeader(string $name, ?string $docName = null): self
     {
         return self::generate($name, ParameterLocation::generateHeader());
     }
 
-    public static function generateInPath(string $name): self
+    public static function generateInPath(string $name, ?string $docName = null): self
     {
-        throw SpecificationException::generateCannotBeInPath('BooleanParameter');
+        return self::generate($name, ParameterLocation::generatePath());
     }
 
-    public function makeNullable(): self
+    public function setFormat(string $format): self
     {
         return new self(
             $this->name,
             $this->location,
-            $this->schema->makeNullable(),
+            $this->schema->setFormat($format),
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -170,7 +173,7 @@ final class BooleanParameter extends DetailedParameter
             ParameterIsRequired::generateTrue(),
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -186,7 +189,7 @@ final class BooleanParameter extends DetailedParameter
             $this->isRequired,
             ParameterIsDeprecated::generateTrue(),
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
@@ -202,14 +205,62 @@ final class BooleanParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             ParameterDescription::fromString($description),
-            $this->docName,
+            $this->key,
             $this->style,
             $this->example,
             $this->examples
         );
     }
 
-    public function setDocName(string $name): self
+    public function makeNullable(): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema->makeNullable(),
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setMinimum(int $minimum): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema->setMinimum($minimum),
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setMaximum(int $maximum): self
+    {
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema->setMaximum($maximum),
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
+    }
+
+    public function setKey(string $key): self
     {
         return new self(
             $this->name,
@@ -218,7 +269,7 @@ final class BooleanParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            ParameterDocName::fromString($name),
+            ParameterKey::fromString($key),
             $this->style,
             $this->example,
             $this->examples
@@ -234,7 +285,7 @@ final class BooleanParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             $example,
             null
@@ -259,10 +310,25 @@ final class BooleanParameter extends DetailedParameter
             $this->isRequired,
             $this->isDeprecated,
             $this->description,
-            $this->docName,
+            $this->key,
             $this->style,
             null,
-            $examples
+            $examples->addExample($example, $example->getName()->toString())
         );
+    }
+
+    public function getRouteRequirements(): ?string
+    {
+        $minimum = $this->schema->getMinimum();
+
+        if (!$minimum || $minimum->toInt() < 0) {
+            return '^(\-?)\d*';
+        }
+
+        if ($minimum->toInt() > 0) {
+            return '^[1-9]\d*';
+        }
+
+        return '^\d*';
     }
 }

@@ -6,8 +6,8 @@ use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
 use App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 use App\OpenApiSpecification\ApiComponents\ComponentsHeaders;
-use App\OpenApiSpecification\ApiComponents\Parameter;
-use App\OpenApiSpecification\ApiComponents\Parameters;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
 use App\OpenApiSpecification\ApiComponents\RequestBodies;
 use App\OpenApiSpecification\ApiComponents\RequestBody;
 use App\OpenApiSpecification\ApiComponents\Response;
@@ -22,7 +22,7 @@ final class ApiComponents
 {
     private Schemas $schemas;
     private Responses $responses;
-    private Parameters $parameters;
+    private ComponentsParameters $parameters;
     private ComponentsExamples $examples;
     private RequestBodies $requestBodies;
     private ComponentsHeaders $headers;
@@ -32,7 +32,7 @@ final class ApiComponents
     private function __construct(
         Schemas $schemas,
         Responses $responses,
-        Parameters $parameters,
+        ComponentsParameters $parameters,
         ComponentsExamples $examples,
         RequestBodies $requestBodies,
         ComponentsHeaders $headers,
@@ -52,7 +52,7 @@ final class ApiComponents
         return new self(
             Schemas::generate(),
             Responses::generate(),
-            Parameters::generate(),
+            ComponentsParameters::generate(),
             ComponentsExamples::generate(),
             RequestBodies::generate(),
             ComponentsHeaders::generate(),
@@ -107,9 +107,9 @@ final class ApiComponents
         );
     }
 
-    public function addParameter(Parameter $parameter): self
+    public function addParameter(ComponentsParameter $parameter): self
     {
-        if (!$parameter->hasDocName()) {
+        if (!$parameter->hasKey()) {
             throw SpecificationException::generateMustHaveKeyInComponents();
         }
 

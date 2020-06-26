@@ -2,8 +2,8 @@
 
 namespace App\OpenApiSpecification\ApiException;
 
-use App\OpenApiSpecification\ApiComponents\Parameter\ParameterLocation;
-use App\OpenApiSpecification\ApiComponents\Parameter\ParameterStyle;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\ParameterLocation;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\ParameterStyle;
 use App\OpenApiSpecification\ApiComponents\Reference\ReferenceType;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\DiscriminatorSchemaType;
 use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\ApiKeyLocation;

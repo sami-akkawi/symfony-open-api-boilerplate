@@ -2,9 +2,9 @@
 
 namespace App\OpenApiSpecification\ApiPath;
 
-use App\OpenApiSpecification\ApiComponents\Parameter;
-use App\OpenApiSpecification\ApiComponents\Parameter\DetailedParameter;
-use App\OpenApiSpecification\ApiComponents\Parameters;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
 use App\OpenApiSpecification\ApiComponents\RequestBody;
 use App\OpenApiSpecification\ApiComponents\Responses;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationDescription;
@@ -25,7 +25,7 @@ use App\OpenApiSpecification\ApiPath\PathOperation\OperationTags;
 final class PathOperation
 {
     private OperationName $name;
-    private Parameters $parameters;
+    private ComponentsParameters $parameters;
     private Responses $responses;
     private OperationId $id;
     private OperationTags $tags;
@@ -39,7 +39,7 @@ final class PathOperation
         OperationName $name,
         OperationId $id,
         OperationTags $tags,
-        Parameters $parameters,
+        ComponentsParameters $parameters,
         Responses $responses,
         OperationIsDeprecated $isDeprecated,
         OperationHasOptionalSecurity $hasOptionalSecurity,
@@ -62,7 +62,7 @@ final class PathOperation
     public static function generate(
         OperationName $name,
         OperationId $id,
-        Parameters $parameters,
+        ComponentsParameters $parameters,
         Responses $responses
     ): self {
         return new self(
@@ -192,12 +192,12 @@ final class PathOperation
         );
     }
 
-    public function getPathParameter(string $name): ?DetailedParameter
+    public function getPathParameter(string $name): ?Parameter
     {
         return $this->parameters->getPathParameter($name);
     }
 
-    /** @return Parameter[] */
+    /** @return ComponentsParameter[] */
     public function getAllPathParameters(): array
     {
         return $this->parameters->getAllPathParameters();
