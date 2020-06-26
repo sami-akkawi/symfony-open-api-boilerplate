@@ -2,10 +2,10 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\MediaType\MediaTypeMimeType;
+use App\OpenApiSpecification\ApiComponents\ComponentsMediaType\MediaTypeMimeType;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class MediaType
+final class ComponentsMediaType
 {
     private MediaTypeMimeType $mimeType;
     private Schema $schema;

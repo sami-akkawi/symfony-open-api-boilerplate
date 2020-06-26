@@ -2,12 +2,12 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\MediaType\MediaTypeMimeType;
+use App\OpenApiSpecification\ApiComponents\ComponentsMediaType\MediaTypeMimeType;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class MediaTypes
+final class ComponentsMediaTypes
 {
-    /** @var MediaType[] */
+    /** @var ComponentsMediaType[] */
     private array $mediaTypes;
 
     private function __construct(array $mediaTypes)
@@ -20,7 +20,7 @@ final class MediaTypes
         return new self([]);
     }
 
-    public function getByMimeType(string $mimeType): ?MediaType
+    public function getByMimeType(string $mimeType): ?ComponentsMediaType
     {
         foreach ($this->mediaTypes as $mediaType) {
             if ($mediaType->getMimeType()->toString() === $mimeType) {
@@ -53,7 +53,7 @@ final class MediaTypes
         return false;
     }
 
-    public function addMediaType(MediaType $mediaType): self
+    public function addMediaType(ComponentsMediaType $mediaType): self
     {
         if ($this->hasMediaType($mediaType->getMimeType())) {
             throw SpecificationException::generateDuplicateDefinitionException($mediaType->getMimeType()->toString());

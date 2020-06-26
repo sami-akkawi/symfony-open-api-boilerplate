@@ -4,8 +4,8 @@ namespace App\OpenApiSpecification\ApiComponents\Response;
 
 use App\Message\FieldMessage;
 use App\Message\Message;
-use App\OpenApiSpecification\ApiComponents\MediaType;
-use App\OpenApiSpecification\ApiComponents\MediaTypes;
+use App\OpenApiSpecification\ApiComponents\ComponentsMediaType;
+use App\OpenApiSpecification\ApiComponents\ComponentsMediaTypes;
 use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseDescription;
 use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseHttpCode;
 use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseName;
@@ -21,12 +21,12 @@ use App\OpenApiSpecification\ApiComponents\Response;
 final class DetailedResponse extends Response
 {
     private ResponseDescription $description;
-    private MediaTypes $content;
+    private ComponentsMediaTypes $content;
 
     private function __construct(
         ResponseHttpCode $code,
         ResponseDescription $description,
-        MediaTypes $content,
+        ComponentsMediaTypes $content,
         ?ResponseName $name = null
     )
     {
@@ -41,9 +41,9 @@ final class DetailedResponse extends Response
         return new self(
             ResponseHttpCode::generateOk(),
             ResponseDescription::fromString('Ok.'),
-            MediaTypes::generate()
-                ->addMediaType(MediaType::generateJson($schema))
-                ->addMediaType(MediaType::generateXml($schema))
+            ComponentsMediaTypes::generate()
+                ->addMediaType(ComponentsMediaType::generateJson($schema))
+                ->addMediaType(ComponentsMediaType::generateXml($schema))
         );
     }
 
@@ -52,9 +52,9 @@ final class DetailedResponse extends Response
         return new self(
             ResponseHttpCode::generateOk(),
             ResponseDescription::fromString('Created.'),
-            MediaTypes::generate()
-                ->addMediaType(MediaType::generateJson($schema))
-                ->addMediaType(MediaType::generateXml($schema))
+            ComponentsMediaTypes::generate()
+                ->addMediaType(ComponentsMediaType::generateJson($schema))
+                ->addMediaType(ComponentsMediaType::generateXml($schema))
         );
     }
 
@@ -63,9 +63,9 @@ final class DetailedResponse extends Response
         return new self(
             ResponseHttpCode::generateNotFound(),
             ResponseDescription::fromString('Not Found.'),
-            MediaTypes::generate()
-                ->addMediaType(MediaType::generateJson($schema))
-                ->addMediaType(MediaType::generateXml($schema))
+            ComponentsMediaTypes::generate()
+                ->addMediaType(ComponentsMediaType::generateJson($schema))
+                ->addMediaType(ComponentsMediaType::generateXml($schema))
         );
     }
 
@@ -74,9 +74,9 @@ final class DetailedResponse extends Response
         return new self(
             ResponseHttpCode::generateUnprocessableEntity(),
             ResponseDescription::fromString('Unprocessable Entity.'),
-            MediaTypes::generate()
-                ->addMediaType(MediaType::generateJson($schema))
-                ->addMediaType(MediaType::generateXml($schema))
+            ComponentsMediaTypes::generate()
+                ->addMediaType(ComponentsMediaType::generateJson($schema))
+                ->addMediaType(ComponentsMediaType::generateXml($schema))
         );
     }
 
@@ -85,9 +85,9 @@ final class DetailedResponse extends Response
         return new self(
             ResponseHttpCode::generateCorruptData(),
             ResponseDescription::fromString('Corrupt Data. The server fetched data that do not comply with the defined schema.'),
-            MediaTypes::generate()
-                ->addMediaType(MediaType::generateJson($schema))
-                ->addMediaType(MediaType::generateXml($schema))
+            ComponentsMediaTypes::generate()
+                ->addMediaType(ComponentsMediaType::generateJson($schema))
+                ->addMediaType(ComponentsMediaType::generateXml($schema))
         );
     }
 

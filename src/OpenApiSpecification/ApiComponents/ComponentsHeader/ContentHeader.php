@@ -4,16 +4,16 @@ namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\MediaType;
-use App\OpenApiSpecification\ApiComponents\MediaTypes;
+use App\OpenApiSpecification\ApiComponents\ComponentsMediaType;
+use App\OpenApiSpecification\ApiComponents\ComponentsMediaTypes;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ContentHeader extends DetailedHeader
 {
-    private MediaTypes $mediaTypes;
+    private ComponentsMediaTypes $mediaTypes;
 
     private function __construct(
-        MediaTypes $mediaTypes,
+        ComponentsMediaTypes $mediaTypes,
         ?HeaderIsRequired $isRequired = null,
         ?HeaderIsDeprecated $isDeprecated = null,
         ?HeaderDescription $description = null,
@@ -66,7 +66,7 @@ final class ContentHeader extends DetailedHeader
 
     public static function generate(): self
     {
-        return new self(MediaTypes::generate());
+        return new self(ComponentsMediaTypes::generate());
     }
 
     public function require(): self
@@ -82,7 +82,7 @@ final class ContentHeader extends DetailedHeader
         );
     }
 
-    public function addMediaType(MediaType $mediaType): self
+    public function addMediaType(ComponentsMediaType $mediaType): self
     {
         return new self(
             $this->mediaTypes->addMediaType($mediaType),

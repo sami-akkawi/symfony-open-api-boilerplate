@@ -4,8 +4,8 @@ namespace App\OpenApiSpecification\ApiComponents\RequestBody;
 
 use App\Message\FieldMessage;
 use App\Message\Message;
-use App\OpenApiSpecification\ApiComponents\MediaType;
-use App\OpenApiSpecification\ApiComponents\MediaTypes;
+use App\OpenApiSpecification\ApiComponents\ComponentsMediaType;
+use App\OpenApiSpecification\ApiComponents\ComponentsMediaTypes;
 use App\OpenApiSpecification\ApiComponents\RequestBody;
 use App\OpenApiSpecification\ApiComponents\Schema;
 
@@ -16,12 +16,12 @@ use App\OpenApiSpecification\ApiComponents\Schema;
 
 final class DetailedRequestBody extends RequestBody
 {
-    private MediaTypes $content;
+    private ComponentsMediaTypes $content;
     private RequestBodyIsRequired $isRequired;
     private ?RequestBodyDescription $description;
 
     private function __construct(
-        MediaTypes $content,
+        ComponentsMediaTypes $content,
         ?RequestBodyIsRequired $isRequired = null,
         ?RequestBodyDescription $description = null,
         ?RequestBodyName $name = null
@@ -34,17 +34,17 @@ final class DetailedRequestBody extends RequestBody
 
     public static function generateEmpty(): self
     {
-        return new self(MediaTypes::generate());
+        return new self(ComponentsMediaTypes::generate());
     }
 
     public static function generate(Schema $schema): self
     {
-        return new self(MediaTypes::generate()
-            ->addMediaType(MediaType::generateJson($schema))
-            ->addMediaType(MediaType::generateXml($schema)));
+        return new self(ComponentsMediaTypes::generate()
+            ->addMediaType(ComponentsMediaType::generateJson($schema))
+            ->addMediaType(ComponentsMediaType::generateXml($schema)));
     }
 
-    public function addMediaType(MediaType $mediaType): self
+    public function addMediaType(ComponentsMediaType $mediaType): self
     {
         return new self($this->content->addMediaType($mediaType), $this->isRequired, $this->description, $this->name);
     }
