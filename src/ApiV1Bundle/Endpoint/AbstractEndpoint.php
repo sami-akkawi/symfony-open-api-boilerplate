@@ -9,7 +9,7 @@ use App\ApiV1Bundle\Response\CorruptDataResponse;
 use App\ApiV1Bundle\Response\UnprocessableEntityResponse;
 use App\Message\FieldMessage;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
-use App\OpenApiSpecification\ApiComponents\RequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 use App\OpenApiSpecification\ApiComponents\Responses;
 use App\OpenApiSpecification\ApiPath;
 use App\OpenApiSpecification\ApiPath\PathOperation;
@@ -149,7 +149,7 @@ abstract class AbstractEndpoint
         return null;
     }
 
-    public static function getRequestBody(): ?RequestBody
+    public static function getRequestBody(): ?ComponentsRequestBody
     {
         return null;
     }

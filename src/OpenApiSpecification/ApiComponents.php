@@ -8,8 +8,8 @@ use App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 use App\OpenApiSpecification\ApiComponents\ComponentsHeaders;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
-use App\OpenApiSpecification\ApiComponents\RequestBodies;
-use App\OpenApiSpecification\ApiComponents\RequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBodies;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 use App\OpenApiSpecification\ApiComponents\Response;
 use App\OpenApiSpecification\ApiComponents\Responses;
 use App\OpenApiSpecification\ApiComponents\Schema;
@@ -24,7 +24,7 @@ final class ApiComponents
     private Responses $responses;
     private ComponentsParameters $parameters;
     private ComponentsExamples $examples;
-    private RequestBodies $requestBodies;
+    private ComponentsRequestBodies $requestBodies;
     private ComponentsHeaders $headers;
     private SecuritySchemes $securitySchemes;
     // todo: private Links $links
@@ -34,7 +34,7 @@ final class ApiComponents
         Responses $responses,
         ComponentsParameters $parameters,
         ComponentsExamples $examples,
-        RequestBodies $requestBodies,
+        ComponentsRequestBodies $requestBodies,
         ComponentsHeaders $headers,
         SecuritySchemes $securitySchemes
     ) {
@@ -54,7 +54,7 @@ final class ApiComponents
             Responses::generate(),
             ComponentsParameters::generate(),
             ComponentsExamples::generate(),
-            RequestBodies::generate(),
+            ComponentsRequestBodies::generate(),
             ComponentsHeaders::generate(),
             SecuritySchemes::generate()
         );
@@ -141,7 +141,7 @@ final class ApiComponents
         );
     }
 
-    public function addRequestBody(RequestBody $requestBody): self
+    public function addRequestBody(ComponentsRequestBody $requestBody): self
     {
         if (!$requestBody->hasName()) {
             throw SpecificationException::generateMustHaveKeyInComponents();

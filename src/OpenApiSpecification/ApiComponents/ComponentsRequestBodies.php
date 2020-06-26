@@ -2,12 +2,12 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\RequestBody\RequestBodyName;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\RequestBodyName;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class RequestBodies
+final class ComponentsRequestBodies
 {
-    /** @var RequestBody[] */
+    /** @var ComponentsRequestBody[] */
     private array $requestBodies;
 
     private function __construct(array $requestBodies)
@@ -31,7 +31,7 @@ final class RequestBodies
         return false;
     }
 
-    public function addRequestBody(RequestBody $requestBody): self
+    public function addRequestBody(ComponentsRequestBody $requestBody): self
     {
         if (!$requestBody->hasName()) {
             throw SpecificationException::generateRequestBodyInRequestBodiesNeedsAName();

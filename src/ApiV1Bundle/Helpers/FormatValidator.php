@@ -5,7 +5,7 @@ namespace App\ApiV1Bundle\Helpers;
 use App\ApiV1Bundle\Endpoint\AbstractEndpoint;
 use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
-use App\OpenApiSpecification\ApiComponents\RequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -132,7 +132,7 @@ final class FormatValidator
 
     }
 
-    private function getRequestBody(RequestBody $requestBodySchema, Request $request): array
+    private function getRequestBody(ComponentsRequestBody $requestBodySchema, Request $request): array
     {
         $requestContentType = $request->headers->get('content-type');
         $schemaContentTypes = $requestBodySchema->getDefinedMimeTypes();
@@ -172,7 +172,7 @@ final class FormatValidator
         }
 
         if ($isXml) {
-            $schema = $requestBodySchema->toDetailedRequestBody()->getSchemaByMimeType('application/xml');
+            $schema = $requestBodySchema->toRequestBody()->getSchemaByMimeType('application/xml');
             $cleanRequestBody = $schema->getValueFromCastedString(json_encode($requestBody));
 
             $this->errors = $requestBodySchema->isValueValidByMimeType($requestContentType, $cleanRequestBody);

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\RequestBody;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody;
 
 /**
  * Determines if the request body is required in the request. Defaults to false.

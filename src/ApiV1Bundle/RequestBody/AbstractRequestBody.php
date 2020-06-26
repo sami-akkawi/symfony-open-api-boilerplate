@@ -2,17 +2,17 @@
 
 namespace App\ApiV1Bundle\RequestBody;
 
-use App\OpenApiSpecification\ApiComponents\RequestBody\DetailedRequestBody;
-use App\OpenApiSpecification\ApiComponents\RequestBody\ReferenceRequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\ReferenceRequestBody;
 
 abstract class AbstractRequestBody
 {
-    public static function getOpenApiRequestBody(): DetailedRequestBody
+    public static function getOpenApiRequestBody(): RequestBody
     {
         return static::getOpenApiRequestBodyWithoutName()->setName(static::getClassName());
     }
 
-    protected abstract static function getOpenApiRequestBodyWithoutName(): DetailedRequestBody;
+    protected abstract static function getOpenApiRequestBodyWithoutName(): RequestBody;
 
     public static function getReferenceRequestBody(): ReferenceRequestBody
     {

@@ -5,7 +5,7 @@ namespace App\OpenApiSpecification\ApiPath;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
-use App\OpenApiSpecification\ApiComponents\RequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 use App\OpenApiSpecification\ApiComponents\Responses;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationDescription;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationHasOptionalSecurity;
@@ -33,7 +33,7 @@ final class PathOperation
     private OperationHasOptionalSecurity $hasOptionalSecurity;
     private ?OperationDescription $description;
     private ?OperationSummary $summary;
-    private ?RequestBody $requestBody;
+    private ?ComponentsRequestBody $requestBody;
 
     private function __construct(
         OperationName $name,
@@ -45,7 +45,7 @@ final class PathOperation
         OperationHasOptionalSecurity $hasOptionalSecurity,
         ?OperationDescription $description = null,
         ?OperationSummary $summary = null,
-        ?RequestBody $requestBody = null
+        ?ComponentsRequestBody $requestBody = null
     ) {
         $this->name = $name;
         $this->id = $id;
@@ -144,7 +144,7 @@ final class PathOperation
         );
     }
 
-    public function setRequestBody(RequestBody $requestBody): self
+    public function setRequestBody(ComponentsRequestBody $requestBody): self
     {
         return new self(
             $this->name,

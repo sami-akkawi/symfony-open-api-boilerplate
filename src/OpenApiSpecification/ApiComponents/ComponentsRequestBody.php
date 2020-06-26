@@ -2,10 +2,10 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\RequestBody\DetailedRequestBody;
-use App\OpenApiSpecification\ApiComponents\RequestBody\RequestBodyName;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\RequestBodyName;
 
-abstract class RequestBody
+abstract class ComponentsRequestBody
 {
     protected ?RequestBodyName $name;
 
@@ -25,7 +25,7 @@ abstract class RequestBody
 
     public abstract function isValueValidByMimeType(string $mimeType, $value): array;
 
-    public abstract function toDetailedRequestBody(): DetailedRequestBody;
+    public abstract function toRequestBody(): RequestBody;
 
     public abstract function toOpenApiSpecification(): array;
 }

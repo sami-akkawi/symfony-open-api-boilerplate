@@ -4,8 +4,8 @@ namespace App\ApiV1Bundle\Endpoint\Security;
 
 use App\ApiV1Bundle\Endpoint\AbstractPostEndpoint;
 use App\ApiV1Bundle\Tag\Security;
-use App\OpenApiSpecification\ApiComponents\RequestBody;
-use App\OpenApiSpecification\ApiComponents\RequestBody\DetailedRequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody;
 use App\OpenApiSpecification\ApiComponents\Response\DetailedResponse;
 use App\OpenApiSpecification\ApiComponents\Responses;
 use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
@@ -36,9 +36,9 @@ final class LoginPostEndpoint extends AbstractPostEndpoint
         return PathPartialUrl::fromString('login');
     }
 
-    public static function getRequestBody(): ?RequestBody
+    public static function getRequestBody(): ?ComponentsRequestBody
     {
-        return DetailedRequestBody::generate(
+        return RequestBody::generate(
             ObjectSchema::generate(
             Schemas::generate()
                 ->addSchema(StringSchema::generate()

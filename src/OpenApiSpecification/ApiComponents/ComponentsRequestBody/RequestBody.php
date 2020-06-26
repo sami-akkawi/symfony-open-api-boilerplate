@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\RequestBody;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 
 use App\Message\FieldMessage;
 use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\ComponentsMediaType;
 use App\OpenApiSpecification\ApiComponents\ComponentsMediaTypes;
-use App\OpenApiSpecification\ApiComponents\RequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\RequestBodyDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\RequestBodyIsRequired;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\RequestBodyName;
 use App\OpenApiSpecification\ApiComponents\Schema;
 
 /**
@@ -14,7 +17,7 @@ use App\OpenApiSpecification\ApiComponents\Schema;
  * http://spec.openapis.org/oas/v3.0.3#request-body-object
  */
 
-final class DetailedRequestBody extends RequestBody
+final class RequestBody extends ComponentsRequestBody
 {
     private ComponentsMediaTypes $content;
     private RequestBodyIsRequired $isRequired;
@@ -82,7 +85,7 @@ final class DetailedRequestBody extends RequestBody
         return new self($this->content, $this->isRequired, $this->description, RequestBodyName::fromString($name));
     }
 
-    public function toDetailedRequestBody(): DetailedRequestBody
+    public function toRequestBody(): RequestBody
     {
         return $this;
     }

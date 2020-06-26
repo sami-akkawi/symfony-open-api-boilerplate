@@ -1,17 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\RequestBody;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
+use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\RequestBodyName;
 use App\OpenApiSpecification\ApiComponents\Reference;
 
-final class ReferenceRequestBody
+final class ReferenceRequestBody extends ComponentsRequestBody
 {
     private Reference $reference;
-    private DetailedRequestBody $requestBody;
+    private RequestBody $requestBody;
 
     private function __construct(
         Reference $reference,
-        DetailedRequestBody $requestBody,
+        RequestBody $requestBody,
         ?RequestBodyName $name = null
     ) {
         $this->reference = $reference;
@@ -19,7 +21,7 @@ final class ReferenceRequestBody
         $this->name = $name;
     }
 
-    public static function generate(string $objectName, DetailedRequestBody $requestBody): self
+    public static function generate(string $objectName, RequestBody $requestBody): self
     {
         return new self(Reference::generateRequestBodyReference($objectName), $requestBody);
     }
@@ -39,7 +41,7 @@ final class ReferenceRequestBody
         return new self($this->reference, $this->requestBody, RequestBodyName::fromString($name));
     }
 
-    public function toDetailedRequestBody(): DetailedRequestBody
+    public function toRequestBody(): RequestBody
     {
         return $this->requestBody;
     }
