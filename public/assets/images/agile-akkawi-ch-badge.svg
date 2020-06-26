@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="156" height="20">
+<linearGradient id="b" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+</linearGradient>
+<clipPath id="a">
+    <rect width="156" height="20" rx="3" fill="#fff"/>
+</clipPath>
+<g clip-path="url(#a)">
+    <path fill="#555" d="M0 0h65v20H0z"/>
+    <path fill="#007ec6" d="M65 0h785v20H65z"/>
+    <path fill="url(#b)" d="M0 0h1840v20H0z"/>
+</g>
+<g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="110">
+    <text x="324" y="150" textLength="540" fill="#010101" fill-opacity=".3" transform="scale(.1)" >Project on</text>
+    <text x="324" y="140" textLength="540" transform="scale(.1)" >Project on</text>
+    <text x="1104" y="150" textLength="800" fill="#010101" fill-opacity=".3" transform="scale(.1)">agile.akkawi.ch</text>
+    <text x="1104" y="140" textLength="800" transform="scale(.1)">agile.akkawi.ch</text>
+</g>
+</svg>
