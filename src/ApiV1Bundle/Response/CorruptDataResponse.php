@@ -5,7 +5,7 @@ namespace App\ApiV1Bundle\Response;
 use App\ApiV1Bundle\Schema\ErrorResponseSchema;
 use App\Message\FieldMessage;
 use App\Message\Message;
-use App\OpenApiSpecification\ApiComponents\Response\DetailedResponse;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponse\ResponseSchema;
 
 final class CorruptDataResponse extends AbstractErrorResponse
 {
@@ -24,9 +24,9 @@ final class CorruptDataResponse extends AbstractErrorResponse
         return new self($this->messages, array_merge($this->fieldMessages, [$fieldMessage]), $this->headers);
     }
 
-    protected static function getOpenApiResponseWithoutName(): DetailedResponse
+    protected static function getOpenApiResponseWithoutName(): ResponseSchema
     {
-        return DetailedResponse::generateCorruptDataResponse(
+        return ResponseSchema::generateCorruptDataResponse(
             ErrorResponseSchema::getReferenceSchema()
         );
     }

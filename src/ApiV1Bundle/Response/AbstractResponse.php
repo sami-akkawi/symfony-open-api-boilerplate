@@ -3,18 +3,18 @@
 namespace App\ApiV1Bundle\Response;
 
 use App\ApiV1Bundle\Helpers\JsonToXmlConverter;
-use App\OpenApiSpecification\ApiComponents\Response\ReferenceResponse;
-use App\OpenApiSpecification\ApiComponents\Response\DetailedResponse;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponse\ReferenceResponse;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponse\ResponseSchema;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractResponse
 {
-    public static function getOpenApiResponse(): DetailedResponse
+    public static function getOpenApiResponse(): ResponseSchema
     {
         return static::getOpenApiResponseWithoutName()->setName(static::getClassName());
     }
 
-    protected abstract static function getOpenApiResponseWithoutName(): DetailedResponse;
+    protected abstract static function getOpenApiResponseWithoutName(): ResponseSchema;
 
     public static function getReferenceResponse(): ReferenceResponse
     {

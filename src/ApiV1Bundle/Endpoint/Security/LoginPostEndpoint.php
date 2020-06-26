@@ -6,8 +6,8 @@ use App\ApiV1Bundle\Endpoint\AbstractPostEndpoint;
 use App\ApiV1Bundle\Tag\Security;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody;
-use App\OpenApiSpecification\ApiComponents\Response\DetailedResponse;
-use App\OpenApiSpecification\ApiComponents\Responses;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponse\ResponseSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponses;
 use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
@@ -49,14 +49,14 @@ final class LoginPostEndpoint extends AbstractPostEndpoint
                     ->setName('password')
                     ->setFormat(SchemaType::STRING_PASSWORD_FORMAT)
                     ->require())
-        )
+            )
         )->require();
     }
 
-    protected static function getResponses(): Responses
+    protected static function getResponses(): ComponentsResponses
     {
-        return Responses::generate()->addResponse(
-            DetailedResponse::generateOk(
+        return ComponentsResponses::generate()->addResponse(
+            ResponseSchema::generateOk(
                 ObjectSchema::generateDataSchema(
                     Schemas::generate()
                     ->addSchema(StringSchema::generate()->setName('id')->setFormat(SchemaType::STRING_UUID_FORMAT))
@@ -69,7 +69,6 @@ final class LoginPostEndpoint extends AbstractPostEndpoint
 
     public static function getTags(): OperationTags
     {
-        return OperationTags::generate()
-            ->addTag(Security::getApiTag()->getName()->toString());
+        return OperationTags::generate()->addTag(Security::getApiTag()->getName()->toString());
     }
 }

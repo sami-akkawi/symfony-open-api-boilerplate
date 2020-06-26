@@ -6,7 +6,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsParameter;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
-use App\OpenApiSpecification\ApiComponents\Responses;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponses;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationDescription;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationHasOptionalSecurity;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationId;
@@ -26,7 +26,7 @@ final class PathOperation
 {
     private OperationName $name;
     private ComponentsParameters $parameters;
-    private Responses $responses;
+    private ComponentsResponses $responses;
     private OperationId $id;
     private OperationTags $tags;
     private OperationIsDeprecated $isDeprecated;
@@ -40,7 +40,7 @@ final class PathOperation
         OperationId $id,
         OperationTags $tags,
         ComponentsParameters $parameters,
-        Responses $responses,
+        ComponentsResponses $responses,
         OperationIsDeprecated $isDeprecated,
         OperationHasOptionalSecurity $hasOptionalSecurity,
         ?OperationDescription $description = null,
@@ -63,7 +63,7 @@ final class PathOperation
         OperationName $name,
         OperationId $id,
         ComponentsParameters $parameters,
-        Responses $responses
+        ComponentsResponses $responses
     ): self {
         return new self(
             $name,

@@ -1,23 +1,23 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Response;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsResponse;
 
-use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseDescription;
-use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseName;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponse;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseName;
 use App\OpenApiSpecification\ApiComponents\Reference;
-use App\OpenApiSpecification\ApiComponents\Response;
 
 /**
  * The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.
  * http://spec.openapis.org/oas/v3.0.3#reference-object
  */
 
-final class ReferenceResponse extends Response
+final class ReferenceResponse extends ComponentsResponse
 {
     private Reference $reference;
-    private DetailedResponse $response;
+    private ResponseSchema $response;
 
-    private function __construct(Reference $reference, DetailedResponse $response, ?ResponseName $name = null)
+    private function __construct(Reference $reference, ResponseSchema $response, ?ResponseName $name = null)
     {
         $this->code = $response->getCode();
         $this->reference = $reference;
@@ -25,7 +25,7 @@ final class ReferenceResponse extends Response
         $this->name = $name;
     }
 
-    public static function generate(string $objectName, DetailedResponse $response): self
+    public static function generate(string $objectName, ResponseSchema $response): self
     {
         return new self(Reference::generateResponseReference($objectName), $response);
     }
@@ -40,7 +40,7 @@ final class ReferenceResponse extends Response
         return $this->reference->toOpenApiSpecification();
     }
 
-    public function toDetailedResponse(): DetailedResponse
+    public function toResponse(): ResponseSchema
     {
         return $this->response;
     }

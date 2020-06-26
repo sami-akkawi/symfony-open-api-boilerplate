@@ -2,13 +2,13 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseHttpCode;
-use App\OpenApiSpecification\ApiComponents\Response\Response\ResponseName;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseHttpCode;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseName;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class Responses
+final class ComponentsResponses
 {
-    /** @var Response[] */
+    /** @var ComponentsResponse[] */
     private array $responses;
 
     private function __construct(array $responses)
@@ -41,7 +41,7 @@ final class Responses
         return false;
     }
 
-    public function getResponseByHttpCode(string $code): ?Response
+    public function getResponseByHttpCode(string $code): ?ComponentsResponse
     {
         foreach ($this->responses as $response) {
             if ($response->getCode()->toString() === $code) {
@@ -67,7 +67,7 @@ final class Responses
     }
 
 
-    public function addResponse(Response $response): self
+    public function addResponse(ComponentsResponse $response): self
     {
         if ($this->hasHttpCode($response->getCode())) {
             throw SpecificationException::generateDuplicateDefinitionException($response->getCode()->toString());
@@ -78,7 +78,7 @@ final class Responses
         return new self(array_merge($this->responses, [$response]));
     }
 
-    public function addResponseToComponents(Response $response): self
+    public function addResponseToComponents(ComponentsResponse $response): self
     {
         if ($response->hasName() && $this->hasKey($response->getName())) {
             throw SpecificationException::generateDuplicateDefinitionException($response->getName()->toString());

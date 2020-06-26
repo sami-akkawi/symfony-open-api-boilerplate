@@ -10,7 +10,7 @@ use App\ApiV1Bundle\Response\UnprocessableEntityResponse;
 use App\Message\FieldMessage;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
-use App\OpenApiSpecification\ApiComponents\Responses;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponses;
 use App\OpenApiSpecification\ApiPath;
 use App\OpenApiSpecification\ApiPath\PathOperation;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationDescription;
@@ -125,14 +125,14 @@ abstract class AbstractEndpoint
         return false;
     }
 
-    public static function getAllResponses(): Responses
+    public static function getAllResponses(): ComponentsResponses
     {
         return static::getResponses()
             ->addResponse(UnprocessableEntityResponse::getReferenceResponse())
             ->addResponse(CorruptDataResponse::getReferenceResponse());
     }
 
-    protected abstract static function getResponses(): Responses;
+    protected abstract static function getResponses(): ComponentsResponses;
 
     public static function getParameters(): ComponentsParameters
     {

@@ -10,8 +10,8 @@ use App\OpenApiSpecification\ApiComponents\ComponentsParameter;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBodies;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
-use App\OpenApiSpecification\ApiComponents\Response;
-use App\OpenApiSpecification\ApiComponents\Responses;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponse;
+use App\OpenApiSpecification\ApiComponents\ComponentsResponses;
 use App\OpenApiSpecification\ApiComponents\Schema;
 use App\OpenApiSpecification\ApiComponents\Schemas;
 use App\OpenApiSpecification\ApiComponents\SecurityScheme;
@@ -21,7 +21,7 @@ use App\OpenApiSpecification\ApiException\SpecificationException;
 final class ApiComponents
 {
     private Schemas $schemas;
-    private Responses $responses;
+    private ComponentsResponses $responses;
     private ComponentsParameters $parameters;
     private ComponentsExamples $examples;
     private ComponentsRequestBodies $requestBodies;
@@ -31,7 +31,7 @@ final class ApiComponents
 
     private function __construct(
         Schemas $schemas,
-        Responses $responses,
+        ComponentsResponses $responses,
         ComponentsParameters $parameters,
         ComponentsExamples $examples,
         ComponentsRequestBodies $requestBodies,
@@ -51,7 +51,7 @@ final class ApiComponents
     {
         return new self(
             Schemas::generate(),
-            Responses::generate(),
+            ComponentsResponses::generate(),
             ComponentsParameters::generate(),
             ComponentsExamples::generate(),
             ComponentsRequestBodies::generate(),
@@ -90,7 +90,7 @@ final class ApiComponents
         );
     }
 
-    public function addResponse(Response $response): self
+    public function addResponse(ComponentsResponse $response): self
     {
         if (!$response->hasName()) {
             throw SpecificationException::generateMustHaveKeyInComponents();
