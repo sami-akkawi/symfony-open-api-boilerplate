@@ -11,7 +11,7 @@ use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 
-final class MapSchema extends DetailedSchema
+final class MapSchema extends Schema
 {
     private SchemaAdditionalProperty $additionalProperty;
 

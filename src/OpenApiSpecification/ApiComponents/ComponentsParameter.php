@@ -58,5 +58,5 @@ abstract class ComponentsParameter
 
     public abstract function isValueValid($value): array;
 
-    public abstract function getSchema(): Schema;
+    public abstract function getSchema(): ComponentsSchema;
 }

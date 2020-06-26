@@ -2,7 +2,7 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\Schema\DetailedSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\Schema;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
@@ -16,7 +16,7 @@ use App\OpenApiSpecification\ApiException\SpecificationException;
  * http://spec.openapis.org/oas/v3.0.3#schema-object
  */
 
-abstract class Schema
+abstract class ComponentsSchema
 {
     protected SchemaIsNullable $isNullable;
     protected ?SchemaName $name;
@@ -73,7 +73,7 @@ abstract class Schema
         return null;
     }
 
-    public abstract function toDetailedSchema(): DetailedSchema;
+    public abstract function toSchema(): Schema;
 
     public abstract function getType(): ?SchemaType;
 

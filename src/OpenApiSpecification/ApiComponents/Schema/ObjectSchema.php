@@ -11,18 +11,18 @@ use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
-use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class ObjectSchema extends DetailedSchema
+final class ObjectSchema extends Schema
 {
     protected ?SchemaName $name;
     private SchemaType $type;
-    private Schemas $properties;
+    private ComponentsSchemas $properties;
     private ?SchemaDescription $description;
 
     private function __construct(
-        Schemas $properties,
+        ComponentsSchemas $properties,
         SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
@@ -113,17 +113,17 @@ final class ObjectSchema extends DetailedSchema
         );
     }
 
-    public function getProperties(): Schemas
+    public function getProperties(): ComponentsSchemas
     {
         return $this->properties;
     }
 
-    public static function generate(Schemas $properties): self
+    public static function generate(ComponentsSchemas $properties): self
     {
         return new self($properties, SchemaIsRequired::generateFalse());
     }
 
-    public static function generateDataSchema(Schemas $properties): self
+    public static function generateDataSchema(ComponentsSchemas $properties): self
     {
         return new self($properties, SchemaIsRequired::generateTrue(), SchemaName::fromString('data'));
     }

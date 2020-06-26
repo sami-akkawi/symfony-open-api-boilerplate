@@ -3,10 +3,10 @@
 namespace App\ApiV1Bundle\Schema;
 
 use App\OpenApiSpecification\ApiComponents\Schema\ArraySchema;
-use App\OpenApiSpecification\ApiComponents\Schema\DetailedSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\Schema;
 use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
-use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 
 final class ErrorResponseSchema extends AbstractSchema
 {
@@ -17,7 +17,7 @@ final class ErrorResponseSchema extends AbstractSchema
         $this->schema = $schema;
     }
 
-    public function toDetailedSchema(): DetailedSchema
+    public function toDetailedSchema(): Schema
     {
         return $this->schema;
     }
@@ -34,10 +34,10 @@ final class ErrorResponseSchema extends AbstractSchema
         return new self($newSchema);
     }
 
-    protected static function getOpenApiSchemaWithoutName(): DetailedSchema
+    protected static function getOpenApiSchemaWithoutName(): Schema
     {
         return ObjectSchema::generate(
-            Schemas::generate()
+            ComponentsSchemas::generate()
                 ->addSchema(
                     StringSchema::generate()
                         ->setName('errorType')

@@ -4,7 +4,7 @@ namespace App\OpenApiSpecification\ApiComponents\Schema\Schema;
 
 use App\OpenApiSpecification\ApiComponents\Schema\ReferenceSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
-use App\OpenApiSpecification\ApiComponents\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 
 final class SchemaAdditionalProperty
 {
@@ -36,7 +36,7 @@ final class SchemaAdditionalProperty
         return get_class($this->schema) === ReferenceSchema::class;
     }
 
-    public function getSchema(): Schema
+    public function getSchema(): ComponentsSchema
     {
         return $this->schema;
     }

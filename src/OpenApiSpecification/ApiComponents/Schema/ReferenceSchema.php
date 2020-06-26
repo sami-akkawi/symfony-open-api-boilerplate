@@ -5,8 +5,9 @@ namespace App\OpenApiSpecification\ApiComponents\Schema;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\OpenApiSpecification\ApiComponents\Reference;
-use App\OpenApiSpecification\ApiComponents\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
+use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 /**
@@ -14,16 +15,16 @@ use App\OpenApiSpecification\ApiException\SpecificationException;
  * http://spec.openapis.org/oas/v3.0.3#reference-object
  */
 
-final class ReferenceSchema extends Schema
+final class ReferenceSchema extends ComponentsSchema
 {
     private Reference $reference;
     protected ?SchemaName $name;
-    private DetailedSchema $schema;
+    private Schema $schema;
 
     private function __construct(
         Reference $reference,
         SchemaIsRequired $isRequired,
-        DetailedSchema $schema,
+        Schema $schema,
         ?SchemaName $name = null
     ) {
         $this->reference = $reference;
@@ -48,7 +49,7 @@ final class ReferenceSchema extends Schema
         return new self($this->reference, $this->isRequired, $this->schema, SchemaName::fromString($name));
     }
 
-    public static function generate(string $objectName, DetailedSchema $schema): self
+    public static function generate(string $objectName, Schema $schema): self
     {
         return new self(Reference::generateSchemaReference($objectName), SchemaIsRequired::generateFalse(), $schema);
     }
@@ -78,7 +79,7 @@ final class ReferenceSchema extends Schema
         return $this->reference->toOpenApiSpecification();
     }
 
-    public function toDetailedSchema(): DetailedSchema
+    public function toSchema(): Schema
     {
         return $this->schema;
     }
@@ -93,7 +94,7 @@ final class ReferenceSchema extends Schema
         return $this->schema->getValueFromCastedString($value);
     }
 
-    public function getType(): Schema\Schema\SchemaType
+    public function getType(): SchemaType
     {
         return $this->schema->getType();
     }

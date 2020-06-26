@@ -4,7 +4,7 @@ namespace App\OpenApiSpecification\ApiComponents\Schema;
 
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 
-abstract class PrimitiveSchema extends DetailedSchema
+abstract class PrimitiveSchema extends Schema
 {
     protected SchemaType $type;
 

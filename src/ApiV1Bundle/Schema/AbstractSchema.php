@@ -2,19 +2,19 @@
 
 namespace App\ApiV1Bundle\Schema;
 
-use App\OpenApiSpecification\ApiComponents\Schema\DetailedSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\Schema;
 use App\OpenApiSpecification\ApiComponents\Schema\ReferenceSchema;
 
 abstract class AbstractSchema
 {
-    public abstract function toDetailedSchema(): DetailedSchema;
+    public abstract function toDetailedSchema(): Schema;
 
-    public static function getOpenApiSchema(): DetailedSchema
+    public static function getOpenApiSchema(): Schema
     {
         return static::getOpenApiSchemaWithoutName()->setName(static::getClassName());
     }
 
-    protected abstract static function getOpenApiSchemaWithoutName(): DetailedSchema;
+    protected abstract static function getOpenApiSchemaWithoutName(): Schema;
 
     public static function getReferenceSchema(): ReferenceSchema
     {

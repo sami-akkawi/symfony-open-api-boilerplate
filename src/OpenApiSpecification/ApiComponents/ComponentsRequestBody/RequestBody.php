@@ -10,7 +10,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\RequestBodyDescription;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\RequestBodyIsRequired;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\RequestBodyName;
-use App\OpenApiSpecification\ApiComponents\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 
 /**
  * Describes a single request body.
@@ -40,7 +40,7 @@ final class RequestBody extends ComponentsRequestBody
         return new self(ComponentsMediaTypes::generate());
     }
 
-    public static function generate(Schema $schema): self
+    public static function generate(ComponentsSchema $schema): self
     {
         return new self(ComponentsMediaTypes::generate()
             ->addMediaType(ComponentsMediaType::generateJson($schema))
@@ -70,7 +70,7 @@ final class RequestBody extends ComponentsRequestBody
         return $mediaType->isValueValid($value);
     }
 
-    public function getSchemaByMimeType(string $mimeType): Schema
+    public function getSchemaByMimeType(string $mimeType): ComponentsSchema
     {
         return $this->content->getByMimeType($mimeType)->getSchema();
     }

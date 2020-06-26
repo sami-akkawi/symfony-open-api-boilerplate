@@ -12,15 +12,15 @@ use App\OpenApiSpecification\ApiComponents\ComponentsRequestBodies;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponse;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponses;
-use App\OpenApiSpecification\ApiComponents\Schema;
-use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 use App\OpenApiSpecification\ApiComponents\SecurityScheme;
 use App\OpenApiSpecification\ApiComponents\SecuritySchemes;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ApiComponents
 {
-    private Schemas $schemas;
+    private ComponentsSchemas $schemas;
     private ComponentsResponses $responses;
     private ComponentsParameters $parameters;
     private ComponentsExamples $examples;
@@ -30,7 +30,7 @@ final class ApiComponents
     // todo: private Links $links
 
     private function __construct(
-        Schemas $schemas,
+        ComponentsSchemas $schemas,
         ComponentsResponses $responses,
         ComponentsParameters $parameters,
         ComponentsExamples $examples,
@@ -50,7 +50,7 @@ final class ApiComponents
     public static function generate(): self
     {
         return new self(
-            Schemas::generate(),
+            ComponentsSchemas::generate(),
             ComponentsResponses::generate(),
             ComponentsParameters::generate(),
             ComponentsExamples::generate(),
@@ -73,7 +73,7 @@ final class ApiComponents
         );
     }
 
-    public function addSchema(Schema $schema): self
+    public function addSchema(ComponentsSchema $schema): self
     {
         if (!$schema->hasName()) {
             throw SpecificationException::generateMustHaveKeyInComponents();

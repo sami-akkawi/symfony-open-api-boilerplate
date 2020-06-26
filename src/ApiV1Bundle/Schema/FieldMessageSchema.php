@@ -7,8 +7,8 @@ use App\OpenApiSpecification\ApiComponents\Schema\DiscriminatorSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\IntegerSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\DetailedSchema;
-use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\Schema\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 
 final class FieldMessageSchema extends AbstractSchema
 {
@@ -19,7 +19,7 @@ final class FieldMessageSchema extends AbstractSchema
         $this->schema = $schema;
     }
 
-    public function toDetailedSchema(): DetailedSchema
+    public function toDetailedSchema(): Schema
     {
         return $this->schema;
     }
@@ -36,10 +36,10 @@ final class FieldMessageSchema extends AbstractSchema
         return new self($newSchema);
     }
 
-    protected static function getOpenApiSchemaWithoutName(): DetailedSchema
+    protected static function getOpenApiSchemaWithoutName(): Schema
     {
         return ObjectSchema::generate(
-            Schemas::generate()->addSchema(
+            ComponentsSchemas::generate()->addSchema(
                 ArraySchema::generate(
                     DiscriminatorSchema::generateAnyOf()
                     ->addSchema(StringSchema::generate())

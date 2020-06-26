@@ -11,7 +11,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsResponses;
 use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
-use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationTags;
 use App\OpenApiSpecification\ApiPath\PathPartialUrl;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,7 +40,7 @@ final class LoginPostEndpoint extends AbstractPostEndpoint
     {
         return RequestBody::generate(
             ObjectSchema::generate(
-            Schemas::generate()
+            ComponentsSchemas::generate()
                 ->addSchema(StringSchema::generate()
                     ->setName('email')
                     ->setFormat(SchemaType::STRING_EMAIL_FORMAT)
@@ -58,7 +58,7 @@ final class LoginPostEndpoint extends AbstractPostEndpoint
         return ComponentsResponses::generate()->addResponse(
             ResponseSchema::generateOk(
                 ObjectSchema::generateDataSchema(
-                    Schemas::generate()
+                    ComponentsSchemas::generate()
                     ->addSchema(StringSchema::generate()->setName('id')->setFormat(SchemaType::STRING_UUID_FORMAT))
                     ->addSchema(StringSchema::generate()->setName('email')->setFormat(SchemaType::STRING_EMAIL_FORMAT))
                     ->addSchema(StringSchema::generate()->setName('username'))

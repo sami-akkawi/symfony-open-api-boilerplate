@@ -2,11 +2,11 @@
 
 namespace App\ApiV1Bundle\Schema;
 
-use App\OpenApiSpecification\ApiComponents\Schema\DetailedSchema;
+use App\OpenApiSpecification\ApiComponents\Schema\Schema;
 use App\OpenApiSpecification\ApiComponents\Schema\IntegerSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
-use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 
 final class PaginationSchema extends AbstractSchema
 {
@@ -17,7 +17,7 @@ final class PaginationSchema extends AbstractSchema
         $this->schema = $schema;
     }
 
-    public function toDetailedSchema(): DetailedSchema
+    public function toDetailedSchema(): Schema
     {
         return $this->schema;
     }
@@ -34,10 +34,10 @@ final class PaginationSchema extends AbstractSchema
         return new self($newSchema);
     }
 
-    protected static function getOpenApiSchemaWithoutName(): DetailedSchema
+    protected static function getOpenApiSchemaWithoutName(): Schema
     {
         return ObjectSchema::generate(
-            Schemas::generate()
+            ComponentsSchemas::generate()
                 ->addSchema(IntegerSchema::generate()
                     ->setName('totalCount')
                     ->setDescription('Total number of results.'))
@@ -55,7 +55,7 @@ final class PaginationSchema extends AbstractSchema
                     ->setName('lastPage')
                     ->setDescription('Index of the last page.'))
                 ->addSchema(ObjectSchema::generate(
-                    Schemas::generate()
+                    ComponentsSchemas::generate()
                         ->addSchema(StringSchema::generate()
                             ->setName('first')
                             ->setDescription('Link to the endpoint of the first page.'))

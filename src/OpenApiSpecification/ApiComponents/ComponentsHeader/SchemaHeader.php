@@ -4,16 +4,16 @@ namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 
 abstract class SchemaHeader extends DetailedHeader
 {
-    protected Schema $schema;
+    protected ComponentsSchema $schema;
 
     protected function __construct(
         HeaderIsRequired $isRequired,
         HeaderIsDeprecated $isDeprecated,
-        Schema $schema,
+        ComponentsSchema $schema,
         ?HeaderDescription $description = null,
         ?HeaderKey $key = null,
         ?ComponentsExample $example = null,

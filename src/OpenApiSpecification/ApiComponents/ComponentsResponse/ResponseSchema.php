@@ -10,7 +10,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsResponse;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseDescription;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseHttpCode;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseName;
-use App\OpenApiSpecification\ApiComponents\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 
 /**
  * Describes a single response from an API Operation, including design-time, static links to operations based on the
@@ -35,7 +35,7 @@ final class ResponseSchema extends ComponentsResponse
         $this->name = $name;
     }
 
-    public static function generateOk(Schema $schema): self
+    public static function generateOk(ComponentsSchema $schema): self
     {
         return new self(
             ResponseHttpCode::generateOk(),
@@ -46,7 +46,7 @@ final class ResponseSchema extends ComponentsResponse
         );
     }
 
-    public static function generateJsonCreated(Schema $schema): self
+    public static function generateJsonCreated(ComponentsSchema $schema): self
     {
         return new self(
             ResponseHttpCode::generateOk(),
@@ -57,7 +57,7 @@ final class ResponseSchema extends ComponentsResponse
         );
     }
 
-    public static function generateNotFoundResponse(Schema $schema): self
+    public static function generateNotFoundResponse(ComponentsSchema $schema): self
     {
         return new self(
             ResponseHttpCode::generateNotFound(),
@@ -68,7 +68,7 @@ final class ResponseSchema extends ComponentsResponse
         );
     }
 
-    public static function generateUnprocessableEntityResponse(Schema $schema): self
+    public static function generateUnprocessableEntityResponse(ComponentsSchema $schema): self
     {
         return new self(
             ResponseHttpCode::generateUnprocessableEntity(),
@@ -79,7 +79,7 @@ final class ResponseSchema extends ComponentsResponse
         );
     }
 
-    public static function generateCorruptDataResponse(Schema $schema): self
+    public static function generateCorruptDataResponse(ComponentsSchema $schema): self
     {
         return new self(
             ResponseHttpCode::generateCorruptData(),

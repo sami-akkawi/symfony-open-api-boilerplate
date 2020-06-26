@@ -5,9 +5,9 @@ namespace App\OpenApiSpecification\ApiComponents;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class Schemas
+final class ComponentsSchemas
 {
-    /** @var Schema[] */
+    /** @var ComponentsSchema[] */
     private array $schemas;
 
     private function __construct(array $schemas)
@@ -62,7 +62,7 @@ final class Schemas
         return false;
     }
 
-    public function addSchema(Schema $schema): self
+    public function addSchema(ComponentsSchema $schema): self
     {
         if (!$schema->hasName()) {
             throw SpecificationException::generateSchemaInSchemasNeedsAName();
@@ -82,7 +82,7 @@ final class Schemas
         return $requiredSchemas;
     }
 
-    public function getSchema(string $name): ?Schema
+    public function getSchema(string $name): ?ComponentsSchema
     {
         foreach ($this->schemas as $schema) {
             if ($schema->getName()->toString() === $name) {

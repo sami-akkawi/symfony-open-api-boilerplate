@@ -12,7 +12,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\Paramet
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterName;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterStyle;
 use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ObjectParameter extends Parameter
@@ -26,7 +26,7 @@ final class ObjectParameter extends Parameter
         return new self(
             ParameterName::fromString($name),
             $location,
-            ObjectSchema::generate(Schemas::generate()),
+            ObjectSchema::generate(ComponentsSchemas::generate()),
             ParameterIsRequired::generateFalse(),
             ParameterIsDeprecated::generateFalse()
         );

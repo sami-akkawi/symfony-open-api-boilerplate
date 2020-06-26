@@ -10,16 +10,16 @@ use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaItemsAreUnique;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaMaximumItems;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaMinimumItems;
-use App\OpenApiSpecification\ApiComponents\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class ArraySchema extends DetailedSchema
+final class ArraySchema extends Schema
 {
-    private Schema $itemType;
+    private ComponentsSchema $itemType;
     protected ?SchemaName $name;
     private SchemaItemsAreUnique $itemsAreUnique;
     private SchemaType $type;
@@ -28,7 +28,7 @@ final class ArraySchema extends DetailedSchema
     private ?SchemaMaximumItems $maximumItems;
 
     private function __construct(
-        Schema $itemType,
+        ComponentsSchema $itemType,
         SchemaIsRequired $isRequired,
         ?SchemaName $name = null,
         ?SchemaItemsAreUnique $itemsAreUnique = null,
@@ -58,7 +58,7 @@ final class ArraySchema extends DetailedSchema
         return $this->type;
     }
 
-    public function getItemType(): Schema
+    public function getItemType(): ComponentsSchema
     {
         return $this->itemType;
     }
@@ -95,7 +95,7 @@ final class ArraySchema extends DetailedSchema
         );
     }
 
-    public static function generate(Schema $itemType): self
+    public static function generate(ComponentsSchema $itemType): self
     {
         return new self($itemType, SchemaIsRequired::generateFalse());
     }

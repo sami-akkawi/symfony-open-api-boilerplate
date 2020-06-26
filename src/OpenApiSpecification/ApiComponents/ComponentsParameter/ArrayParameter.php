@@ -11,7 +11,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\Paramet
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterLocation;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterName;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterStyle;
-use App\OpenApiSpecification\ApiComponents\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 use App\OpenApiSpecification\ApiComponents\Schema\ArraySchema;
 use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
@@ -33,7 +33,7 @@ final class ArrayParameter extends Parameter
         );
     }
 
-    public function setItemSchema(Schema $itemSchema): self
+    public function setItemSchema(ComponentsSchema $itemSchema): self
     {
         return new self(
             $this->name,

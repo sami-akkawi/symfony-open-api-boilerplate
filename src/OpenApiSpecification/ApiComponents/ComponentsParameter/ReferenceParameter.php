@@ -6,7 +6,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsParameter;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterKey;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterName;
 use App\OpenApiSpecification\ApiComponents\Reference;
-use App\OpenApiSpecification\ApiComponents\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 
 final class ReferenceParameter extends ComponentsParameter
 {
@@ -55,7 +55,7 @@ final class ReferenceParameter extends ComponentsParameter
         return $this->parameter->isValueValid($value);
     }
 
-    public function getSchema(): Schema
+    public function getSchema(): ComponentsSchema
     {
         return $this->parameter->getSchema();
     }

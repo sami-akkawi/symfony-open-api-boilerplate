@@ -13,7 +13,7 @@ abstract class ComponentsExample
 
     public abstract function setName(string $name);
 
-    public function isValidForSchema(Schema $schema): array
+    public function isValidForSchema(ComponentsSchema $schema): array
     {
         return $schema->isValueValid($this->toExample()->getLiteralValue());
     }

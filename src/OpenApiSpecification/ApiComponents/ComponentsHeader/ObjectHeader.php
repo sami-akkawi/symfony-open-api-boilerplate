@@ -5,7 +5,7 @@ namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
 use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ObjectHeader extends SchemaHeader
@@ -15,7 +15,7 @@ final class ObjectHeader extends SchemaHeader
         return new self(
             HeaderIsRequired::generateFalse(),
             HeaderIsDeprecated::generateFalse(),
-            ObjectSchema::generate(Schemas::generate())
+            ObjectSchema::generate(ComponentsSchemas::generate())
         );
     }
 

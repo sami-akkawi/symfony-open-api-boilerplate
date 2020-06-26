@@ -12,23 +12,23 @@ use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
 use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
-use App\OpenApiSpecification\ApiComponents\Schema;
-use App\OpenApiSpecification\ApiComponents\Schemas;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 use LogicException;
 use Symfony\Component\Uid\Uuid;
 
-final class DiscriminatorSchema extends DetailedSchema
+final class DiscriminatorSchema extends Schema
 {
     protected DiscriminatorSchemaType $type;
-    protected Schemas $schemas;
+    protected ComponentsSchemas $schemas;
     protected ?SchemaName $name;
     protected ?SchemaDescription $description;
 
     private function __construct(
         DiscriminatorSchemaType $type,
         SchemaIsRequired $isRequired,
-        Schemas $schemas,
+        ComponentsSchemas $schemas,
         ?SchemaName $name = null,
         ?SchemaDescription $description = null,
         ?SchemaIsNullable $isNullable = null,
@@ -47,20 +47,20 @@ final class DiscriminatorSchema extends DetailedSchema
 
     public static function generateAnyOf(): self
     {
-        return new self(DiscriminatorSchemaType::generateAnyOf(), SchemaIsRequired::generateFalse(), Schemas::generate());
+        return new self(DiscriminatorSchemaType::generateAnyOf(), SchemaIsRequired::generateFalse(), ComponentsSchemas::generate());
     }
 
     public static function generateAllOf(): self
     {
-        return new self(DiscriminatorSchemaType::generateAllOf(), SchemaIsRequired::generateFalse(), Schemas::generate());
+        return new self(DiscriminatorSchemaType::generateAllOf(), SchemaIsRequired::generateFalse(), ComponentsSchemas::generate());
     }
 
     public static function generateOneOf(): self
     {
-        return new self(DiscriminatorSchemaType::generateOneOf(), SchemaIsRequired::generateFalse(), Schemas::generate());
+        return new self(DiscriminatorSchemaType::generateOneOf(), SchemaIsRequired::generateFalse(), ComponentsSchemas::generate());
     }
 
-    public function addSchema(Schema $schema): self
+    public function addSchema(ComponentsSchema $schema): self
     {
         if ($this->type->isAllOf() && $schema instanceof PrimitiveSchema) {
             SpecificationException::generateCannotAddPrimitiveSchemaToAllOfDiscriminator();
@@ -85,10 +85,10 @@ final class DiscriminatorSchema extends DetailedSchema
             throw SpecificationException::generateRequireOnlyWorksOnlyOnAllOf();
         }
 
-        $schemas = Schemas::generate();
+        $schemas = ComponentsSchemas::generate();
         /** @var ObjectSchema $schema */
         foreach ($this->schemas->toArrayOfSchemas() as $schema) {
-            $schema = $schema->toDetailedSchema();
+            $schema = $schema->toSchema();
             $newSchema = $schema->requireOnly($fieldNames)->setName(Uuid::v4()->toRfc4122());
             $schemas = $schemas->addSchema($newSchema);
         }
@@ -306,7 +306,7 @@ final class DiscriminatorSchema extends DetailedSchema
         return $fieldErrors;
     }
 
-    private function getFirstSchemaByName(string $name): ?Schema
+    private function getFirstSchemaByName(string $name): ?ComponentsSchema
     {
         foreach ($this->schemas->toArrayOfSchemas() as $schema) {
             if ($schema instanceof ObjectSchema) {

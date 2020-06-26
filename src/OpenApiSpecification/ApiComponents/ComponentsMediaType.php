@@ -8,13 +8,13 @@ use App\OpenApiSpecification\ApiException\SpecificationException;
 final class ComponentsMediaType
 {
     private MediaTypeMimeType $mimeType;
-    private Schema $schema;
+    private ComponentsSchema $schema;
     private ?ComponentsExample $example;
     private ?ComponentsExamples $examples;
 
     private function __construct(
         MediaTypeMimeType $mimeType,
-        Schema $schema,
+        ComponentsSchema $schema,
         ?ComponentsExample $example = null,
         ?ComponentsExamples $examples = null
     ) {
@@ -24,17 +24,17 @@ final class ComponentsMediaType
         $this->examples = $examples;
     }
 
-    public static function generateJson(Schema $schema): self
+    public static function generateJson(ComponentsSchema $schema): self
     {
         return new self(MediaTypeMimeType::generateJson(), $schema);
     }
 
-    public static function generateXml(Schema $schema): self
+    public static function generateXml(ComponentsSchema $schema): self
     {
         return new self(MediaTypeMimeType::generateXml(), $schema);
     }
 
-    public function getSchema(): Schema
+    public function getSchema(): ComponentsSchema
     {
         return $this->schema;
     }

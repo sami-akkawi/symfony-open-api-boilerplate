@@ -13,7 +13,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\Paramet
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterLocation;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterName;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterStyle;
-use App\OpenApiSpecification\ApiComponents\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 /**
@@ -40,13 +40,13 @@ abstract class Parameter extends ComponentsParameter
     protected ?ParameterDescription $description;
     protected ?ComponentsExample $example;
     protected ?ComponentsExamples $examples;
-    protected Schema $schema;
+    protected ComponentsSchema $schema;
     protected ?ParameterStyle $style;
 
     protected function __construct(
         ParameterName $name,
         ParameterLocation $location,
-        Schema $schema,
+        ComponentsSchema $schema,
         ?ParameterIsRequired $isRequired = null,
         ?ParameterIsDeprecated $isDeprecated = null,
         ?ParameterDescription $description =null,
@@ -279,7 +279,7 @@ abstract class Parameter extends ComponentsParameter
         return $parameterErrors;
     }
 
-    public function getSchema(): Schema
+    public function getSchema(): ComponentsSchema
     {
         return $this->schema;
     }

@@ -3,11 +3,11 @@
 namespace App\OpenApiSpecification\ApiComponents\Schema;
 
 use App\Message\Message;
-use App\OpenApiSpecification\ApiComponents\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 
-abstract class DetailedSchema extends Schema
+abstract class Schema extends ComponentsSchema
 {
-    public function toDetailedSchema(): DetailedSchema
+    public function toSchema(): Schema
     {
         return $this;
     }
