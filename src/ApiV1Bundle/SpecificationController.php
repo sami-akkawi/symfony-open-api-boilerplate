@@ -12,6 +12,7 @@ use App\ApiV1Bundle\Tag\AbstractTag;
 use App\Kernel;
 use App\OpenApiSpecification\ApiComponents;
 use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\HttpSecurityScheme;
+use App\OpenApiSpecification\ApiExternalDocs;
 use App\OpenApiSpecification\ApiInfo;
 use App\OpenApiSpecification\ApiInfo\InfoContact;
 use App\OpenApiSpecification\ApiInfo\InfoLicense;
@@ -52,7 +53,8 @@ final class SpecificationController
                 $this->getServers(),
                 $this->getComponents(),
                 $this->getSecurityRequirements(),
-                $this->getTags()
+                $this->getTags(),
+                $this->getApiExternalDocs()
             );
         });
     }
@@ -291,5 +293,11 @@ final class SpecificationController
         }
 
         return $tags;
+    }
+
+    private function getApiExternalDocs(): ?ApiExternalDocs
+    {
+        return ApiExternalDocs::generate('https://www.example.com/')
+            ->setDescription('Find out more about my service.');
     }
 }

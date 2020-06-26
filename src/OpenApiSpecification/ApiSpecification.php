@@ -14,6 +14,7 @@ final class ApiSpecification
     private ApiComponents $components;
     private ApiSecurityRequirements $securityRequirements;
     private ApiTags $tags;
+    private ?ApiExternalDocs $externalDocs;
 
     public function __construct(
         OpenApiVersion $openApiVersion,
@@ -22,7 +23,8 @@ final class ApiSpecification
         ApiServers $servers,
         ApiComponents $components,
         ApiSecurityRequirements $securityRequirements,
-        ApiTags $tags
+        ApiTags $tags,
+        ?ApiExternalDocs $externalDocs
     ) {
         $this->openApiVersion = $openApiVersion;
         $this->info = $info;
@@ -31,6 +33,7 @@ final class ApiSpecification
         $this->components = $components;
         $this->securityRequirements = $securityRequirements;
         $this->tags = $tags;
+        $this->externalDocs = $externalDocs;
     }
 
     public function toOpenApiSpecification(): array
@@ -41,20 +44,19 @@ final class ApiSpecification
             'paths' => $this->paths->toOpenApiSpecification(),
         ];
 
-        if ($this->components && $this->components->isDefined()) {
+        if ($this->components->isDefined()) {
             $specifications['components'] = $this->components->toOpenApiSpecification();
         }
 
-        if ($this->servers && $this->servers->isDefined()) {
+        if ($this->servers->isDefined()) {
             $specifications['servers'] = $this->servers->toOpenApiSpecification();
         }
 
-        if ($this->securityRequirements) {
-            $specifications['security'] = $this->securityRequirements->toOpenApiSpecification();
-        }
+        $specifications['security'] = $this->securityRequirements->toOpenApiSpecification();
+        $specifications['tags'] = $this->tags->toOpenApiSpecification();
 
-        if ($this->tags) {
-            $specifications['tags'] = $this->tags->toOpenApiSpecification();
+        if ($this->externalDocs) {
+            $specifications['externalDocs'] = $this->externalDocs->toOpenApiSpecification();
         }
 
         return $specifications;
