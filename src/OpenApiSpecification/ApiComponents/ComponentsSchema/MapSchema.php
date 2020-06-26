@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Schema;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 
 use App\Message\FieldMessage;
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaAdditionalProperty;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaAdditionalProperty;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsDeprecated;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsNullable;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsRequired;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaType;
 
 final class MapSchema extends Schema
 {

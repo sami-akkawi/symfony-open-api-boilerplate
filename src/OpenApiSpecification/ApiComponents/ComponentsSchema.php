@@ -2,12 +2,12 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\Schema\Schema;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsDeprecated;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsNullable;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsRequired;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaType;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 /**

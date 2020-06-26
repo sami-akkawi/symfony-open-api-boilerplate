@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Schema\Schema;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
 
-use App\OpenApiSpecification\ApiComponents\Schema\ReferenceSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\ReferenceSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\StringSchema;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 
 final class SchemaAdditionalProperty

@@ -2,7 +2,7 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ComponentsSchemas

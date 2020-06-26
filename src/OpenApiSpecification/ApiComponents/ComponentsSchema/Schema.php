@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Schema;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 
 use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema;

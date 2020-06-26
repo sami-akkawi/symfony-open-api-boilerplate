@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Schema;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaType;
 
 abstract class PrimitiveSchema extends Schema
 {

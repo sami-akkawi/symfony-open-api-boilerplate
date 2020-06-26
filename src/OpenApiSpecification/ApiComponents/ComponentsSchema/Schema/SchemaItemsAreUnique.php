@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Schema\Schema;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
 
-final class SchemaIsRequired
+final class SchemaItemsAreUnique
 {
-    private bool $isRequired;
+    private bool $areUnique;
 
-    private function __construct(bool $isRequired)
+    private function __construct(bool $areUnique)
     {
-        $this->isRequired = $isRequired;
+        $this->areUnique = $areUnique;
     }
 
     public static function generateTrue(): self
@@ -23,6 +23,6 @@ final class SchemaIsRequired
 
     public function toBool(): bool
     {
-        return $this->isRequired;
+        return $this->areUnique;
     }
 }

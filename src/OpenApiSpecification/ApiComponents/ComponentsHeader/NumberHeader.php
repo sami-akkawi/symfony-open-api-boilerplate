@@ -4,7 +4,7 @@ namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
-use App\OpenApiSpecification\ApiComponents\Schema\NumberSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\NumberSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class NumberHeader extends SchemaHeader

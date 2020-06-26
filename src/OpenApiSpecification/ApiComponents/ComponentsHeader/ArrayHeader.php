@@ -5,8 +5,8 @@ namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\ArraySchema;
-use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\ArraySchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\StringSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ArrayHeader extends SchemaHeader

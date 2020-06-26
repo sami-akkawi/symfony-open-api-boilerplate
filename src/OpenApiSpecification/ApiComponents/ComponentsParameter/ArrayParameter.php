@@ -12,8 +12,8 @@ use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\Paramet
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterName;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterStyle;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\ArraySchema;
-use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\ArraySchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\StringSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ArrayParameter extends Parameter

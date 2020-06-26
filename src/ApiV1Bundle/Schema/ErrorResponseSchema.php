@@ -2,10 +2,10 @@
 
 namespace App\ApiV1Bundle\Schema;
 
-use App\OpenApiSpecification\ApiComponents\Schema\ArraySchema;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema;
-use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\ArraySchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\ObjectSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\StringSchema;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 
 final class ErrorResponseSchema extends AbstractSchema

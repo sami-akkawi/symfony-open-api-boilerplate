@@ -5,12 +5,12 @@ namespace App\ApiV1Bundle\Schema;
 use App\Message\Message;
 use App\Message\MessageType;
 use App\OpenApiSpecification\ApiComponents\ComponentsExample\Example;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema;
-use App\OpenApiSpecification\ApiComponents\Schema\DiscriminatorSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\MapSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
-use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\DiscriminatorSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\MapSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\ObjectSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\StringSchema;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 
 final class MessageSchema extends AbstractSchema

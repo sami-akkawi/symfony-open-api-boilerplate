@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\Schema;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 
 use App\Message\FieldMessage;
 use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaDescription;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsDeprecated;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsNullable;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaIsRequired;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaMaximum;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaMinimum;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaName;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\SchemaType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsDeprecated;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsNullable;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsRequired;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaMaximum;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaMinimum;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaType;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class NumberSchema extends PrimitiveSchema

@@ -5,7 +5,7 @@ namespace App\OpenApiSpecification\ApiException;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\ParameterLocation;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\ParameterStyle;
 use App\OpenApiSpecification\ApiComponents\Reference\ReferenceType;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema\DiscriminatorSchemaType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\DiscriminatorSchemaType;
 use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\ApiKeyLocation;
 use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\HttpScheme;
 use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeType;

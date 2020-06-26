@@ -2,12 +2,12 @@
 
 namespace App\ApiV1Bundle\Schema;
 
-use App\OpenApiSpecification\ApiComponents\Schema\ArraySchema;
-use App\OpenApiSpecification\ApiComponents\Schema\DiscriminatorSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\IntegerSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\ObjectSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\StringSchema;
-use App\OpenApiSpecification\ApiComponents\Schema\Schema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\ArraySchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\DiscriminatorSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\IntegerSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\ObjectSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\StringSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 
 final class FieldMessageSchema extends AbstractSchema

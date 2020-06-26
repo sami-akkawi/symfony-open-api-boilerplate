@@ -11,7 +11,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\Paramet
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterLocation;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterName;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterStyle;
-use App\OpenApiSpecification\ApiComponents\Schema\BooleanSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\BooleanSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class BooleanParameter extends Parameter
