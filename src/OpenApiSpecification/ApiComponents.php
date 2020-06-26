@@ -14,8 +14,8 @@ use App\OpenApiSpecification\ApiComponents\ComponentsResponse;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponses;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme;
-use App\OpenApiSpecification\ApiComponents\SecuritySchemes;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecuritySchemes;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ApiComponents
@@ -26,7 +26,7 @@ final class ApiComponents
     private ComponentsExamples $examples;
     private ComponentsRequestBodies $requestBodies;
     private ComponentsHeaders $headers;
-    private SecuritySchemes $securitySchemes;
+    private ComponentsSecuritySchemes $securitySchemes;
     // todo: private Links $links
 
     private function __construct(
@@ -36,7 +36,7 @@ final class ApiComponents
         ComponentsExamples $examples,
         ComponentsRequestBodies $requestBodies,
         ComponentsHeaders $headers,
-        SecuritySchemes $securitySchemes
+        ComponentsSecuritySchemes $securitySchemes
     ) {
         $this->schemas = $schemas;
         $this->responses = $responses;
@@ -56,11 +56,11 @@ final class ApiComponents
             ComponentsExamples::generate(),
             ComponentsRequestBodies::generate(),
             ComponentsHeaders::generate(),
-            SecuritySchemes::generate()
+            ComponentsSecuritySchemes::generate()
         );
     }
 
-    public function addSecurityScheme(SecurityScheme $scheme): self
+    public function addSecurityScheme(ComponentsSecurityScheme $scheme): self
     {
         return new self(
             $this->schemas,

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme;
 
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class ApiKeyName
+final class SchemeName
 {
     private string $name;
 
@@ -24,5 +24,10 @@ final class ApiKeyName
     public function toString(): string
     {
         return $this->name;
+    }
+
+    public function isIdenticalTo(self $name): bool
+    {
+        return $this->toString() === $name->toString();
     }
 }

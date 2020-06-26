@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\SecurityScheme;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme;
 
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\OpenIdConnectUrl;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeDescription;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeName;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeType;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\OpenIdConnectUrl;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeName;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme;
 
-final class OpenIdConnectSecurityScheme extends SecurityScheme
+final class OpenIdConnectSecurityScheme extends ComponentsSecurityScheme
 {
     private OpenIdConnectUrl $url;
 

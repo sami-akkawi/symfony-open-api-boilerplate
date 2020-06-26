@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme;
 
 use App\OpenApiSpecification\ApiException\SpecificationException;
 

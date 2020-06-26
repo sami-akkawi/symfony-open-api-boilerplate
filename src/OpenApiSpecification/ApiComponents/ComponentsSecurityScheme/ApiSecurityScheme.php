@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\SecurityScheme;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme;
 
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\ApiKeyLocation;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\ApiKeyName;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeName;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeDescription;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeType;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\ApiKeyLocation;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\ApiKeyName;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeName;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme;
 
-final class ApiSecurityScheme extends SecurityScheme
+final class ApiSecurityScheme extends ComponentsSecurityScheme
 {
     private ApiKeyName $apiKeyName;
     private ApiKeyLocation $location;

@@ -2,12 +2,12 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeName;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeName;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class SecuritySchemes
+final class ComponentsSecuritySchemes
 {
-    /** @var SecurityScheme[] */
+    /** @var ComponentsSecurityScheme[] */
     private array $schemes;
 
     private function __construct(array $schemes)
@@ -30,7 +30,7 @@ final class SecuritySchemes
         return false;
     }
 
-    public function addScheme(SecurityScheme $scheme): self
+    public function addScheme(ComponentsSecurityScheme $scheme): self
     {
         if ($this->hasScheme($scheme->getSchemeName())) {
             throw SpecificationException::generateDuplicateDefinitionException($scheme->getSchemeName()->toString());

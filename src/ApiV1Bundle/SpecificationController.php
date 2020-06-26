@@ -11,7 +11,7 @@ use App\ApiV1Bundle\Schema\AbstractSchema;
 use App\ApiV1Bundle\Tag\AbstractTag;
 use App\Kernel;
 use App\OpenApiSpecification\ApiComponents;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\HttpSecurityScheme;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\HttpSecurityScheme;
 use App\OpenApiSpecification\ApiInfo;
 use App\OpenApiSpecification\ApiInfo\InfoContact;
 use App\OpenApiSpecification\ApiInfo\InfoLicense;

@@ -2,11 +2,11 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeDescription;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeName;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeName;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeType;
 
-abstract class SecurityScheme
+abstract class ComponentsSecurityScheme
 {
     protected SchemeName $schemeName;
     protected SchemeType $type;

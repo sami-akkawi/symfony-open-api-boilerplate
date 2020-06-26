@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace App\OpenApiSpecification\ApiComponents\SecurityScheme;
+namespace App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme;
 
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\HttpBearerFormat;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\HttpScheme;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeDescription;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeName;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme\SecurityScheme\SchemeType;
-use App\OpenApiSpecification\ApiComponents\SecurityScheme;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\HttpBearerFormat;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\HttpScheme;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeName;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\SchemeType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
-final class HttpSecurityScheme extends SecurityScheme
+final class HttpSecurityScheme extends ComponentsSecurityScheme
 {
     private HttpScheme $scheme;
     private ?HttpBearerFormat $format;
