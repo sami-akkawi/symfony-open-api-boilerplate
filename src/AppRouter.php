@@ -8,12 +8,12 @@ use Symfony\Component\Routing\RouteCollection;
 
 final class AppRouter extends Loader
 {
-    private V1SpecsController $v2SpecificationsController;
+    private V1SpecsController $v1SpecificationsController;
     private static bool $loadedConfig = false;
 
-    public function __construct(V1SpecsController $v2SpecificationsController)
+    public function __construct(V1SpecsController $v1SpecificationsController)
     {
-        $this->v2SpecificationsController = $v2SpecificationsController;
+        $this->v1SpecificationsController = $v1SpecificationsController;
     }
 
     public function load($resource, string $type = null)
@@ -30,7 +30,7 @@ final class AppRouter extends Loader
                 );
             }
             $routes->addCollection(
-                $this->v2SpecificationsController->getApiSpecification()->toSymfonyRouteCollection('handle')
+                $this->v1SpecificationsController->getApiSpecification()->toSymfonyRouteCollection('handle')
             );
             self::$loadedConfig = true;
         }
