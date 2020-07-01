@@ -2,6 +2,11 @@
 [![Badge: MIT License](public/assets/images/mit-license-badge.svg)](LICENSE)
 [![Badge: agile.akkawi.ch](public/assets/images/agile-akkawi-ch-badge.svg)](https://agile.akkawi.ch/bp/5ec0b57a1ee7f)
 
+** NOTICE ** Please note this is still a work in progress, but if you find anything missing or not correct, please do
+ not hesitate to contact me.
+ 
+## Introduction ##
+
 This project is an attempt to make API Documentation easier and error free. Request parameters shall be validated
  with the documentation and responses as well. This way, documentation is kept up-to-date and responses are
  guaranteed to look like the documentation. This will decrease frustration from the frontend and increase
@@ -9,5 +14,3 @@ This project is an attempt to make API Documentation easier and error free. Requ
  
 The API Documentation follows the [OpenAPI Initiative](https://www.openapis.org/) and its latest [Specifications
  (v3.0.3)](http://spec.openapis.org/oas/v3.0.3).
- 
-** If you find anything mising or not correct, please do not hesitate to contact me. **
