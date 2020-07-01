@@ -9,3 +9,5 @@ This project is an attempt to make API Documentation easier and error free. Requ
  
 The API Documentation follows the [OpenAPI Initiative](https://www.openapis.org/) and its latest [Specifications
  (v3.0.3)](http://spec.openapis.org/oas/v3.0.3).
+ 
+** If you find anything mising or not correct, please do not hesitate to contact me. **
