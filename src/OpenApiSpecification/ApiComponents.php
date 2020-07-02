@@ -160,7 +160,7 @@ final class ApiComponents
 
     public function addHeader(ComponentsHeader $header): self
     {
-        if (!$header->hasDocName()) {
+        if (!$header->hasKey()) {
             throw SpecificationException::generateMustHaveKeyInComponents();
         }
 

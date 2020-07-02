@@ -33,7 +33,7 @@ final class ComponentsHeaders
 
     public function addHeader(ComponentsHeader $header): self
     {
-        if (!$header->hasDocName()) {
+        if (!$header->hasKey()) {
             throw SpecificationException::generateHeaderInHeadersNeedsAName();
         }
         if ($this->hasHeader($header->getKey())) {

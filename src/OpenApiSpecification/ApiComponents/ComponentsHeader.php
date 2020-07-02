@@ -13,7 +13,7 @@ abstract class ComponentsHeader
 
     public abstract function toDetailedHeader(): DetailedHeader;
 
-    public function hasDocName(): bool
+    public function hasKey(): bool
     {
         return (bool)$this->key;
     }
