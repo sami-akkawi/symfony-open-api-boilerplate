@@ -3,13 +3,13 @@
 namespace App\OpenApiSpecification\ApiComponents;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsHeader\DetailedHeader;
-use App\OpenApiSpecification\ApiComponents\ComponentsHeader\HeaderKey;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header\HeaderKey;
 
 abstract class ComponentsHeader
 {
     protected ?HeaderKey $key;
 
-    public abstract function setKey(string $name);
+    public abstract function setKey(string $key);
 
     public abstract function toDetailedHeader(): DetailedHeader;
 

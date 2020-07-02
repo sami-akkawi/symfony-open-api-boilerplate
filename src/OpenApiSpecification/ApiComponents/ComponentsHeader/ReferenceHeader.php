@@ -22,9 +22,9 @@ final class ReferenceHeader extends ComponentsHeader
         return new self(Reference::generateHeaderReference($objectName), $Header);
     }
 
-    public function setKey(string $name): self
+    public function setKey(string $key): self
     {
-        return new self($this->reference, $this->Header, HeaderKey::fromString($name));
+        return new self($this->reference, $this->Header, HeaderKey::fromString($key));
     }
 
     public function toDetailedHeader(): DetailedHeader

@@ -123,14 +123,14 @@ final class StringHeader extends SchemaHeader
         );
     }
 
-    public function setKey(string $name): self
+    public function setKey(string $key): self
     {
         return new self(
             $this->isRequired,
             $this->isDeprecated,
             $this->schema,
             $this->description,
-            HeaderKey::fromString($name),
+            HeaderKey::fromString($key),
             $this->example,
             $this->examples
         );

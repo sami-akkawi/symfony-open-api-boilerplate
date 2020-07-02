@@ -2,7 +2,7 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
-use App\OpenApiSpecification\ApiComponents\ComponentsHeader\HeaderKey;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header\HeaderKey;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ComponentsHeaders
@@ -20,10 +20,10 @@ final class ComponentsHeaders
         return new self([]);
     }
 
-    private function hasHeader(HeaderKey $name): bool
+    private function hasHeader(HeaderKey $key): bool
     {
         foreach ($this->headers as $header) {
-            if ($header->getKey()->isIdenticalTo($name)) {
+            if ($header->getKey()->isIdenticalTo($key)) {
                 return true;
             }
         }
