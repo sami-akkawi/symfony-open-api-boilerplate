@@ -23,7 +23,7 @@ abstract class SchemaHeader extends DetailedHeader
         $this->schema = $schema;
     }
 
-    public abstract function makeNullable();
+    abstract public function makeNullable();
 
     public function toOpenApiSpecification(): array
     {

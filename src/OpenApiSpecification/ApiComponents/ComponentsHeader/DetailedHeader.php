@@ -46,13 +46,13 @@ abstract class DetailedHeader extends ComponentsHeader
         return $this;
     }
 
-    public abstract function require();
+    abstract public function require();
 
-    public abstract function deprecate();
+    abstract public function deprecate();
 
-    public abstract function setDescription(string $description);
+    abstract public function setDescription(string $description);
 
-    public abstract function addExample(ComponentsExample $example);
+    abstract public function addExample(ComponentsExample $example);
 
-    public abstract function setExample(ComponentsExample $example);
+    abstract public function setExample(ComponentsExample $example);
 }

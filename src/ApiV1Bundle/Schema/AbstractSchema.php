@@ -7,7 +7,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsSchema\ReferenceSchema;
 
 abstract class AbstractSchema
 {
-    public abstract function toDetailedSchema(): Schema;
+    abstract public function toDetailedSchema(): Schema;
 
     public static function getOpenApiSchema(): Schema
     {
@@ -21,9 +21,9 @@ abstract class AbstractSchema
         return ReferenceSchema::generate(static::getClassName(), static::getOpenApiSchemaWithoutName());
     }
 
-    public abstract static function getAlwaysRequiredFields(): array;
+    abstract public static function getAlwaysRequiredFields(): array;
 
-    public abstract function requireOnly(array $fieldNames);
+    abstract public function requireOnly(array $fieldNames);
 
     private static function getClassName(): string
     {

@@ -9,9 +9,9 @@ abstract class ComponentsExample
 {
     protected ?ExampleName $name;
 
-    public abstract function toExample(): Example;
+    abstract public function toExample(): Example;
 
-    public abstract function setName(string $name);
+    abstract public function setName(string $name);
 
     public function isValidForSchema(ComponentsSchema $schema): array
     {
@@ -28,7 +28,7 @@ abstract class ComponentsExample
         return (bool)$this->name;
     }
 
-    public abstract function getLiteralValue();
+    abstract public function getLiteralValue();
 
-    public abstract function toOpenApiSpecification(): array;
+    abstract public function toOpenApiSpecification(): array;
 }

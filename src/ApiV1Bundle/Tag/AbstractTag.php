@@ -6,5 +6,5 @@ use App\OpenApiSpecification\ApiTag;
 
 abstract class AbstractTag
 {
-    public abstract static function getApiTag(): ApiTag;
+    abstract public static function getApiTag(): ApiTag;
 }

@@ -24,9 +24,9 @@ abstract class ComponentsSchema
     protected ?ComponentsExample $example;
     protected SchemaIsDeprecated $isDeprecated;
 
-    public abstract function toOpenApiSpecification(): array;
+    abstract public function toOpenApiSpecification(): array;
 
-    public abstract function setName(string $name);
+    abstract public function setName(string $name);
 
     public function hasName(): bool
     {
@@ -48,17 +48,17 @@ abstract class ComponentsSchema
         return $this->isRequired->toBool();
     }
 
-    public abstract function unRequire();
+    abstract public function unRequire();
 
-    public abstract function require();
+    abstract public function require();
 
-    public abstract function deprecate();
+    abstract public function deprecate();
 
-    public abstract function makeNullable();
+    abstract public function makeNullable();
 
-    public abstract function setExample(ComponentsExample $example);
+    abstract public function setExample(ComponentsExample $example);
 
-    public abstract function isValueValid($value): array;
+    abstract public function isValueValid($value): array;
 
     public function validateValue($value): ?SpecificationException
     {
@@ -73,9 +73,9 @@ abstract class ComponentsSchema
         return null;
     }
 
-    public abstract function toSchema(): Schema;
+    abstract public function toSchema(): Schema;
 
-    public abstract function getType(): ?SchemaType;
+    abstract public function getType(): ?SchemaType;
 
     public function getValueFromCastedString(string $value)
     {

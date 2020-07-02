@@ -9,9 +9,9 @@ abstract class ComponentsHeader
 {
     protected ?HeaderKey $key;
 
-    public abstract function setKey(string $key);
+    abstract public function setKey(string $key);
 
-    public abstract function toDetailedHeader(): DetailedHeader;
+    abstract public function toDetailedHeader(): DetailedHeader;
 
     public function hasKey(): bool
     {
@@ -23,5 +23,5 @@ abstract class ComponentsHeader
         return $this->key;
     }
 
-    public abstract function toOpenApiSpecification(): array;
+    abstract public function toOpenApiSpecification(): array;
 }

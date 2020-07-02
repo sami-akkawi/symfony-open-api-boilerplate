@@ -104,39 +104,39 @@ abstract class Parameter extends ComponentsParameter
         );
     }
 
-    public abstract static function generateInQuery(string $name);
+    abstract public static function generateInQuery(string $name);
 
-    public abstract static function generateInHeader(string $name);
+    abstract public static function generateInHeader(string $name);
 
-    public abstract static function generateInPath(string $name);
+    abstract public static function generateInPath(string $name);
 
-    public abstract static function generateInCookie(string $name);
+    abstract public static function generateInCookie(string $name);
 
-    public abstract function require();
+    abstract public function require();
 
-    public abstract function deprecate();
+    abstract public function deprecate();
 
-    public abstract function setDescription(string $description);
+    abstract public function setDescription(string $description);
 
-    public abstract function addExample(ComponentsExample $example);
+    abstract public function addExample(ComponentsExample $example);
 
-    public abstract function setExample(ComponentsExample $example);
+    abstract public function setExample(ComponentsExample $example);
 
-    public abstract function makeNullable();
+    abstract public function makeNullable();
 
-    public abstract function styleAsMatrix();
+    abstract public function styleAsMatrix();
 
-    public abstract function styleAsLabel();
+    abstract public function styleAsLabel();
 
-    public abstract function styleAsForm();
+    abstract public function styleAsForm();
 
-    public abstract function styleAsSimple();
+    abstract public function styleAsSimple();
 
-    public abstract function styleAsSpaceDelimited();
+    abstract public function styleAsSpaceDelimited();
 
-    public abstract function styleAsPipeDelimited();
+    abstract public function styleAsPipeDelimited();
 
-    public abstract function styleAsDeepObject();
+    abstract public function styleAsDeepObject();
 
     public function getStyle(): ?ParameterStyle
     {

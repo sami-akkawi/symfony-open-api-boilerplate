@@ -33,15 +33,15 @@ abstract class ComponentsResponse
         return $this->name;
     }
 
-    public abstract function setName(string $name);
+    abstract public function setName(string $name);
 
-    public abstract function toOpenApiSpecification(): array;
+    abstract public function toOpenApiSpecification(): array;
 
-    public abstract function toResponse(): ResponseSchema;
+    abstract public function toResponse(): ResponseSchema;
 
-    public abstract function getDefinedMimeTypes(): array;
+    abstract public function getDefinedMimeTypes(): array;
 
-    public abstract function isValueValidByMimeType(string $mimeType, $value): array;
+    abstract public function isValueValidByMimeType(string $mimeType, $value): array;
 
-    public abstract function getDescription(): ResponseDescription;
+    abstract public function getDescription(): ResponseDescription;
 }

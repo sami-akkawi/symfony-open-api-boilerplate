@@ -13,7 +13,7 @@ abstract class PrimitiveSchema extends Schema
         return $this->type;
     }
 
-    public abstract static function generate();
+    abstract public static function generate();
 
-    public abstract function setDescription(string $description);
+    abstract public function setDescription(string $description);
 }

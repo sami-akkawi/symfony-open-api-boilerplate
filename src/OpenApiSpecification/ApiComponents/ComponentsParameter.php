@@ -16,13 +16,13 @@ abstract class ComponentsParameter
 {
     protected ?ParameterKey $key;
 
-    public abstract function setKey(string $key);
+    abstract public function setKey(string $key);
 
-    public abstract function getName(): ParameterName;
+    abstract public function getName(): ParameterName;
 
-    public abstract function isRequired(): bool;
+    abstract public function isRequired(): bool;
 
-    public abstract function toParameter(): Parameter;
+    abstract public function toParameter(): Parameter;
 
     public function hasKey(): bool
     {
@@ -34,7 +34,7 @@ abstract class ComponentsParameter
         return $this->key;
     }
 
-    public abstract function toOpenApiSpecification(): array;
+    abstract public function toOpenApiSpecification(): array;
 
     public function isQueryParameter(): bool
     {
@@ -56,7 +56,7 @@ abstract class ComponentsParameter
         return $this->toParameter()->getLocation()->isInPath();
     }
 
-    public abstract function isValueValid($value): array;
+    abstract public function isValueValid($value): array;
 
-    public abstract function getSchema(): ComponentsSchema;
+    abstract public function getSchema(): ComponentsSchema;
 }

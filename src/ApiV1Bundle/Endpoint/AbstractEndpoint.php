@@ -24,9 +24,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractEndpoint
 {
-    public abstract static function getOperationName(): OperationName;
+    abstract public static function getOperationName(): OperationName;
 
-    public abstract static function getPartialPath(): PathPartialUrl;
+    abstract public static function getPartialPath(): PathPartialUrl;
 
     protected FormatValidator $validator;
 
@@ -113,7 +113,7 @@ abstract class AbstractEndpoint
         array $cookieParams
     ): Response;
 
-    public abstract static function getTags(): OperationTags;
+    abstract public static function getTags(): OperationTags;
 
     public static function getOperationId(): OperationId
     {

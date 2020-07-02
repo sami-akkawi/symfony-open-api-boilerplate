@@ -9,7 +9,7 @@ abstract class ComponentsRequestBody
 {
     protected ?RequestBodyName $name;
 
-    public abstract function setName(string $name);
+    abstract public function setName(string $name);
 
     public function hasName(): bool
     {
@@ -21,11 +21,11 @@ abstract class ComponentsRequestBody
         return $this->name;
     }
 
-    public abstract function getDefinedMimeTypes(): array;
+    abstract public function getDefinedMimeTypes(): array;
 
-    public abstract function isValueValidByMimeType(string $mimeType, $value): array;
+    abstract public function isValueValidByMimeType(string $mimeType, $value): array;
 
-    public abstract function toRequestBody(): RequestBody;
+    abstract public function toRequestBody(): RequestBody;
 
-    public abstract function toOpenApiSpecification(): array;
+    abstract public function toOpenApiSpecification(): array;
 }
