@@ -14,7 +14,7 @@ abstract class AbstractSchema
         return static::getOpenApiSchemaWithoutName()->setName(static::getClassName());
     }
 
-    protected abstract static function getOpenApiSchemaWithoutName(): Schema;
+    abstract protected static function getOpenApiSchemaWithoutName(): Schema;
 
     public static function getReferenceSchema(): ReferenceSchema
     {

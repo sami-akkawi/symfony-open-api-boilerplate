@@ -12,7 +12,7 @@ abstract class AbstractHeader
         return static::getOpenApiHeaderWithoutName()->setKey(static::getClassName());
     }
 
-    protected abstract static function getOpenApiHeaderWithoutName(): DetailedHeader;
+    abstract protected static function getOpenApiHeaderWithoutName(): DetailedHeader;
 
     public static function getReferenceParameter(): ReferenceHeader
     {

@@ -12,7 +12,7 @@ abstract class AbstractRequestBody
         return static::getOpenApiRequestBodyWithoutName()->setName(static::getClassName());
     }
 
-    protected abstract static function getOpenApiRequestBodyWithoutName(): RequestBody;
+    abstract protected static function getOpenApiRequestBodyWithoutName(): RequestBody;
 
     public static function getReferenceRequestBody(): ReferenceRequestBody
     {

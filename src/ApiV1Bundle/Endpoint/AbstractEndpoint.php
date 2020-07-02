@@ -110,7 +110,7 @@ abstract class AbstractEndpoint
         return $errorResponse;
     }
 
-    protected abstract function subHandle(
+    abstract protected function subHandle(
         array $pathParams,
         array $requestBody,
         array $queryParams,
@@ -137,7 +137,7 @@ abstract class AbstractEndpoint
             ->addResponse(CorruptDataResponse::getReferenceResponse());
     }
 
-    protected abstract static function getResponses(): ComponentsResponses;
+    abstract protected static function getResponses(): ComponentsResponses;
 
     public static function getParameters(): ComponentsParameters
     {

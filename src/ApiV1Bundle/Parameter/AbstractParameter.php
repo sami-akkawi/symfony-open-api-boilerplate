@@ -12,7 +12,7 @@ abstract class AbstractParameter
         return static::getOpenApiResponseWithoutName()->setKey(static::getClassName());
     }
 
-    protected abstract static function getOpenApiResponseWithoutName(): Parameter;
+    abstract protected static function getOpenApiResponseWithoutName(): Parameter;
 
     public static function getReferenceParameter(): ReferenceParameter
     {

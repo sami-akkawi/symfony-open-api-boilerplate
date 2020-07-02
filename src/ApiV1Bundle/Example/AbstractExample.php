@@ -12,7 +12,7 @@ abstract class AbstractExample
         return static::getOpenApiExampleWithoutName()->setName(static::getClassName());
     }
 
-    protected abstract static function getOpenApiExampleWithoutName(): Example;
+    abstract protected static function getOpenApiExampleWithoutName(): Example;
 
     public static function getReferenceExample(): ReferenceExample
     {

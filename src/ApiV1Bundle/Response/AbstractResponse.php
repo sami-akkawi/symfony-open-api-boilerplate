@@ -14,7 +14,7 @@ abstract class AbstractResponse
         return static::getOpenApiResponseWithoutName()->setName(static::getClassName());
     }
 
-    protected abstract static function getOpenApiResponseWithoutName(): ResponseSchema;
+    abstract protected static function getOpenApiResponseWithoutName(): ResponseSchema;
 
     public static function getReferenceResponse(): ReferenceResponse
     {
@@ -42,5 +42,5 @@ abstract class AbstractResponse
         return array_pop($path);
     }
 
-    protected abstract function toArray(): array;
+    abstract protected function toArray(): array;
 }

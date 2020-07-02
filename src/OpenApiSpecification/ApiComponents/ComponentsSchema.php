@@ -90,5 +90,5 @@ abstract class ComponentsSchema
         return $this->getValueFromTrimmedCastedString($cleanValue);
     }
 
-    protected abstract function getValueFromTrimmedCastedString(string $value);
+    abstract protected function getValueFromTrimmedCastedString(string $value);
 }
