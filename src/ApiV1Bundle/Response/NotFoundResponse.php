@@ -9,19 +9,19 @@ use App\OpenApiSpecification\ApiComponents\ComponentsResponse\ResponseSchema;
 
 final class NotFoundResponse extends AbstractErrorResponse
 {
-    public static function generate(array $headers): self
+    public static function generate(): self
     {
-        return new self([], [], $headers);
+        return new self([], []);
     }
 
     public function addMessage(Message $message): self
     {
-        return new self(array_merge($this->messages, [$message]), $this->fieldMessages, $this->headers);
+        return new self(array_merge($this->messages, [$message]), $this->fieldMessages);
     }
 
     public function addFieldMessage(FieldMessage $fieldMessage): self
     {
-        return new self($this->messages, array_merge($this->fieldMessages, [$fieldMessage]), $this->headers);
+        return new self($this->messages, array_merge($this->fieldMessages, [$fieldMessage]));
     }
 
     protected static function getOpenApiResponseWithoutName(): ResponseSchema

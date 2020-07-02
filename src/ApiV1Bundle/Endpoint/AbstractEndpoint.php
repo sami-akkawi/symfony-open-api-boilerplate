@@ -5,6 +5,7 @@ namespace App\ApiV1Bundle\Endpoint;
 use App\ApiV1Bundle\Helpers\ApiDependencies;
 use App\ApiV1Bundle\Helpers\FormatValidator;
 use App\ApiV1Bundle\Helpers\JsonToXmlConverter;
+use App\ApiV1Bundle\Response\AbstractErrorResponse;
 use App\ApiV1Bundle\Response\CorruptDataResponse;
 use App\ApiV1Bundle\Response\UnprocessableEntityResponse;
 use App\Message\FieldMessage;
@@ -59,15 +60,11 @@ abstract class AbstractEndpoint
         //  return NotAuthorizedResponse (403 Forbidden)
 
         if ($this->validator->hasErrors()) {
-            $response = UnprocessableEntityResponse::generate($headers);
-            foreach ($this->validator->getErrors() as $message) {
-                if ($message instanceof FieldMessage) {
-                    $response = $response->addFieldMessage($message);
-                    continue;
-                }
-                $response = $response->addMessage($message);
-            }
-            return $isXml ? $response->toXmlResponse() : $response->toJsonResponse();
+            $errorResponse = UnprocessableEntityResponse::generate();
+            $errorResponse = $this->addErrorsMessagesToResponse($errorResponse);
+            $response = $isXml ? $errorResponse->toXmlResponse() : $errorResponse->toJsonResponse();
+            $response->headers->add($headers);
+            return $response;
         }
 
         $endpointResponse = $this->subHandle($pathParams, $requestBody, $queryParams, $headerParams, $cookieParams);
@@ -83,15 +80,11 @@ abstract class AbstractEndpoint
 
         $this->validator->validateResponse($endpointResponse, $this);
         if ($this->validator->hasErrors()) {
-            $response = CorruptDataResponse::generate($headers);
-            foreach ($this->validator->getErrors() as $message) {
-                if ($message instanceof FieldMessage) {
-                    $response = $response->addFieldMessage($message);
-                    continue;
-                }
-                $response = $response->addMessage($message);
-            }
-            return $isXml ? $response->toXmlResponse() : $response->toJsonResponse();
+            $errorResponse = CorruptDataResponse::generate();
+            $errorResponse = $this->addErrorsMessagesToResponse($errorResponse);
+            $response = $isXml ? $errorResponse->toXmlResponse() : $errorResponse->toJsonResponse();
+            $response->headers->add($headers);
+            return $response;
         }
 
         if ($isXml) {
@@ -103,6 +96,18 @@ abstract class AbstractEndpoint
         }
 
         return $endpointResponse;
+    }
+
+    private function addErrorsMessagesToResponse(AbstractErrorResponse $errorResponse): AbstractErrorResponse
+    {
+        foreach ($this->validator->getErrors() as $message) {
+            if ($message instanceof FieldMessage) {
+                $errorResponse = $errorResponse->addFieldMessage($message);
+                continue;
+            }
+            $errorResponse = $errorResponse->addMessage($message);
+        }
+        return $errorResponse;
     }
 
     protected abstract function subHandle(

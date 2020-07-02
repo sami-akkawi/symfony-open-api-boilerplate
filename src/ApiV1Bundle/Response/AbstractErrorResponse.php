@@ -12,11 +12,8 @@ abstract class AbstractErrorResponse extends AbstractResponse
     /** @var FieldMessage[] */
     protected array $fieldMessages;
 
-    protected array $headers;
-
-    protected function __construct(array $messages, array $fieldMessages, array $headers)
+    protected function __construct(array $messages, array $fieldMessages)
     {
-        $this->headers = $headers;
         $this->messages = $messages;
         $this->fieldMessages = $fieldMessages;
     }
