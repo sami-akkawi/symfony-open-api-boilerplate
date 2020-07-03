@@ -2,8 +2,11 @@
 
 namespace App\OpenApiSpecification\ApiException;
 
-use App\OpenApiSpecification\ApiComponents\ComponentsParameter\ParameterLocation;
-use App\OpenApiSpecification\ApiComponents\ComponentsParameter\ParameterStyle;
+use App\OpenApiSpecification\ApiComponents\ComponentsLink\Link\LinkParameter\ParameterKey\KeyLocation;
+use App\OpenApiSpecification\ApiComponents\ComponentsLink\Link\LinkParameter\ParameterValue\ValueLocation;
+use App\OpenApiSpecification\ApiComponents\ComponentsLink\Link\LinkParameter\ParameterValue\ValueSource;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterLocation;
+use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter\ParameterStyle;
 use App\OpenApiSpecification\ApiComponents\Reference\ReferenceType;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\DiscriminatorSchemaType;
 use App\OpenApiSpecification\ApiComponents\ComponentsSecurityScheme\SecurityScheme\ApiKeyLocation;
@@ -251,5 +254,30 @@ final class SpecificationException extends LogicException
     public static function generateCannotAddPrimitiveSchemaToAllOfDiscriminator(): self
     {
         return self::generate("Cannot add a primitive Schema to an 'allOf' Discriminator Schema, make sure to wrap all the primitives in one or more Schema(s).");
+    }
+
+    public static function generateInvalidParameterKeyLocation(string $invalidLocation): self
+    {
+        return self::generate("Invalid Parameter Key Location: $invalidLocation. Please choose one of: " . implode(', ', KeyLocation::getValidLocations()) . '.');
+    }
+
+    public static function generateInvalidParameterValueLocation(string $invalidLocation): self
+    {
+        return self::generate("Invalid Parameter Value Location: $invalidLocation. Please choose one of: " . implode(', ', ValueLocation::getValidLocations()) . '.');
+    }
+
+    public static function generateInvalidParameterValueSource(string $invalidSource): self
+    {
+        return self::generate("Invalid Parameter Value Source: $invalidSource. Please choose one of: " . implode(', ', ValueSource::getValidSources()) . '.');
+    }
+
+    public static function generateResponseParameterValueCanOnlyHaveBodyLocation(): self
+    {
+        return self::generate("Parameter Value from Response cannot be outside of body.");
+    }
+
+    public static function generatePathOperationIdAlreadyDefined(string $operationId): self
+    {
+        return new self("The operation id '$operationId' was already defined on path.");
     }
 }

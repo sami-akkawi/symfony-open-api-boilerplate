@@ -26,6 +26,7 @@ final class ApiSpecification
         ApiTags $tags,
         ?ApiExternalDocs $externalDocs
     ) {
+        $paths->validate();
         $this->openApiVersion = $openApiVersion;
         $this->info = $info;
         $this->paths = $paths;

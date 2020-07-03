@@ -2,6 +2,7 @@
 
 namespace App\OpenApiSpecification;
 
+use App\OpenApiSpecification\ApiException\SpecificationException;
 use App\OpenApiSpecification\ApiPath\PathPartialUrl;
 
 /**
@@ -68,5 +69,23 @@ final class ApiPaths
         }
         ksort($specifications);
         return $specifications;
+    }
+
+    public function validate(): void
+    {
+        $allOperationIds = [];
+        foreach ($this->paths as $path) {
+            foreach ($path->getOperations()->toArrayOfOperations() as $operation) {
+                $operationId = $operation->getId()->toString();
+                if (
+                in_array($operationId, $allOperationIds)
+                ) {
+                    throw SpecificationException::generatePathOperationIdAlreadyDefined($operationId);
+                }
+                $allOperationIds[] = $operationId;
+
+                // todo: validate Links
+            }
+        }
     }
 }

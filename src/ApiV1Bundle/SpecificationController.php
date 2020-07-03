@@ -5,6 +5,7 @@ namespace App\ApiV1Bundle;
 use App\ApiV1Bundle\Endpoint\AbstractEndpoint;
 use App\ApiV1Bundle\Example\AbstractExample;
 use App\ApiV1Bundle\Header\AbstractHeader;
+use App\ApiV1Bundle\Link\AbstractLink;
 use App\ApiV1Bundle\Parameter\AbstractParameter;
 use App\ApiV1Bundle\RequestBody\AbstractRequestBody;
 use App\ApiV1Bundle\Response\AbstractResponse;
@@ -105,6 +106,7 @@ final class SpecificationController
         $components = $this->addExamples($components);
         $components = $this->addRequestBodies($components);
         $components = $this->addHeaders($components);
+        $components = $this->addLinks($components);
 
         return $components;
     }
@@ -229,6 +231,27 @@ final class SpecificationController
             $headerClass = $this->getFullyQualifiedClassName($file, $type);
             $components = $components->addHeader(
                 $headerClass::getOpenApiHeader()
+            );
+        }
+
+        return $components;
+    }
+
+    private function addLinks(ApiComponents $components): ApiComponents
+    {
+        $type = 'link';
+        foreach ($this->getAutoLoadedClasses($type) as $file) {
+            if (
+                !$file->isFile()
+                || is_int(strpos($file->getBaseName(), 'AbstractLink'))
+            ) {
+                continue;
+            }
+
+            /** @var AbstractLink $linkClass */
+            $linkClass = $this->getFullyQualifiedClassName($file, $type);
+            $components = $components->addLink(
+                $linkClass::getOpenApiLink()
             );
         }
 

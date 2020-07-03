@@ -6,6 +6,8 @@ use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
 use App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 use App\OpenApiSpecification\ApiComponents\ComponentsHeaders;
+use App\OpenApiSpecification\ApiComponents\ComponentsLink;
+use App\OpenApiSpecification\ApiComponents\ComponentsLinks;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameter;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBodies;
@@ -27,7 +29,7 @@ final class ApiComponents
     private ComponentsRequestBodies $requestBodies;
     private ComponentsHeaders $headers;
     private ComponentsSecuritySchemes $securitySchemes;
-    // todo: private Links $links
+    private ComponentsLinks $links;
 
     private function __construct(
         ComponentsSchemas $schemas,
@@ -36,7 +38,8 @@ final class ApiComponents
         ComponentsExamples $examples,
         ComponentsRequestBodies $requestBodies,
         ComponentsHeaders $headers,
-        ComponentsSecuritySchemes $securitySchemes
+        ComponentsSecuritySchemes $securitySchemes,
+        ComponentsLinks $links
     ) {
         $this->schemas = $schemas;
         $this->responses = $responses;
@@ -45,6 +48,7 @@ final class ApiComponents
         $this->requestBodies = $requestBodies;
         $this->headers = $headers;
         $this->securitySchemes = $securitySchemes;
+        $this->links = $links;
     }
 
     public static function generate(): self
@@ -56,7 +60,8 @@ final class ApiComponents
             ComponentsExamples::generate(),
             ComponentsRequestBodies::generate(),
             ComponentsHeaders::generate(),
-            ComponentsSecuritySchemes::generate()
+            ComponentsSecuritySchemes::generate(),
+            ComponentsLinks::generate()
         );
     }
 
@@ -70,6 +75,7 @@ final class ApiComponents
             $this->requestBodies,
             $this->headers,
             $this->securitySchemes->addScheme($scheme),
+            $this->links
         );
     }
 
@@ -86,7 +92,8 @@ final class ApiComponents
             $this->examples,
             $this->requestBodies,
             $this->headers,
-            $this->securitySchemes
+            $this->securitySchemes,
+            $this->links
         );
     }
 
@@ -103,7 +110,8 @@ final class ApiComponents
             $this->examples,
             $this->requestBodies,
             $this->headers,
-            $this->securitySchemes
+            $this->securitySchemes,
+            $this->links
         );
     }
 
@@ -120,7 +128,8 @@ final class ApiComponents
             $this->examples,
             $this->requestBodies,
             $this->headers,
-            $this->securitySchemes
+            $this->securitySchemes,
+            $this->links
         );
     }
 
@@ -137,7 +146,8 @@ final class ApiComponents
             $this->examples->addExample($example, $example->getName()->toString()),
             $this->requestBodies,
             $this->headers,
-            $this->securitySchemes
+            $this->securitySchemes,
+            $this->links
         );
     }
 
@@ -154,7 +164,8 @@ final class ApiComponents
             $this->examples,
             $this->requestBodies->addRequestBody($requestBody),
             $this->headers,
-            $this->securitySchemes
+            $this->securitySchemes,
+            $this->links
         );
     }
 
@@ -171,7 +182,22 @@ final class ApiComponents
             $this->examples,
             $this->requestBodies,
             $this->headers->addHeader($header),
-            $this->securitySchemes
+            $this->securitySchemes,
+            $this->links
+        );
+    }
+
+    public function addLink(ComponentsLink $link): self
+    {
+        return new self(
+            $this->schemas,
+            $this->responses,
+            $this->parameters,
+            $this->examples,
+            $this->requestBodies,
+            $this->headers,
+            $this->securitySchemes,
+            $this->links->addLink($link)
         );
     }
 
@@ -199,6 +225,9 @@ final class ApiComponents
         if ($this->securitySchemes->isDefined()) {
             $specifications['securitySchemes'] =  $this->securitySchemes->toOpenApiSpecification();
         }
+        if ($this->links->isDefined()) {
+            $specifications['links'] =  $this->links->toOpenApiSpecificationForComponents();
+        }
         return $specifications;
     }
 
@@ -210,7 +239,9 @@ final class ApiComponents
             || $this->responses->isDefined()
             || $this->examples->isDefined()
             || $this->requestBodies->isDefined()
+            || $this->headers->isDefined()
             || $this->parameters->isDefined()
+            || $this->links->isDefined()
         );
     }
 }
