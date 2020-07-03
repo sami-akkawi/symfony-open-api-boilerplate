@@ -4,6 +4,7 @@ namespace App\ApiV1Bundle;
 
 use App\ApiV1Bundle\Endpoint\AbstractEndpoint;
 use App\ApiV1Bundle\Example\AbstractExample;
+use App\ApiV1Bundle\Header\AbstractHeader;
 use App\ApiV1Bundle\Parameter\AbstractParameter;
 use App\ApiV1Bundle\RequestBody\AbstractRequestBody;
 use App\ApiV1Bundle\Response\AbstractResponse;
@@ -103,6 +104,7 @@ final class SpecificationController
         $components = $this->addParameters($components);
         $components = $this->addExamples($components);
         $components = $this->addRequestBodies($components);
+        $components = $this->addHeaders($components);
 
         return $components;
     }
@@ -206,6 +208,27 @@ final class SpecificationController
             $exampleClass = $this->getFullyQualifiedClassName($file, $type);
             $components = $components->addRequestBody(
                 $exampleClass::getOpenApiRequestBody()
+            );
+        }
+
+        return $components;
+    }
+
+    private function addHeaders(ApiComponents $components): ApiComponents
+    {
+        $type = 'header';
+        foreach ($this->getAutoLoadedClasses($type) as $file) {
+            if (
+                !$file->isFile()
+                || is_int(strpos($file->getBaseName(), 'AbstractHeader'))
+            ) {
+                continue;
+            }
+
+            /** @var AbstractHeader $headerClass */
+            $headerClass = $this->getFullyQualifiedClassName($file, $type);
+            $components = $components->addHeader(
+                $headerClass::getOpenApiHeader()
             );
         }
 

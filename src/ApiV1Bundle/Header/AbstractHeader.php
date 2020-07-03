@@ -14,7 +14,7 @@ abstract class AbstractHeader
 
     abstract protected static function getOpenApiHeaderWithoutName(): DetailedHeader;
 
-    public static function getReferenceParameter(): ReferenceHeader
+    public static function getReferenceHeader(): ReferenceHeader
     {
         return ReferenceHeader::generate(static::getClassName(), static::getOpenApiHeaderWithoutName());
     }
