@@ -37,7 +37,9 @@ abstract class ComponentsResponse
 
     abstract public function toOpenApiSpecification(): array;
 
-    abstract public function toResponse(): ResponseSchema;
+    abstract public function toResponseSchema(): ResponseSchema;
+
+    abstract public function getLinks(): ComponentsLinks;
 
     abstract public function getDefinedMimeTypes(): array;
 

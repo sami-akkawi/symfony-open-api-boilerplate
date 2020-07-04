@@ -83,8 +83,6 @@ final class ApiPaths
                     throw SpecificationException::generatePathOperationIdAlreadyDefined($operationId);
                 }
                 $allOperationIds[] = $operationId;
-
-                // todo: validate Links
             }
         }
     }

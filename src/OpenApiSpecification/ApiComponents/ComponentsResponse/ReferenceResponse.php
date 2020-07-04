@@ -2,6 +2,7 @@
 
 namespace App\OpenApiSpecification\ApiComponents\ComponentsResponse;
 
+use App\OpenApiSpecification\ApiComponents\ComponentsLinks;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponse;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseDescription;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseName;
@@ -40,9 +41,14 @@ final class ReferenceResponse extends ComponentsResponse
         return $this->reference->toOpenApiSpecification();
     }
 
-    public function toResponse(): ResponseSchema
+    public function toResponseSchema(): ResponseSchema
     {
         return $this->response;
+    }
+
+    public function getLinks(): ComponentsLinks
+    {
+        return $this->response->getLinks();
     }
 
     public function getDefinedMimeTypes(): array

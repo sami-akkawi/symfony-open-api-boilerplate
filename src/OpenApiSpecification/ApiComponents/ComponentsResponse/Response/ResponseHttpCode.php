@@ -17,11 +17,14 @@ use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ResponseHttpCode
 {
-    private const OK        = '200';
-    private const CREATED   = '201';
-    private const NOT_FOUND = '404';
+    private const OK                   = '200';
+    private const CREATED              = '201';
+    private const BAD_REQUEST          = '400';
+    private const UNAUTHORIZED         = '401';
+    private const FORBIDDEN            = '403';
+    private const NOT_FOUND            = '404';
     private const UNPROCESSABLE_ENTITY = '422';
-    private const CORRUPT_DATA = '588';
+    private const CORRUPT_DATA         = '588';
 
     private string $statusCode;
 
@@ -46,6 +49,26 @@ final class ResponseHttpCode
     public static function generateOk(): self
     {
         return new self(self::OK);
+    }
+
+    public static function generateCreated(): self
+    {
+        return new self(self::CREATED);
+    }
+
+    public static function generateBadRequest(): self
+    {
+        return new self(self::BAD_REQUEST);
+    }
+
+    public static function generateUnauthorized(): self
+    {
+        return new self(self::UNAUTHORIZED);
+    }
+
+    public static function generateForbidden(): self
+    {
+        return new self(self::FORBIDDEN);
     }
 
     public static function generateNotFound(): self
