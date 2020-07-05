@@ -33,6 +33,7 @@ final class SchemaType
     const STRING_BINARY_FORMAT         = 'binary';
     const STRING_BYTE_FORMAT           = 'byte';
     const STRING_DATE_FORMAT           = 'date';
+    const STRING_TIME_FORMAT           = 'time';
     const STRING_DATE_TIME_ATOM_FORMAT = 'atom-date-time';
     const STRING_DATE_TIME_FORMAT      = 'date-time';
     const STRING_PASSWORD_FORMAT       = 'password';
@@ -45,6 +46,7 @@ final class SchemaType
         self::STRING_BINARY_FORMAT,
         self::STRING_BYTE_FORMAT,
         self::STRING_DATE_FORMAT,
+        self::STRING_TIME_FORMAT,
         self::STRING_DATE_TIME_ATOM_FORMAT,
         self::STRING_DATE_TIME_FORMAT,
         self::STRING_EMAIL_FORMAT,
@@ -183,6 +185,14 @@ final class SchemaType
             return $this->getInvalidStringFormatErrorMessage(self::STRING_URL_FORMAT, $value);
         }
 
+        if ($this->format === self::STRING_TIME_FORMAT) {
+            if (preg_match('/^([01][0-9]|2[0-3])(:([0-5][0-9])){2}$/', $value) === 1) {
+                return null;
+            }
+
+            return $this->getInvalidStringFormatErrorMessage(self::STRING_TIME_FORMAT, $value);
+        }
+
         throw new LogicException("Missing String validation case for format " . $this->format);
     }
 
@@ -212,6 +222,11 @@ final class SchemaType
     {
         $dateTime = new DateTimeImmutable($value);
         return $dateTime->format(DATE_ATOM) === $value;
+    }
+
+    public function isStringTime(): bool
+    {
+        return $this->format === self::STRING_TIME_FORMAT;
     }
 
     private function getInvalidStringFormatErrorMessage(string $format, string $invalidValue): Message

@@ -14,6 +14,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaMinimum
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaType;
 use App\OpenApiSpecification\ApiException\SpecificationException;
+use Symfony\Component\Uid\Uuid;
 
 final class StringSchema extends PrimitiveSchema
 {
@@ -339,6 +340,14 @@ final class StringSchema extends PrimitiveSchema
 
         if ($this->type->isStringUrl()) {
             return 'https://www.easycharter.ch/';
+        }
+
+        if ($this->type->isStringTime()) {
+            return '06:45:21';
+        }
+
+        if ($this->type->isStringUuid()) {
+            return Uuid::v4()->toRfc4122();
         }
 
         return null;
