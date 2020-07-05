@@ -134,7 +134,7 @@ abstract class ComponentsSchema
             }
 
             if ($schema instanceof DiscriminatorSchema) {
-                $schema = $schema->getSchemas()->findSchemaByName($part);
+                $schema = $schema->getFirstSchemaByName($part);
                 continue;
             }
 

@@ -311,17 +311,17 @@ final class DiscriminatorSchema extends Schema
         return $fieldErrors;
     }
 
-    private function getFirstSchemaByName(string $name): ?ComponentsSchema
+    public function getFirstSchemaByName(string $name): ?Schema
     {
         foreach ($this->schemas->toArrayOfSchemas() as $schema) {
             if ($schema instanceof ObjectSchema) {
                 $foundSchema = $schema->getProperties()->findSchemaByName($name);
                 if ($foundSchema) {
-                    return $foundSchema;
+                    return $foundSchema->toSchema();
                 }
             }
             if ($schema->getName()->toString() === $name) {
-                return $schema;
+                return $schema->toSchema();
             }
         }
 
