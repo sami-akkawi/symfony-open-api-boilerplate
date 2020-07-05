@@ -4,6 +4,7 @@ namespace App\OpenApiSpecification;
 
 use App\OpenApiSpecification\ApiException\SpecificationException;
 use App\OpenApiSpecification\ApiPath\PathOperation;
+use App\OpenApiSpecification\ApiPath\PathOperation\OperationId;
 use App\OpenApiSpecification\ApiPath\PathOperations;
 use App\OpenApiSpecification\ApiPath\PathPartialUrl;
 
@@ -37,6 +38,11 @@ final class ApiPath
     public function getOperations(): PathOperations
     {
         return $this->operations;
+    }
+
+    public function findOperationById(OperationId $id): ?PathOperation
+    {
+        return $this->operations->findById($id);
     }
 
     public function toOpenApiSpecification(): array

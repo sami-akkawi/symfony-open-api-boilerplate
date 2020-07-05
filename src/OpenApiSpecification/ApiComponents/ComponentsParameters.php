@@ -96,6 +96,42 @@ final class ComponentsParameters
         return null;
     }
 
+    public function getQueryParameter(string $name): ?Parameter
+    {
+        foreach ($this->getAllQueryParameters() as $parameter) {
+            $parameter = $parameter->toParameter();
+            if ($parameter->getName()->toString() === $name) {
+                return $parameter;
+            }
+        }
+
+        return null;
+    }
+
+    public function getHeaderParameter(string $name): ?Parameter
+    {
+        foreach ($this->getAllHeaderParameters() as $parameter) {
+            $parameter = $parameter->toParameter();
+            if ($parameter->getName()->toString() === $name) {
+                return $parameter;
+            }
+        }
+
+        return null;
+    }
+
+    public function getCookieParameter(string $name): ?Parameter
+    {
+        foreach ($this->getAllCookieParameters() as $parameter) {
+            $parameter = $parameter->toParameter();
+            if ($parameter->getName()->toString() === $name) {
+                return $parameter;
+            }
+        }
+
+        return null;
+    }
+
     /** @return ComponentsParameter[] */
     public function getAllQueryParameters(): array
     {

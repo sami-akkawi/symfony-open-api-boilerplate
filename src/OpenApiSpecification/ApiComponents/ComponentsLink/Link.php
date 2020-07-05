@@ -90,6 +90,11 @@ final class Link extends ComponentsLink
         );
     }
 
+    public function getParameters(): LinkParameters
+    {
+        return $this->parameters;
+    }
+
     public function getOperationId(): LinkOperationId
     {
         return $this->operationId;

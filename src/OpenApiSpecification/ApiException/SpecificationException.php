@@ -280,4 +280,29 @@ final class SpecificationException extends LogicException
     {
         return new self("The operation id '$operationId' was already defined on path.");
     }
+
+    public static function generateTargetOperationDoesNotExist(string $linkOperationId, string $sourceOperationId): self
+    {
+        return new self("The operation '$linkOperationId' defined in a response of '$sourceOperationId' is not defined.");
+    }
+
+    public static function generateLinkHasNoParameters(string $linkOperationId, string $sourceOperationId): self
+    {
+        return new self("The link to '$linkOperationId' defined in a response of '$sourceOperationId' has no parameters.");
+    }
+
+    public static function generateTargetParameterNotDefined(string $key, string $linkOperationId, string $sourceOperationId): self
+    {
+        return new self("The parameter $key was not found in '$linkOperationId' as defined in '$sourceOperationId'.");
+    }
+
+    public static function generateSourceParameterNotDefined(string $key, string $sourceOperationId): self
+    {
+        return new self("The parameter $key was not found in '$sourceOperationId' as defined in a belonging link.");
+    }
+
+    public static function generateParametersNotCompatible(string $keyParameter, string $linkOperationId, string $valueParameter, string $sourceOperationId): self
+    {
+        return new self("The parameter '$valueParameter' in '$sourceOperationId' is not compatible with '$keyParameter' of '$linkOperationId'.");
+    }
 }

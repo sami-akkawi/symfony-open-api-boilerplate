@@ -2,6 +2,7 @@
 
 namespace App\OpenApiSpecification\ApiComponents;
 
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
@@ -82,11 +83,11 @@ final class ComponentsSchemas
         return $requiredSchemas;
     }
 
-    public function getSchema(string $name): ?ComponentsSchema
+    public function findSchemaByName(string $name): ?Schema
     {
         foreach ($this->schemas as $schema) {
             if ($schema->getName()->toString() === $name) {
-                return $schema;
+                return $schema->toSchema();
             }
         }
         return null;

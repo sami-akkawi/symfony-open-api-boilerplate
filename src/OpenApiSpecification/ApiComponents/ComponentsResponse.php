@@ -46,4 +46,9 @@ abstract class ComponentsResponse
     abstract public function isValueValidByMimeType(string $mimeType, $value): array;
 
     abstract public function getDescription(): ResponseDescription;
+
+    public function hasLinks(): bool
+    {
+        return $this->getLinks()->isDefined();
+    }
 }

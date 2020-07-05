@@ -346,4 +346,48 @@ final class SchemaType
             || $this->format === self::STRING_EMAIL_FORMAT
             || $this->format === self::STRING_DATE_FORMAT;
     }
+
+    public function isCompatibleWith(self $type): bool
+    {
+        $thisType = $this->getType();
+        $thatType = $type->getType();
+
+        $thisFormat = $this->getFormat();
+        $thatFormat = $type->getFormat();
+
+        $thisEnum = $this->getEnum();
+        $thatEnum = $type->getEnum();
+
+        if ($thisType !== $thatType) {
+            if (
+                $thatType === self::NUMBER_TYPE
+                && $thisType === self::INTEGER_TYPE
+            ) {
+                return true;
+            }
+
+            return false;
+        }
+
+        if (
+            (is_null($thatFormat) && is_null($thatEnum))
+            || $thatType === self::NUMBER_TYPE
+        ) {
+            return true;
+        }
+
+        if (isset($thatEnum)) {
+            if (is_null($thisEnum)) {
+                return false;
+            }
+
+            return !(bool)count(array_diff($thisEnum, $thatEnum));
+        }
+
+        if ($thisFormat === self::INTEGER_INT32_FORMAT && $thatFormat === self::INTEGER_INT64_FORMAT) {
+            return true;
+        }
+
+        return $thisFormat === $thatFormat;
+    }
 }

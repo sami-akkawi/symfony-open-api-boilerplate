@@ -51,6 +51,31 @@ final class ParameterKey
         return $this->name;
     }
 
+    public function isInPath(): bool
+    {
+        return $this->location->isInPath();
+    }
+
+    public function isInQuery(): bool
+    {
+        return $this->location->isInQuery();
+    }
+
+    public function isInCookie(): bool
+    {
+        return $this->location->isInCookie();
+    }
+
+    public function isInHeader(): bool
+    {
+        return $this->location->isInHeader();
+    }
+
+    public function isInRequestBody(): bool
+    {
+        return $this->location->isInBody();
+    }
+
     public function isIdenticalTo(self $key): bool
     {
         return (

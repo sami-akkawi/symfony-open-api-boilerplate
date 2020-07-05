@@ -7,6 +7,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsParameter\Parameter;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponses;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationDescription;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationHasOptionalSecurity;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationId;
@@ -84,6 +85,25 @@ final class PathOperation
     private function hasOptionalSecurity(): bool
     {
         return $this->hasOptionalSecurity->toBool();
+    }
+
+    public function getRequestBodySchemaByMimeType(string $mimeType): ?Schema
+    {
+        if (!$this->requestBody) {
+            return null;
+        }
+
+        return $this->requestBody->toRequestBody()->getSchemaByMimeType($mimeType);
+    }
+
+    public function getResponses(): ComponentsResponses
+    {
+        return $this->responses;
+    }
+
+    public function getParameters(): ComponentsParameters
+    {
+        return $this->parameters;
     }
 
     public function setDescription(OperationDescription $description): self

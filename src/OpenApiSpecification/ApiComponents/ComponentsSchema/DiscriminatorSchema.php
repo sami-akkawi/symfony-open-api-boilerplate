@@ -60,6 +60,11 @@ final class DiscriminatorSchema extends Schema
         return new self(DiscriminatorSchemaType::generateOneOf(), SchemaIsRequired::generateFalse(), ComponentsSchemas::generate());
     }
 
+    public function getSchemas(): ComponentsSchemas
+    {
+        return $this->schemas;
+    }
+
     public function addSchema(ComponentsSchema $schema): self
     {
         if ($this->type->isAllOf() && $schema instanceof PrimitiveSchema) {
@@ -239,7 +244,7 @@ final class DiscriminatorSchema extends Schema
     {
         $errors = [];
         foreach ($this->schemas->getSchemaNames() as $name) {
-            $schema = $this->schemas->getSchema($name);
+            $schema = $this->schemas->findSchemaByName($name);
             $errors[$name] = $schema->isValueValid($value);
         }
 
@@ -273,7 +278,7 @@ final class DiscriminatorSchema extends Schema
     {
         $errors = [];
         foreach ($this->schemas->getSchemaNames() as $name) {
-            $schema = $this->schemas->getSchema($name);
+            $schema = $this->schemas->findSchemaByName($name);
             $errors[$name] = $schema->isValueValid($value);
         }
 
@@ -310,7 +315,7 @@ final class DiscriminatorSchema extends Schema
     {
         foreach ($this->schemas->toArrayOfSchemas() as $schema) {
             if ($schema instanceof ObjectSchema) {
-                $foundSchema = $schema->getProperties()->getSchema($name);
+                $foundSchema = $schema->getProperties()->findSchemaByName($name);
                 if ($foundSchema) {
                     return $foundSchema;
                 }

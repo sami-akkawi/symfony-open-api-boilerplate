@@ -3,6 +3,7 @@
 namespace App\OpenApiSpecification\ApiPath;
 
 use App\OpenApiSpecification\ApiException\SpecificationException;
+use App\OpenApiSpecification\ApiPath\PathOperation\OperationId;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationName;
 
 /**
@@ -30,6 +31,17 @@ final class PathOperations
     public static function generate(): self
     {
         return new self([]);
+    }
+
+    public function findById(OperationId $id): ?PathOperation
+    {
+        foreach ($this->operations as $operation) {
+            if ($operation->getId()->isIdenticalTo($id)) {
+                return $operation;
+            }
+        }
+
+        return null;
     }
 
     private function hasOperation(OperationName $name): bool

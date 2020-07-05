@@ -212,6 +212,11 @@ final class IntegerSchema extends PrimitiveSchema
         return $this->minimum;
     }
 
+    public function getMaximum(): ?SchemaMaximum
+    {
+        return $this->maximum;
+    }
+
     private function isIntegerValueValid(int $value): ?Message
     {
         if ($this->minimum && $value < $this->minimum->toInt()) {

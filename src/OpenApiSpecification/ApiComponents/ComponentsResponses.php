@@ -21,6 +21,11 @@ final class ComponentsResponses
         return new self([]);
     }
 
+    public function toArrayOfResponses(): array
+    {
+        return $this->responses;
+    }
+
     private function hasHttpCode(ResponseHttpCode $code): bool
     {
         foreach ($this->responses as $response) {

@@ -191,7 +191,7 @@ final class ObjectSchema extends Schema
                 );
                 continue;
             }
-            $schema = $this->properties->getSchema($name);
+            $schema = $this->properties->findSchemaByName($name);
             $subErrors = $schema->isValueValid($object[$name]);
             if ($subErrors) {
                 foreach ($subErrors as $error) {
@@ -216,7 +216,7 @@ final class ObjectSchema extends Schema
                 );
                 continue;
             }
-            $schema = $this->properties->getSchema($key);
+            $schema = $this->properties->findSchemaByName($key);
             if ($schema->isRequired()) {
                 continue;
             }
@@ -297,7 +297,7 @@ final class ObjectSchema extends Schema
         $object = [];
         $json = json_decode($value, true);
         foreach ($json as $key => $entry) {
-            $schema = $this->properties->getSchema($key);
+            $schema = $this->properties->findSchemaByName($key);
             $entry = is_array($entry) ? json_encode($entry) : $entry;
             $object[$key] = $schema ? $schema->getValueFromCastedString($entry) : $entry;
         }

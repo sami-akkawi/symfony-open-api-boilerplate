@@ -207,6 +207,16 @@ final class NumberSchema extends PrimitiveSchema
         return new self(SchemaType::generateNumber(), SchemaIsRequired::generateFalse());
     }
 
+    public function getMinimum(): ?SchemaMinimum
+    {
+        return $this->minimum;
+    }
+
+    public function getMaximum(): ?SchemaMaximum
+    {
+        return $this->maximum;
+    }
+
     private function isFloatValueValid(float $value): ?Message
     {
         if ($this->minimum && $value < $this->minimum->toFloat()) {

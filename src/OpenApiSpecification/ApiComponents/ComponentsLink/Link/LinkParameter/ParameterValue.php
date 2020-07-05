@@ -79,6 +79,37 @@ final class ParameterValue
         return $this->source;
     }
 
+    public function isInPath(): bool
+    {
+        return $this->location->isInPath();
+    }
+
+    public function isInQuery(): bool
+    {
+        return $this->location->isInQuery();
+    }
+
+    public function isInCookie(): bool
+    {
+        return $this->location->isInCookie();
+    }
+
+    public function isInHeader(): bool
+    {
+        return $this->location->isInHeader();
+    }
+
+    public function isInRequestBody(): bool
+    {
+        return $this->location->isInBody() && $this->source->isInRequest();
+    }
+
+    public function isInResponseBody(): bool
+    {
+        return $this->location->isInBody() && $this->source->isInResponse();
+    }
+
+
     public function toOpenApiSpecification(): string
     {
         $specification = $this->location->toOpenApiSpecification() . $this->name->toOpenApiSpecification();

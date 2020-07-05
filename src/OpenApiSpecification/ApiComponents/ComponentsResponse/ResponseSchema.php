@@ -13,6 +13,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseD
 use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseHttpCode;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponse\Response\ResponseName;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
 
 /**
  * Describes a single response from an API Operation, including design-time, static links to operations based on the
@@ -148,6 +149,11 @@ final class ResponseSchema extends ComponentsResponse
     public function toResponseSchema(): ResponseSchema
     {
         return $this;
+    }
+
+    public function getSchemaByMimeType(string $mimeType): ?Schema
+    {
+        return $this->content->getSchemaByMimeType($mimeType);
     }
 
     public function getLinks(): ComponentsLinks

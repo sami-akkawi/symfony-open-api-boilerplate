@@ -280,6 +280,16 @@ final class StringSchema extends PrimitiveSchema
         return null;
     }
 
+    public function getMaximumLength(): ?SchemaMaximumLength
+    {
+        return $this->maximumLength;
+    }
+
+    public function getMinimumLength(): ?SchemaMinimumLength
+    {
+        return $this->minimumLength;
+    }
+
     public function getValueFromTrimmedCastedString(string $value): string
     {
         $decodedString = json_decode($value);

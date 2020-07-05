@@ -3,6 +3,7 @@
 namespace App\OpenApiSpecification\ApiComponents;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsMediaType\MediaTypeMimeType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ComponentsMediaTypes
@@ -18,6 +19,16 @@ final class ComponentsMediaTypes
     public static function generate(): self
     {
         return new self([]);
+    }
+
+    public function getSchemaByMimeType(string $mimeType): ?Schema
+    {
+        $mediaType = $this->getByMimeType($mimeType);
+        if (!$mimeType) {
+            return null;
+        }
+
+        return $mediaType->getSchema()->toSchema();
     }
 
     public function getByMimeType(string $mimeType): ?ComponentsMediaType

@@ -3,6 +3,7 @@
 namespace App\OpenApiSpecification\ApiComponents;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsMediaType\MediaTypeMimeType;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ComponentsMediaType
@@ -34,9 +35,9 @@ final class ComponentsMediaType
         return new self(MediaTypeMimeType::generateXml(), $schema);
     }
 
-    public function getSchema(): ComponentsSchema
+    public function getSchema(): Schema
     {
-        return $this->schema;
+        return $this->schema->toSchema();
     }
 
     public function isValueValid($value): array

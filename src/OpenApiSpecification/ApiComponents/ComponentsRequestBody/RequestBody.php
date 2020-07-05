@@ -11,6 +11,7 @@ use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\Req
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\RequestBodyIsRequired;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody\RequestBodyName;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema;
+use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema;
 
 /**
  * Describes a single request body.
@@ -70,9 +71,9 @@ final class RequestBody extends ComponentsRequestBody
         return $mediaType->isValueValid($value);
     }
 
-    public function getSchemaByMimeType(string $mimeType): ComponentsSchema
+    public function getSchemaByMimeType(string $mimeType): ?Schema
     {
-        return $this->content->getByMimeType($mimeType)->getSchema();
+        return $this->content->getSchemaByMimeType($mimeType);
     }
 
     public function getDefinedMimeTypes(): array
