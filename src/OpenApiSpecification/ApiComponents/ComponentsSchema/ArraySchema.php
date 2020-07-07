@@ -290,6 +290,16 @@ final class ArraySchema extends Schema
         );
     }
 
+    public function getMaximumItems(): ?SchemaMaximumItems
+    {
+        return $this->maximumItems;
+    }
+
+    public function getMinimumItems(): ?SchemaMinimumItems
+    {
+        return $this->minimumItems;
+    }
+
     public function isArrayLengthValid(array $array): ?Message
     {
         $arrayLength = count($array);

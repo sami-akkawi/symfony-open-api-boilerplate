@@ -171,22 +171,70 @@ abstract class ComponentsSchema
 
         if ($schema instanceof ArraySchema) {
             if ($this instanceof ArraySchema) {
-                return $this->getItemType()->isCompatibleWith($schema->getItemType());
+                return
+                    $this->isArraySchemaCompatible($schema)
+                    && $this->getItemType()->isCompatibleWith($schema->getItemType());
             }
 
             return false;
         }
 
-        // todo: if ObjectSchema then check that require properties are defined
-        //  and that all field are compatible
-        //  and that there are no extra fields
+        if ($schema instanceof DiscriminatorSchema) {
+            if (
+                $schema->getDiscriminatorType()->isAnyOf()
+                || $schema->getDiscriminatorType()->isOneOf()
+            ) {
+                $numberOfCompatibleSchemas = 0;
 
-        // todo: if Discriminator, then according to type of discriminator
-        //  if AllOf, then handle as Object
-        //  if AnyOf, then $this should be compatible to any one definition
-        //  if OneOf, then TODO: define this case
+                foreach ($schema->getSchemas()->toArrayOfSchemas() as $subSchema) {
+                    if ($this->isCompatibleWith($subSchema)) {
+                        $numberOfCompatibleSchemas++;
+                    }
+                }
 
-        // todo: if Map, define this case
+                if ($numberOfCompatibleSchemas === 0) {
+                    return false;
+                }
+
+                if ($numberOfCompatibleSchemas === 1) {
+                    return true;
+                }
+
+                return $schema->getDiscriminatorType()->isAnyOf();
+            }
+
+            $schema = $schema->getAsObjectSchema();
+        }
+
+        if ($schema instanceof ObjectSchema) {
+            if (
+                $this instanceof PrimitiveSchema
+                || $this instanceof ArraySchema
+                || $this instanceof MapSchema
+            ) {
+                return false;
+            }
+
+            if ($this instanceof DiscriminatorSchema) {
+                if (
+                    $this->getDiscriminatorType()->isOneOf()
+                    || $this->getDiscriminatorType()->isAnyOf()
+                ) {
+                    return false;
+                }
+                return $this->getAsObjectSchema()->isObjectSchemaCompatible($schema);
+            }
+
+            return $this->isObjectSchemaCompatible($schema);
+        }
+
+        if ($schema instanceof MapSchema) {
+            if (!$this instanceof MapSchema) {
+                return false;
+            }
+
+            return $this->getAdditionalPropertySchema()->isCompatibleWith($schema->getAdditionalPropertySchema());
+        }
 
         throw new LogicException("Missing compatibility check for " . get_class($this));
     }
@@ -254,5 +302,69 @@ abstract class ComponentsSchema
         }
 
         return $minimumIsCompatible && $maximumIsCompatible;
+    }
+
+    private function isArraySchemaCompatible(ArraySchema $schema): bool
+    {
+        $minimumIsCompatible = false;
+        $thatMinimumLength = $schema->getMinimumItems();
+        $thisMinimumLength = $this->getMinimumItems();
+        if (
+            !$thatMinimumLength
+            || (
+                $thisMinimumLength
+                && $thisMinimumLength->toInt() > $thatMinimumLength->toInt()
+            )
+        ) {
+            $minimumIsCompatible = true;
+        }
+
+        $maximumIsCompatible = false;
+        $thatMaximumLength = $schema->getMaximumItems();
+        $thisMaximumLength = $this->getMaximumItems();
+
+        if (
+            !$thatMaximumLength
+            || (
+                $thisMaximumLength
+                && $thisMaximumLength->toInt() < $thatMaximumLength->toInt()
+            )
+        ) {
+            $maximumIsCompatible =  true;
+        }
+
+        return $minimumIsCompatible && $maximumIsCompatible;
+    }
+
+    public function isObjectSchemaCompatible(ObjectSchema $schema): bool
+    {
+        if (!$this instanceof ObjectSchema) {
+            return false;
+        }
+
+        $thatRequiredSchemaNames = $schema->getProperties()->getRequiredSchemaNames();
+        $thisRequiredSchemaNames = $this->getProperties()->getRequiredSchemaNames();
+
+        if (count(array_diff($thatRequiredSchemaNames, $thisRequiredSchemaNames))) {
+            return false;
+        }
+
+        $thatSchemaNames = $schema->getProperties()->getSchemaNames();
+        $thisSchemaNames = $this->getProperties()->getSchemaNames();
+
+        if (count(array_diff($thisSchemaNames, $thatSchemaNames))) {
+            return false;
+        }
+
+        foreach ($thisSchemaNames as $schemaName) {
+            $thisSubSchema = $this->getProperties()->findSchemaByName($schemaName);
+            $thatSubSchema = $schema->getProperties()->findSchemaByName($schemaName);
+
+            if (!$thisSubSchema->isCompatibleWith($thatSubSchema)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

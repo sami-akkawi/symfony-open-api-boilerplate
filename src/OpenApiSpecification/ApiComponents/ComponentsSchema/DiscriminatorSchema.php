@@ -276,39 +276,42 @@ final class DiscriminatorSchema extends Schema
 
     private function isValueValidForAnyOf($value): array
     {
-        $errors = [];
-        foreach ($this->schemas->getSchemaNames() as $name) {
-            $schema = $this->schemas->findSchemaByName($name);
-            $errors[$name] = $schema->isValueValid($value);
+        return $this->getAsObjectSchema()->isValueValid($value);
+    }
+
+    public function getAsObjectSchema(): ?ObjectSchema
+    {
+        if ($this->type->isAnyOf() || $this->type->isOneOf()) {
+            return null;
         }
 
-        foreach ($errors as $error) {
-            if (empty($error)) {
-                return [];
+        $properties = ComponentsSchemas::generate();
+        foreach ($this->schemas->toArrayOfSchemas() as $schema) {
+            if ($schema instanceof ReferenceSchema) {
+                $schema = $schema->toSchema();
             }
-        }
 
-        if (!$this->name) {
-            return array_values($errors);
-        }
-
-        $fieldErrors = [];
-        foreach ($errors as $error) {
-            if ($error instanceof FieldMessage) {
-                $fieldErrors[] = FieldMessage::generate(
-                    $error->getPath()->prepend($this->name->toString())->toArray(),
-                    $error->getMessage()
-                );
+            if ($schema instanceof ObjectSchema) {
+                foreach ($schema->getProperties()->toArrayOfSchemas() as $subSchema) {
+                    $properties = $properties->addSchema($subSchema);
+                }
                 continue;
             }
 
-            $fieldErrors[] = FieldMessage::generate(
-                [$this->name->toString()],
-                $error
-            );
+            if ($schema instanceof DiscriminatorSchema) {
+                $properties = $properties->addSchema($schema->getAsObjectSchema());
+                continue;
+            }
+
+            $properties->addSchema($schema);
         }
 
-        return $fieldErrors;
+        return ObjectSchema::generate($properties);
+    }
+
+    public function getDiscriminatorType(): DiscriminatorSchemaType
+    {
+        return $this->type;
     }
 
     public function getFirstSchemaByName(string $name): ?Schema

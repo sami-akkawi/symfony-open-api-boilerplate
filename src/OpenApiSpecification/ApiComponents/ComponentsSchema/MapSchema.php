@@ -86,6 +86,11 @@ final class MapSchema extends Schema
         return $errors;
     }
 
+    public function getAdditionalPropertySchema(): Schema
+    {
+        return $this->additionalProperty->getSchema()->toSchema();
+    }
+
     public function makeNullable(): self
     {
         return new self(
