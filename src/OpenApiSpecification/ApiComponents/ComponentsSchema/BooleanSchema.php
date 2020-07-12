@@ -154,7 +154,10 @@ final class BooleanSchema extends PrimitiveSchema
 
     public function toOpenApiSpecification(): array
     {
-        $specification = ['type' => $this->type->getType()];
+        $specification = [
+            'type' => $this->type->getType(),
+            'xml' => ['name' => $this->name ? $this->name->toString() : 'body']
+        ];
         if ($this->description) {
             $specification['description'] = $this->description->toString();
         }
