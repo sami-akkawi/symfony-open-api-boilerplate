@@ -46,9 +46,11 @@ final class ApiTags
     {
         $specifications = [];
         foreach ($this->tags as $tag) {
-            $specifications[] = $tag->toOpenApiSpecification();
+            $specifications[$tag->getName()->toString()] = $tag->toOpenApiSpecification();
         }
 
-        return $specifications;
+        ksort($specifications);
+
+        return array_values($specifications);
     }
 }
