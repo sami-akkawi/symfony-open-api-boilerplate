@@ -356,10 +356,7 @@ final class StringSchema extends PrimitiveSchema
     public function toOpenApiSpecification(): array
     {
         $example = $this->getNullableStringExample();
-        $specification = [
-            'type' => $this->type->getType(),
-            'xml' => ['name' => $this->name ? $this->name->toString() : 'body']
-        ];
+        $specification = ['type' => $this->type->getType()];
         if ($this->type->hasFormat()) {
             $specification['format'] = $this->type->getFormat();
         }

@@ -25,6 +25,11 @@ final class ComponentsMediaType
         $this->examples = $examples;
     }
 
+    private function isXml(): bool
+    {
+        return $this->mimeType->isXml();
+    }
+
     public static function generateJson(ComponentsSchema $schema): self
     {
         return new self(MediaTypeMimeType::generateJson(), $schema);
@@ -72,7 +77,9 @@ final class ComponentsMediaType
 
     public function toOpenApiSpecification(): array
     {
-        $specification = ['schema' => $this->schema->toOpenApiSpecification()];
+        $specification = [
+            'schema' => $this->isXml() ? $this->schema->toXmlOpenApiSpecification() : $this->schema->toOpenApiSpecification()
+        ];
         if ($this->example) {
             $specification['example'] = $this->example->getLiteralValue();
         }

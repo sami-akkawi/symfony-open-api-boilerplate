@@ -271,8 +271,7 @@ final class ObjectSchema extends Schema
     {
         $specification = [
             'type' => $this->type->getType(),
-            'properties' => $this->properties->toOpenApiSpecification(),
-            'xml' => ['name' => $this->name ? $this->name->toString() : 'body']
+            'properties' => $this->properties->toOpenApiSpecification()
         ];
         $requiredProperties = $this->getRequiredProperties();
         if (!empty($requiredProperties)) {

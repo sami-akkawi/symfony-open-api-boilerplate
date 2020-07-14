@@ -37,6 +37,14 @@ abstract class ComponentsSchema
 
     abstract public function toOpenApiSpecification(): array;
 
+    public function toXmlOpenApiSpecification(): array
+    {
+        return array_merge(
+            $this->toOpenApiSpecification(),
+            ['xml' => ['name' => $this->name ? $this->name->toString() : 'body']]
+        );
+    }
+
     abstract public function setName(string $name);
 
     public function hasName(): bool

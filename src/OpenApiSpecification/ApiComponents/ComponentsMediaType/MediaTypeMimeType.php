@@ -51,4 +51,9 @@ final class MediaTypeMimeType
     {
         return $this->toString() === $mimeType->toString();
     }
+
+    public function isXml(): bool
+    {
+        return $this->mimeType === self::XML;
+    }
 }

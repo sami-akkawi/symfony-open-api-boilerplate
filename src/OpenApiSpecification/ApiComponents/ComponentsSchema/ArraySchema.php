@@ -332,8 +332,7 @@ final class ArraySchema extends Schema
     {
         $specification = [
             'type' => $this->type->getType(),
-            'items' => $this->itemType->toOpenApiSpecification(),
-            'xml' => ['name' => $this->name ? $this->name->toString() : 'body']
+            'items' => $this->itemType->toOpenApiSpecification()
         ];
         if ($this->itemsAreUnique) {
             $specification['uniqueItems'] = true;

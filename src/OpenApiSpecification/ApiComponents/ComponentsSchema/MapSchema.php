@@ -172,8 +172,7 @@ final class MapSchema extends Schema
     {
         $specification =  [
             'type' => 'object',
-            'additionalProperties' => $this->additionalProperty->toOpenApiSpecification(),
-            'xml' => ['name' => $this->name ? $this->name->toString() : 'body']
+            'additionalProperties' => $this->additionalProperty->toOpenApiSpecification()
         ];
         if ($this->isNullable()) {
             $specification['nullable'] = true;
