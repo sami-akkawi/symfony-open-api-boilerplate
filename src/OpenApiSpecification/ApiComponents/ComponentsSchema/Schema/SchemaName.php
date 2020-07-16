@@ -10,7 +10,7 @@ final class SchemaName
 
     private function __construct(string $name)
     {
-        if (empty($name)) {
+        if (!strlen($name)) {
             throw SpecificationException::generateEmptyStringException(self::class);
         }
         $this->name = $name;

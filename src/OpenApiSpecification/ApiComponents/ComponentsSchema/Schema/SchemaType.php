@@ -31,6 +31,8 @@ final class SchemaType
     const NUMBER_DOUBLE_FORMAT    = 'double';
 
     const STRING_BINARY_FORMAT         = 'binary';
+    const STRING_BASE64_FORMAT         = 'base64';
+
     const STRING_BYTE_FORMAT           = 'byte';
     const STRING_DATE_FORMAT           = 'date';
     const STRING_TIME_FORMAT           = 'time';
@@ -41,9 +43,11 @@ final class SchemaType
     const STRING_UUID_FORMAT           = 'uuid';
     const STRING_EMAIL_FORMAT          = 'email';
     const STRING_URL_FORMAT            = 'url';
+    const STRING_URI_FORMAT            = 'uri';
 
     private const VALID_STRING_FORMATS = [
         self::STRING_BINARY_FORMAT,
+        self::STRING_BASE64_FORMAT,
         self::STRING_BYTE_FORMAT,
         self::STRING_DATE_FORMAT,
         self::STRING_TIME_FORMAT,
@@ -53,6 +57,7 @@ final class SchemaType
         self::STRING_PASSWORD_FORMAT,
         self::STRING_REGEX_FORMAT,
         self::STRING_URL_FORMAT,
+        self::STRING_URI_FORMAT,
         self::STRING_UUID_FORMAT,
     ];
     private const VALID_INTEGER_FORMATS = [
@@ -93,14 +98,23 @@ final class SchemaType
 
     public function isStringValueValid(string $value): ?Message
     {
+        if (!strlen($value)) {
+            return Message::generateError(
+                'empty_string',
+                'Empty String not allowed'
+            );
+        }
+
         if (!$this->format && !$this->enum) {
             return null;
         }
 
         if (
             $this->format === self::STRING_BINARY_FORMAT
+            || $this->format === self::STRING_BASE64_FORMAT
             || $this->format === self::STRING_BYTE_FORMAT
             || $this->format === self::STRING_PASSWORD_FORMAT
+            || $this->format === self::STRING_URI_FORMAT
         ) {
             return null;
         }
@@ -178,7 +192,7 @@ final class SchemaType
         }
 
         if ($this->format === self::STRING_URL_FORMAT) {
-            if (filter_var($value, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
                 return null;
             }
 
@@ -227,6 +241,16 @@ final class SchemaType
     public function isStringTime(): bool
     {
         return $this->format === self::STRING_TIME_FORMAT;
+    }
+
+    public function isStringUri(): bool
+    {
+        return $this->format === self::STRING_URI_FORMAT;
+    }
+
+    public function isBinary(): bool
+    {
+        return $this->format === self::STRING_BINARY_FORMAT;
     }
 
     private function getInvalidStringFormatErrorMessage(string $format, string $invalidValue): Message
@@ -311,6 +335,21 @@ final class SchemaType
     public static function generateUuidString(): self
     {
         return new self(self::STRING_TYPE, self::STRING_UUID_FORMAT);
+    }
+
+    public static function generateBinaryString(): self
+    {
+        return new self(self::STRING_TYPE, self::STRING_BINARY_FORMAT);
+    }
+
+    public static function generateUrlString(): self
+    {
+        return new self(self::STRING_TYPE, self::STRING_URL_FORMAT);
+    }
+
+    public static function generateUriString(): self
+    {
+        return new self(self::STRING_TYPE, self::STRING_URI_FORMAT);
     }
 
     public function getType(): string

@@ -100,6 +100,26 @@ final class StringSchema extends PrimitiveSchema
         return new self(SchemaType::generateUuidString(), SchemaIsRequired::generateFalse());
     }
 
+    public static function generateUrl(): self
+    {
+        return new self(SchemaType::generateUrlString(), SchemaIsRequired::generateFalse());
+    }
+
+    public static function generateUri(): self
+    {
+        return new self(SchemaType::generateUriString(), SchemaIsRequired::generateFalse());
+    }
+
+    public static function generateBinary(): self
+    {
+        return new self(SchemaType::generateBinaryString(), SchemaIsRequired::generateFalse());
+    }
+
+    public function isBinary(): bool
+    {
+        return $this->type->isBinary();
+    }
+
     public function setFormat(string $format): self
     {
         return new self(
@@ -348,6 +368,10 @@ final class StringSchema extends PrimitiveSchema
 
         if ($this->type->isStringUuid()) {
             return Uuid::v4()->toRfc4122();
+        }
+
+        if ($this->type->isStringUri()) {
+            return '/access-management/roles';
         }
 
         return null;

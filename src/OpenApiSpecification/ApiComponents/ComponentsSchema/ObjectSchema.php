@@ -61,6 +61,16 @@ final class ObjectSchema extends Schema
         );
     }
 
+    public static function generateEmpty(): self
+    {
+        return new self(ComponentsSchemas::generate(), SchemaIsRequired::generateFalse());
+    }
+
+    public function isEmpty(): bool
+    {
+        return !$this->properties->isDefined();
+    }
+
     public function hasProperty(string $propertyName): bool
     {
         return $this->properties->hasSchema(SchemaName::fromString($propertyName));
@@ -206,6 +216,9 @@ final class ObjectSchema extends Schema
         }
 
         foreach (array_keys($object) as $key) {
+            if (is_int($key)) {
+                $key = (string)$key;
+            }
             if (!$this->properties->hasSchema(SchemaName::fromString($key))) {
                 $errors[] = Message::generateError(
                     'key_not_part_of_object',
