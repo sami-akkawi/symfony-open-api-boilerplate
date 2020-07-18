@@ -139,7 +139,7 @@ final class FormatValidator
 
         $isXml = $requestContentType === 'application/xml';
         $isJson = $requestContentType === 'application/json';
-        
+
         $requestBody = [];
 
         if ($isXml) {
