@@ -139,22 +139,33 @@ final class FormatValidator
 
         $isXml = $requestContentType === 'application/xml';
         $isJson = $requestContentType === 'application/json';
+        
+        $requestBody = [];
 
         if ($isXml) {
             $doc = @simplexml_load_string($request->getContent());
-            if (!$doc) {
+            if ($doc === false) {
                 $message = Message::generateError(
                     'invalid_xml',
-                    "The xml request is invalid, please validate your data."
+                    "The XML request is invalid, please validate your data."
+                );
+                $this->errors[] = $message;
+                return [];
+            }
+            $requestBody = json_decode(json_encode($doc), true);
+        }
+
+        if ($isJson) {
+            $requestBody = json_decode($request->getContent(), true);
+            if ($requestBody === null) {
+                $message = Message::generateError(
+                    'invalid_json',
+                    "The JSON request is invalid, please validate your data."
                 );
                 $this->errors[] = $message;
                 return [];
             }
         }
-
-        $requestBody = $isXml ?
-            json_decode(json_encode(simplexml_load_string($request->getContent())), true) :
-            json_decode($request->getContent(), true);
 
         if (!in_array($requestContentType, $schemaContentTypes)) {
             $message = Message::generateError(
