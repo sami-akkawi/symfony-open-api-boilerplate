@@ -23,96 +23,60 @@ final class StringSchema extends PrimitiveSchema
     private ?SchemaMinimumLength $minimumLength;
     private ?SchemaMaximumLength $maximumLength;
 
-    private function __construct(
-        SchemaType $type,
-        SchemaIsRequired $isRequired,
-        ?SchemaName $name = null,
-        ?SchemaDescription $description = null,
-        ?ComponentsExample $example = null,
-        ?SchemaIsNullable $isNullable = null,
-        ?SchemaMinimumLength $minimumLength = null,
-        ?SchemaMaximumLength $maximumLength = null,
-        ?SchemaIsDeprecated $isDeprecated = null
-    ) {
+    private function __construct(SchemaType $type)
+    {
         $this->type = $type;
-        $this->isRequired = $isRequired;
-        $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
-        $this->name = $name;
-        $this->description = $description;
-        $this->example = $example;
-        $this->isNullable = $isNullable ?? SchemaIsNullable::generateFalse();
-        $this->minimumLength = $minimumLength;
-        $this->maximumLength = $maximumLength;
+        $this->isRequired = SchemaIsRequired::generateFalse();
+        $this->isDeprecated = SchemaIsDeprecated::generateFalse();
+        $this->name = null;
+        $this->description = null;
+        $this->example = null;
+        $this->isNullable = SchemaIsNullable::generateFalse();
+        $this->minimumLength = null;
+        $this->maximumLength = null;
     }
 
     public function setName(string $name): self
     {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            SchemaName::fromString($name),
-            $this->description,
-            $this->example,
-            $this->isNullable,
-            $this->minimumLength,
-            $this->maximumLength,
-            $this->isDeprecated
-        );
+        $this->name = SchemaName::fromString($name);
+        return $this;
     }
 
     public function require(): self
     {
-        return new self(
-            $this->type,
-            SchemaIsRequired::generateTrue(),
-            $this->name,
-            $this->description,
-            $this->example,
-            $this->isNullable,
-            $this->minimumLength,
-            $this->maximumLength,
-            $this->isDeprecated
-        );
+        $this->isRequired = SchemaIsRequired::generateTrue();
+        return $this;
     }
 
     public function unRequire(): self
     {
-        return new self(
-            $this->type,
-            SchemaIsRequired::generateFalse(),
-            $this->name,
-            $this->description,
-            $this->example,
-            $this->isNullable,
-            $this->minimumLength,
-            $this->maximumLength,
-            $this->isDeprecated
-        );
+        $this->isRequired = SchemaIsRequired::generateFalse();
+        return $this;
     }
 
     public static function generate(): self
     {
-        return new self(SchemaType::generateString(), SchemaIsRequired::generateFalse());
+        return new self(SchemaType::generateString());
     }
 
     public static function generateUuid(): self
     {
-        return new self(SchemaType::generateUuidString(), SchemaIsRequired::generateFalse());
+        return new self(SchemaType::generateUuidString());
     }
 
     public static function generateUrl(): self
     {
-        return new self(SchemaType::generateUrlString(), SchemaIsRequired::generateFalse());
+        return new self(SchemaType::generateUrlString());
     }
 
     public static function generateUri(): self
     {
-        return new self(SchemaType::generateUriString(), SchemaIsRequired::generateFalse());
+        return new self(SchemaType::generateUriString());
     }
 
     public static function generateBinary(): self
     {
-        return new self(SchemaType::generateBinaryString(), SchemaIsRequired::generateFalse());
+        return new self(SchemaType::generateBinaryString());
     }
 
     public function isBinary(): bool
@@ -122,47 +86,20 @@ final class StringSchema extends PrimitiveSchema
 
     public function setFormat(string $format): self
     {
-        return new self(
-            $this->type->setFormat($format),
-            $this->isRequired,
-            $this->name,
-            $this->description,
-            $this->example,
-            $this->isNullable,
-            $this->minimumLength,
-            $this->maximumLength,
-            $this->isDeprecated
-        );
+        $this->type = $this->type->setFormat($format);
+        return $this;
     }
 
     public function setOptions(array $options): self
     {
-        return new self(
-            $this->type->setEnum($options),
-            $this->isRequired,
-            $this->name,
-            $this->description,
-            $this->example,
-            $this->isNullable,
-            $this->minimumLength,
-            $this->maximumLength,
-            $this->isDeprecated
-        );
+        $this->type = $this->type->setEnum($options);
+        return $this;
     }
 
     public function setDescription(string $description): self
     {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->name,
-            SchemaDescription::fromString($description),
-            $this->example,
-            $this->isNullable,
-            $this->minimumLength,
-            $this->maximumLength,
-            $this->isDeprecated
-        );
+        $this->description = SchemaDescription::fromString($description);
+        return $this;
     }
 
     public function setExample(ComponentsExample $example): self
@@ -172,47 +109,20 @@ final class StringSchema extends PrimitiveSchema
             throw $exception;
         }
 
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->name,
-            $this->description,
-            $example,
-            $this->isNullable,
-            $this->minimumLength,
-            $this->maximumLength,
-            $this->isDeprecated
-        );
+        $this->example = $example;
+        return $this;
     }
 
     public function makeNullable(): self
     {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->name,
-            $this->description,
-            $this->example,
-            SchemaIsNullable::generateTrue(),
-            $this->minimumLength,
-            $this->maximumLength,
-            $this->isDeprecated
-        );
+        $this->isNullable = SchemaIsNullable::generateTrue();
+        return $this;
     }
 
     public function deprecate(): self
     {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->name,
-            $this->description,
-            $this->example,
-            $this->isNullable,
-            $this->minimumLength,
-            $this->maximumLength,
-            SchemaIsDeprecated::generateTrue()
-        );
+        $this->isDeprecated = SchemaIsDeprecated::generateTrue();
+        return $this;
     }
 
     private function areLengthSettingsValid(
@@ -241,37 +151,23 @@ final class StringSchema extends PrimitiveSchema
             throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
         }
 
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->name,
-            $this->description,
-            $this->example,
-            $this->isNullable,
-            $minimumLength,
-            $this->maximumLength,
-            $this->isDeprecated
-        );
+        $this->minimumLength = $minimumLength;
+        return $this;
     }
 
     public function setMaximumLength(int $maxLength): self
     {
+        if ($maxLength < 0) {
+            throw SpecificationException::generateMaximumLengthCannotBeLessThanOrEqualToZero();
+        }
+
         $maximumLength = SchemaMaximumLength::fromInt($maxLength);
         if (!$this->areLengthSettingsValid($this->minimumLength, $maximumLength)) {
             throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
         }
 
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->name,
-            $this->description,
-            $this->example,
-            $this->isNullable,
-            $this->minimumLength,
-            $maximumLength,
-            $this->isDeprecated
-        );
+        $this->maximumLength = $maximumLength;
+        return $this;
     }
 
     public function isValueLengthValid(string $value): ?Message
@@ -359,7 +255,7 @@ final class StringSchema extends PrimitiveSchema
         }
 
         if ($this->type->isStringUrl()) {
-            return 'https://www.easycharter.ch/';
+            return 'https://www.your-website.com/';
         }
 
         if ($this->type->isStringTime()) {

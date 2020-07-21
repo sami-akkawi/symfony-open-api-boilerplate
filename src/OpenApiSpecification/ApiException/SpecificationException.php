@@ -51,6 +51,11 @@ final class SpecificationException extends LogicException
         return self::generate("The minimum length allowed cannot be less than zero.");
     }
 
+    public static function generateMaximumLengthCannotBeLessThanOrEqualToZero(): self
+    {
+        return self::generate("The maximum length allowed cannot be less than ot equal to zero.");
+    }
+
     public static function generateEmptyStringException(string $field): self
     {
         return self::generate("$field cannot have an empty value.");
