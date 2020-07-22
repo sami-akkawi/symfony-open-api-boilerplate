@@ -360,12 +360,17 @@ final class ArraySchema extends Schema
 
     public function getValueFromTrimmedCastedString(string $value): array
     {
-        $array = [];
-        $json = json_decode($value, true);
-        foreach ($json as $entry) {
-            $array[] = $this->itemType->getValueFromCastedString(json_encode($entry));
+        $castedArray = [];
+        $array = json_decode($value, true);
+
+        if ($array === null) {
+            $array = explode(',', $value);
         }
 
-        return $array;
+        foreach ($array as $entry) {
+            $castedArray[] = $this->itemType->getValueFromCastedString(json_encode($entry));
+        }
+
+        return $castedArray;
     }
 }
