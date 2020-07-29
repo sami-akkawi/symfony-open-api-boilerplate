@@ -72,16 +72,8 @@ final class DiscriminatorSchema extends Schema
         }
         $name = $schema->getName() ?? SchemaName::fromString(Uuid::v4()->toRfc4122());
 
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->schemas->addSchema($schema->setName($name->toString())),
-            $this->name,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->isDeprecated
-        );
+        $this->schemas = $this->schemas->addSchema($schema->setName($name->toString()));
+        return $this;
     }
 
     public function requireOnly(array $fieldNames): self
@@ -98,100 +90,44 @@ final class DiscriminatorSchema extends Schema
             $schemas = $schemas->addSchema($newSchema);
         }
 
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $schemas,
-            $this->name,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->isDeprecated
-        );
+        $this->schemas = $schemas;
+        return $this;
     }
 
     public function setDescription(string $description): self
     {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->schemas,
-            $this->name,
-            SchemaDescription::fromString($description),
-            $this->isNullable,
-            $this->example,
-            $this->isDeprecated
-        );
+        $this->description = SchemaDescription::fromString($description);
+        return $this;
     }
 
     public function makeNullable(): self
     {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->schemas,
-            $this->name,
-            $this->description,
-            SchemaIsNullable::generateTrue(),
-            $this->example,
-            $this->isDeprecated
-        );
+        $this->isNullable = SchemaIsNullable::generateTrue();
+        return $this;
     }
 
     public function require(): self
     {
-        return new self(
-            $this->type,
-            SchemaIsRequired::generateTrue(),
-            $this->schemas,
-            $this->name,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->isDeprecated
-        );
+        $this->isRequired = SchemaIsRequired::generateTrue();
+        return $this;
     }
 
     public function unRequire(): self
     {
-        return new self(
-            $this->type,
-            SchemaIsRequired::generateFalse(),
-            $this->schemas,
-            $this->name,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->isDeprecated
-        );
+        $this->isRequired = SchemaIsRequired::generateFalse();
+        return $this;
     }
 
     public function setName(string $name): self
     {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->schemas,
-            SchemaName::fromString($name),
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->isDeprecated
-        );
+        $this->name = SchemaName::fromString($name);
+        return $this;
     }
 
     public function deprecate(): self
     {
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->schemas,
-            $this->name,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            SchemaIsDeprecated::generateTrue()
-        );
+        $this->isDeprecated = SchemaIsDeprecated::generateTrue();
+        return $this;
     }
 
     public function setExample(ComponentsExample $example): self
@@ -201,16 +137,8 @@ final class DiscriminatorSchema extends Schema
             throw $exception;
         }
 
-        return new self(
-            $this->type,
-            $this->isRequired,
-            $this->schemas,
-            $this->name,
-            $this->description,
-            $this->isNullable,
-            $example,
-            $this->isDeprecated
-        );
+        $this->example = $example;
+        return $this;
     }
 
     public function getType(): ?SchemaType
