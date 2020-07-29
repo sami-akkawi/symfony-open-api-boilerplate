@@ -125,19 +125,13 @@ final class StringSchema extends PrimitiveSchema
         return $this;
     }
 
-    private function areLengthSettingsValid(
-        ?SchemaMinimumLength $minimumLength,
-        ?SchemaMaximumLength $maximumLength
-    ): bool {
+    private function areLengthSettingsValid(?SchemaMinimumLength $minimumLength, ?SchemaMaximumLength $maximumLength): bool
+    {
         if (!$minimumLength || !$maximumLength) {
             return true;
         }
 
-        if ($minimumLength->toInt() > $maximumLength->toInt()) {
-            return false;
-        }
-
-        return true;
+        return $minimumLength->toInt() <= $maximumLength->toInt();
     }
 
     public function setMinimumLength(int $minLength): self

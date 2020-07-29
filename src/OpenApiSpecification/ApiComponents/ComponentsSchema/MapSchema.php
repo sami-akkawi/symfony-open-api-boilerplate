@@ -93,62 +93,32 @@ final class MapSchema extends Schema
 
     public function makeNullable(): self
     {
-        return new self(
-            $this->additionalProperty,
-            $this->isRequired,
-            $this->name,
-            SchemaIsNullable::generateTrue(),
-            $this->example,
-            $this->isDeprecated
-        );
+        $this->isNullable = SchemaIsNullable::generateTrue();
+        return $this;
     }
 
     public function require(): self
     {
-        return new self(
-            $this->additionalProperty,
-            SchemaIsRequired::generateTrue(),
-            $this->name,
-            $this->isNullable,
-            $this->example,
-            $this->isDeprecated
-        );
+        $this->isRequired = SchemaIsRequired::generateTrue();
+        return $this;
     }
 
     public function unRequire(): self
     {
-        return new self(
-            $this->additionalProperty,
-            SchemaIsRequired::generateFalse(),
-            $this->name,
-            $this->isNullable,
-            $this->example,
-            $this->isDeprecated
-        );
+        $this->isRequired = SchemaIsRequired::generateFalse();
+        return $this;
     }
 
     public function setName(string $name): self
     {
-        return new self(
-            $this->additionalProperty,
-            $this->isRequired,
-            SchemaName::fromString($name),
-            $this->isNullable,
-            $this->example,
-            $this->isDeprecated
-        );
+        $this->name = SchemaName::fromString($name);
+        return $this;
     }
 
     public function deprecate(): self
     {
-        return new self(
-            $this->additionalProperty,
-            $this->isRequired,
-            $this->name,
-            $this->isNullable,
-            $this->example,
-            SchemaIsDeprecated::generateTrue()
-        );
+        $this->isDeprecated = SchemaIsDeprecated::generateTrue();
+        return $this;
     }
 
     public function setExample(ComponentsExample $example): self
@@ -158,14 +128,8 @@ final class MapSchema extends Schema
             throw $exception;
         }
 
-        return new self(
-            $this->additionalProperty,
-            $this->isRequired,
-            $this->name,
-            $this->isNullable,
-            $example,
-            $this->isDeprecated
-        );
+        $this->example = $example;
+        return $this;
     }
 
     public function toOpenApiSpecification(): array
