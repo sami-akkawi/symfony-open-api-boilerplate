@@ -65,34 +65,14 @@ final class ArraySchema extends Schema
 
     public function setName(string $name): self
     {
-        return new self(
-            $this->itemType,
-            $this->isRequired,
-            SchemaName::fromString($name),
-            $this->itemsAreUnique,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->minimumItems,
-            $this->maximumItems,
-            $this->isDeprecated
-        );
+        $this->name = SchemaName::fromString($name);
+        return $this;
     }
 
     public function makeValuesUnique(): self
     {
-        return new self(
-            $this->itemType,
-            $this->isRequired,
-            $this->name,
-            SchemaItemsAreUnique::generateTrue(),
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->minimumItems,
-            $this->maximumItems,
-            $this->isDeprecated
-        );
+        $this->itemsAreUnique = SchemaItemsAreUnique::generateTrue();
+        return $this;
     }
 
     public static function generate(ComponentsSchema $itemType): self
@@ -130,34 +110,14 @@ final class ArraySchema extends Schema
 
     public function setDescription(string $description): self
     {
-        return new self(
-            $this->itemType,
-            $this->isRequired,
-            $this->name,
-            $this->itemsAreUnique,
-            SchemaDescription::fromString($description),
-            $this->isNullable,
-            $this->example,
-            $this->minimumItems,
-            $this->maximumItems,
-            $this->isDeprecated
-        );
+        $this->description = SchemaDescription::fromString($description);
+        return $this;
     }
 
     public function deprecate(): self
     {
-        return new self(
-            $this->itemType,
-            $this->isRequired,
-            $this->name,
-            $this->itemsAreUnique,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->minimumItems,
-            $this->maximumItems,
-            SchemaIsDeprecated::generateTrue()
-        );
+        $this->isDeprecated = SchemaIsDeprecated::generateTrue();
+        return $this;
     }
 
     public function setExample(ComponentsExample $example): self
@@ -166,66 +126,27 @@ final class ArraySchema extends Schema
         if ($exception) {
             throw $exception;
         }
-        return new self(
-            $this->itemType,
-            $this->isRequired,
-            $this->name,
-            $this->itemsAreUnique,
-            $this->description,
-            $this->isNullable,
-            $example,
-            $this->minimumItems,
-            $this->maximumItems,
-            $this->isDeprecated
-        );
+
+        $this->example = $example;
+        return $this;
     }
 
     public function makeNullable(): self
     {
-        return new self(
-            $this->itemType,
-            $this->isRequired,
-            $this->name,
-            $this->itemsAreUnique,
-            $this->description,
-            SchemaIsNullable::generateTrue(),
-            $this->example,
-            $this->minimumItems,
-            $this->maximumItems,
-            $this->isDeprecated
-        );
+        $this->isNullable = SchemaIsNullable::generateTrue();
+        return $this;
     }
 
     public function require(): self
     {
-        return new self(
-            $this->itemType,
-            SchemaIsRequired::generateTrue(),
-            $this->name,
-            $this->itemsAreUnique,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->minimumItems,
-            $this->maximumItems,
-            $this->isDeprecated
-        );
+        $this->isRequired = SchemaIsRequired::generateTrue();
+        return $this;
     }
 
     public function unRequire(): self
     {
-        return new self(
-            $this->itemType,
-            SchemaIsRequired::generateFalse(),
-            $this->name,
-            $this->itemsAreUnique,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->minimumItems,
-            $this->maximumItems,
-            $this->isDeprecated
-        );
+        $this->isRequired = SchemaIsRequired::generateFalse();
+        return $this;
     }
 
     private function areLengthSettingsValid(
@@ -255,18 +176,8 @@ final class ArraySchema extends Schema
             throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
         }
 
-        return new self(
-            $this->itemType,
-            $this->isRequired,
-            $this->name,
-            $this->itemsAreUnique,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $minimumItems,
-            $this->maximumItems,
-            $this->isDeprecated
-        );
+        $this->minimumItems = $minimumItems;
+        return $this;
     }
 
     public function setMaximumItems(int $maxItems): self
@@ -276,18 +187,8 @@ final class ArraySchema extends Schema
             throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
         }
 
-        return new self(
-            $this->itemType,
-            $this->isRequired,
-            $this->name,
-            $this->itemsAreUnique,
-            $this->description,
-            $this->isNullable,
-            $this->example,
-            $this->minimumItems,
-            $maximumItems,
-            $this->isDeprecated
-        );
+        $this->maximumItems = $maximumItems;
+        return $this;
     }
 
     public function getMaximumItems(): ?SchemaMaximumItems
