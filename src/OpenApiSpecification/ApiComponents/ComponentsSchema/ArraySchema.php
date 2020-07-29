@@ -38,8 +38,7 @@ final class ArraySchema extends Schema
         ?SchemaMinimumItems $minimumItems = null,
         ?SchemaMaximumItems $maximumItems = null,
         ?SchemaIsDeprecated $isDeprecated = null
-    )
-    {
+    ) {
         $this->itemType = $itemType;
         $this->isRequired = $isRequired;
         $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
