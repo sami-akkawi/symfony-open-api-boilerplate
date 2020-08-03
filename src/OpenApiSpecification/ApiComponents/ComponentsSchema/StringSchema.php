@@ -286,6 +286,12 @@ final class StringSchema extends PrimitiveSchema
         if ($this->isDeprecated->toBool()) {
             $specification['deprecated'] = true;
         }
+        if ($this->minimumLength) {
+            $specification['minLength'] = $this->minimumLength->toInt();
+        }
+        if ($this->maximumLength) {
+            $specification['maxLength'] = $this->maximumLength->toInt();
+        }
         if ($example) {
             $specification['example'] = $example;
         }
