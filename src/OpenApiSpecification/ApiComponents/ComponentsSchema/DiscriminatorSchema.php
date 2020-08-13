@@ -227,7 +227,9 @@ final class DiscriminatorSchema extends Schema
             }
 
             if ($schema instanceof DiscriminatorSchema) {
-                $properties = $properties->addSchema($schema->getAsObjectSchema());
+                foreach ($schema->getAsObjectSchema()->getProperties()->toArrayOfSchemas() as $subSchema) {
+                    $properties = $properties->addSchema($subSchema);
+                }
                 continue;
             }
 
