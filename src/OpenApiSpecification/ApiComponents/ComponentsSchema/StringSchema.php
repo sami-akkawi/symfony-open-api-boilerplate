@@ -204,7 +204,7 @@ final class StringSchema extends PrimitiveSchema
     public function getValueFromTrimmedCastedString(string $value): string
     {
         $decodedString = json_decode($value);
-        return $decodedString ?? $value;
+        return is_null($decodedString) ? $value : (string)$decodedString;
     }
 
     public function isValueValid($value): array
