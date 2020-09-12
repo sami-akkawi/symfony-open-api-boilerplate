@@ -37,6 +37,27 @@ final class ApiTags
         return false;
     }
 
+    public function addTags(ApiTag $tag): self
+    {
+        return new self(array_merge($this->tags, [$tag]));
+    }
+
+    public function toTags(): array
+    {
+        return $this->tags;
+    }
+
+    public function mergeTags(self $tags): self
+    {
+        $newTags = $this;
+        foreach ($tags->toTags() as $tag) {
+            if (!$newTags->hasTag($tag->getName())) {
+                $newTags = $newTags->addTag($tag);
+            }
+        }
+        return $newTags;
+    }
+
     public function addTag(ApiTag $tag): self
     {
         return new self(array_merge($this->tags, [$tag]));
@@ -52,5 +73,10 @@ final class ApiTags
         ksort($specifications);
 
         return array_values($specifications);
+    }
+
+    public function hasTags(): bool
+    {
+        return (bool)count($this->tags);
     }
 }

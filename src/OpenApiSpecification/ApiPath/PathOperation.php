@@ -242,7 +242,7 @@ final class PathOperation
             $specification['description'] = $this->description->toString();
         }
         if ($this->tags->isDefined()) {
-            $specification['tags'] = $this->tags->toArray();
+            $specification['tags'] = $this->tags->toOpenApiSpecification();
         }
         if ($this->isDeprecated()) {
             $specification['deprecated'] = true;

@@ -2,44 +2,49 @@
 
 namespace App\OpenApiSpecification\ApiPath\PathOperation;
 
-use App\OpenApiSpecification\ApiException\SpecificationException;
+use App\OpenApiSpecification\ApiTag;
+use App\OpenApiSpecification\ApiTags;
 
 final class OperationTags
 {
-    private array $tags;
+    private ApiTags $tags;
 
-    private function __construct(array $tags)
+    private function __construct(ApiTags $tags)
     {
-        foreach ($tags as $tag) {
-            if (!is_string($tag)) {
-                throw SpecificationException::generateInvalidOperationTags();
-            }
-        }
         $this->tags = $tags;
     }
 
     public static function generate(): self
     {
-        return new self([]);
+        return new self(ApiTags::generate());
     }
 
-    public function addTag(string $tag): self
+    public function addTag(ApiTag $tag): self
     {
-        return new self(array_unique(array_merge($this->tags, [$tag])));
+        return new self($this->tags->addTag($tag));
     }
 
-    public function toArray()
+    public function toApiTags(): ApiTags
     {
         return $this->tags;
     }
 
+    public function toOpenApiSpecification(): array
+    {
+        $names = [];
+        foreach ($this->tags->toTags() as $tag) {
+            $names[] = $tag->getName()->toString();
+        }
+        return $names;
+    }
+
     public function isDefined(): bool
     {
-        return (bool)count($this->tags);
+        return $this->tags->hasTags();
     }
 
     public function addTags(self $tags): self
     {
-        return new self(array_unique(array_merge($this->toArray(), $tags->toArray())));
+        return new self($this->tags->mergeTags($tags->toApiTags()));
     }
 }

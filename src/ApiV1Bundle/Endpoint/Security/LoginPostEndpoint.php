@@ -69,6 +69,6 @@ final class LoginPostEndpoint extends AbstractPostEndpoint
 
     public static function getTags(): OperationTags
     {
-        return OperationTags::generate()->addTag(Security::getApiTag()->getName()->toString());
+        return OperationTags::generate()->addTag(Security::getApiTag());
     }
 }

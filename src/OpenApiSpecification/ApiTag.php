@@ -3,6 +3,7 @@
 namespace App\OpenApiSpecification;
 
 use App\OpenApiSpecification\ApiTag\TagDescription;
+use App\OpenApiSpecification\ApiTag\TagExternalDocs;
 use App\OpenApiSpecification\ApiTag\TagName;
 
 /**
@@ -15,11 +16,16 @@ final class ApiTag
 {
     private TagName $name;
     private ?TagDescription $description;
+    private ?TagExternalDocs $externalDocs;
 
-    private function __construct(TagName $name, ?TagDescription $description = null)
-    {
+    private function __construct(
+        TagName $name,
+        ?TagDescription $description = null,
+        ?TagExternalDocs $externalDocs = null
+    ) {
         $this->name = $name;
         $this->description = $description;
+        $this->externalDocs = $externalDocs;
     }
 
     public static function generate(string $name): self
@@ -34,7 +40,12 @@ final class ApiTag
 
     public function setDescription(string $description): self
     {
-        return new self($this->name, TagDescription::fromString($description));
+        return new self($this->name, TagDescription::fromString($description), $this->externalDocs);
+    }
+
+    public function setExternalDoc(TagExternalDocs $externalDocs): self
+    {
+        return new self($this->name, $this->description, $externalDocs);
     }
 
     public function toOpenApiSpecification(): array
@@ -44,6 +55,9 @@ final class ApiTag
         ];
         if ($this->description) {
             $specification['description'] = $this->description->toString();
+        }
+        if ($this->externalDocs) {
+            $specification['externalDocs'] = $this->externalDocs->toOpenApi3Specification();
         }
 
         return $specification;

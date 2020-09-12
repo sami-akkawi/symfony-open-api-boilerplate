@@ -119,3 +119,4 @@ fabric.properties
 # End of https://www.gitignore.io/api/macos,symfony,phpstorm
 .env
 .gitattributes
+.env.local.php
