@@ -277,7 +277,7 @@ final class DiscriminatorSchema extends Schema
             $specification['deprecated'] = true;
         }
         if ($this->example) {
-            $specification['example'] = $this->example->toOpenApiSpecification();
+            $specification['example'] = $this->example->getLiteralValue();
         }
         $specification[$this->type->toString()] = array_values($this->schemas->toOpenApiSpecification());
 

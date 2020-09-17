@@ -6,6 +6,10 @@ use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema\ObjectSchema;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header\HeaderIsRequired;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header\HeaderIsDeprecated;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header\HeaderDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header\HeaderKey;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ObjectHeader extends SchemaHeader

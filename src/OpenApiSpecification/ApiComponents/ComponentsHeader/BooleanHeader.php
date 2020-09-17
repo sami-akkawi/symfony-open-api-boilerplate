@@ -4,6 +4,10 @@ namespace App\OpenApiSpecification\ApiComponents\ComponentsHeader;
 
 use App\OpenApiSpecification\ApiComponents\ComponentsExample;
 use App\OpenApiSpecification\ApiComponents\ComponentsExamples;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header\HeaderIsRequired;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header\HeaderIsDeprecated;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header\HeaderDescription;
+use App\OpenApiSpecification\ApiComponents\ComponentsHeader\Header\HeaderKey;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema\BooleanSchema;
 use App\OpenApiSpecification\ApiException\SpecificationException;
 
