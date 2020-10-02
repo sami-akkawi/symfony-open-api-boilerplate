@@ -1,0 +1,19 @@
+    <header style="margin-bottom: 20px">
+        <nav class="navbar navbar-dark navbar-expand-sm bg-dark">
+            <a class="navbar-brand" href="{{ path('api-landing-page') }}">OpenApi Boilerplate</a>
+            <button class="navbar-toggler"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarNavAltMarkup"
+                    aria-controls="navbarNavAltMarkup"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link{% if apiV1 is defined %} active{% endif %}" href="{{ path('api-v1-docs') }}">Version 1</a>
+                </div>
+            </div>
+        </nav>
+    </header>

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OpenApi Boilerplate - Version 1{% endblock %}
+
+{% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/api/v1/swagger-ui.css') }}" >
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/api/v1/additional-styles.css') }}" >
+{% endblock %}
+
+{% block body %}
+    {% include 'api/navigation.html.twig' with {'apiV1': true} %}
+
+    <div id="swagger-ui"></div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/api/v1/swagger-ui-bundle.js') }}" charset="UTF-8"> </script>
+    <script src="{{ asset('js/api/v1/swagger-ui-standalone-preset.js') }}" charset="UTF-8"> </script>
+    <script src="{{ asset('js/api/v1/config.js') }}" charset="UTF-8"> </script>
+{% endblock %}

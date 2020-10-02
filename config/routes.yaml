@@ -1,11 +1,15 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+api-landing-page:
+  path: /
+  defaults: { _controller: 'App\Controller\ApiController:handle' }
 
-api-specification:
-  path:       /api/v1/
-  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController::showReadableJson' }
+api-v1-docs:
+  path:       /v1/
+  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController:showDocs' }
 
-openApi:
-  path:       /api/v1/specifications.json
+api-v1-pretty-json:
+  path:       /v1/specs.json
+  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController:showReadableSpecs' }
+
+api-v1-json-docs:
+  path:       /v1/specifications.json
   defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController::show' }

@@ -1,0 +1,4 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    globals:
+        google_tracking_id: '%env(GOOGLE_TRACKING_ID)%' # todo: set your google tracking id in the right env file.

@@ -31,11 +31,12 @@ use App\OpenApiSpecification\OpenApiVersion;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Cache\CacheInterface;
 
-final class SpecificationController
+final class SpecificationController extends AbstractController
 {
     private CacheInterface $cacheInterface;
 
@@ -46,29 +47,47 @@ final class SpecificationController
 
     public function getApiSpecification(): ApiSpecification
     {
-        $cacheKey = $_ENV['APP_ENV'] === 'production' ? $this->getVersion()->getFullVersion() : Uuid::v4()->toRfc4122();
-        return $this->cacheInterface->get($cacheKey, function () {
-            return new ApiSpecification(
-                OpenApiVersion::generate(),
-                $this->getInfo(),
-                $this->getPaths(),
-                $this->getServers(),
-                $this->getComponents(),
-                $this->getSecurityRequirements(),
-                $this->getTags(),
-                $this->getApiExternalDocs()
-            );
-        });
+        return new ApiSpecification(
+            OpenApiVersion::generate(),
+            $this->getInfo(),
+            $this->getPaths(),
+            $this->getServers(),
+            $this->getComponents(),
+            $this->getSecurityRequirements(),
+            $this->getTags(),
+            $this->getApiExternalDocs()
+        );
+    }
+
+    private function getCacheKey(string $section): string
+    {
+        return $_ENV['APP_ENV'] === 'prod'
+            ? "{$section}-v{$this->getVersion()->getFullVersion()}"
+            : Uuid::v4()->toRfc4122();
     }
 
     public function show(): Response
     {
-        return new Response($this->getApiSpecification()->toJson());
+        return $this->cacheInterface->get(
+            $this->getCacheKey('api-json-specification'),
+            fn() => new Response($this->getApiSpecification()->toJson(), 200, ['Access-Control-Allow-Origin' => '*'])
+        );
     }
 
-    public function showReadableJson(): Response
+    public function showReadableSpecs(): Response
     {
-        return new Response('<pre>' . $this->getApiSpecification()->toJson() . '</pre>');
+        return $this->cacheInterface->get(
+            $this->getCacheKey('readable-api-specs'),
+            fn() => new Response('<pre>' . $this->getApiSpecification()->toJson() . '</pre>')
+        );
+    }
+
+    public function showDocs(): Response
+    {
+        return $this->cacheInterface->get(
+            $this->getCacheKey('api-docs'),
+            fn() => $this->render('api/v1/docs.html.twig')
+        );
     }
 
     private function getPaths(): ApiPaths

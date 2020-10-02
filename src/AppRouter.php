@@ -22,11 +22,14 @@ final class AppRouter extends Loader
 
         if (!self::$loadedConfig) {
             $routes->addCollection(
-                $this->import(__DIR__.'/../config/routes.yaml')
+                $this->import($this->getConfigDir() . '/routes.yaml')
             );
             if ($_ENV['APP_ENV'] === 'dev') {
                 $routes->addCollection(
-                    $this->import('@FrameworkBundle/Resources/config/routing/errors.xml')
+                    $this->import($this->getConfigDir() . '/routes/dev/web_profiler.yaml')
+                );
+                $routes->addCollection(
+                    $this->import($this->getConfigDir() . '/routes/dev/framework.yaml')
                 );
             }
             $routes->addCollection(
@@ -48,5 +51,15 @@ final class AppRouter extends Loader
         }
 
         return true;
+    }
+
+    private function getProjectDir(): string
+    {
+        return dirname(__DIR__);
+    }
+
+    private function getConfigDir(): string
+    {
+        return $this->getProjectDir() . '/config';
     }
 }

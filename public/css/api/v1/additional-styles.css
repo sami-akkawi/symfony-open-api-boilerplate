@@ -1,0 +1,36 @@
+html {
+    box-sizing: border-box;
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: scroll;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    margin:0;
+    background: #fafafa;
+}
+
+pre code {
+    /* needed because of combination of bootstrap 4 and swagger ui styles */
+    word-break: break-word;
+}
+
+small {
+    font-weight: inherit;
+}
+
+h2, h4 {
+    font-weight: bold;
+}
+
+h2 {
+    display: block;
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+}

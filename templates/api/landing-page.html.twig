@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OpenApi Boilerplate{% endblock %}
+
+{% block body %}
+{% include 'api/navigation.html.twig' %}
+
+    <div class="container">
+        <section>
+            <p>Please find below the current API versions:</p>
+            <ul>
+                <li><a href="{{ path('api-v1-docs') }}">Version 1</a> (WIP)</li>
+            </ul>
+        </section>
+    </div>
+{% endblock %}
