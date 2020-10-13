@@ -8,8 +8,16 @@ api-v1-docs:
 
 api-v1-pretty-json:
   path:       /v1/specs.json
-  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController:showReadableSpecs' }
+  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController:showReadableJsonSpecs' }
 
 api-v1-json-docs:
   path:       /v1/specifications.json
-  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController::show' }
+  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController::showJson' }
+
+api-v1-pretty-yaml:
+  path:       /v1/specs.yaml
+  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController:showReadableYamlSpecs' }
+
+api-v1-yaml-docs:
+  path:       /v1/specifications.yaml
+  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController::showYaml' }

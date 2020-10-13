@@ -108,4 +108,9 @@ final class ApiSpecification
     {
         return json_encode($this->toOpenApiSpecification(), JSON_PRETTY_PRINT);
     }
+
+    public function toYaml(): string
+    {
+        return yaml_emit($this->toOpenApiSpecification(), YAML_UTF8_ENCODING);
+    }
 }

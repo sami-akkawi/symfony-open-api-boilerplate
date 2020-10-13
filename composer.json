@@ -14,6 +14,7 @@
         "ext-dom": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "ext-yaml": "*",
         "ext-simplexml": "*",
         "symfony/asset": "5.1.*",
         "symfony/console": "5.*",

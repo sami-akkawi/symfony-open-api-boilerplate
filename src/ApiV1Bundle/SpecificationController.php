@@ -66,7 +66,7 @@ final class SpecificationController extends AbstractController
             : Uuid::v4()->toRfc4122();
     }
 
-    public function show(): Response
+    public function showJson(): Response
     {
         return $this->cacheInterface->get(
             $this->getCacheKey('api-json-specification'),
@@ -74,11 +74,27 @@ final class SpecificationController extends AbstractController
         );
     }
 
-    public function showReadableSpecs(): Response
+    public function showReadableJsonSpecs(): Response
     {
         return $this->cacheInterface->get(
-            $this->getCacheKey('readable-api-specs'),
+            $this->getCacheKey('readable-json-api-specs'),
             fn() => new Response('<pre>' . $this->getApiSpecification()->toJson() . '</pre>')
+        );
+    }
+
+    public function showYaml(): Response
+    {
+        return $this->cacheInterface->get(
+            $this->getCacheKey('api-yaml-specification'),
+            fn() => new Response($this->getApiSpecification()->toYaml(), 200, ['Access-Control-Allow-Origin' => '*'])
+        );
+    }
+
+    public function showReadableYamlSpecs(): Response
+    {
+        return $this->cacheInterface->get(
+            $this->getCacheKey('readable-yaml-api-specs'),
+            fn() => new Response('<pre>' . $this->getApiSpecification()->toYaml() . '</pre>')
         );
     }
 
