@@ -148,13 +148,20 @@ final class ArraySchema extends Schema
         return $this;
     }
 
-    private function areLengthSettingsValid(?SchemaMinimumItems $minimumItems, ?SchemaMaximumItems $maximumItems): bool
+    private function areLengthSettingsValid(
+        ?SchemaMinimumItems $minimumItems,
+        ?SchemaMaximumItems $maximumItems
+    ): bool
     {
         if (!$minimumItems || !$maximumItems) {
             return true;
         }
 
-        return $minimumItems->toInt() <= $maximumItems->toInt();
+        if ($minimumItems->toInt() > $maximumItems->toInt()) {
+            return false;
+        }
+
+        return true;
     }
 
     public function setMinimumItems(int $minItems): self
