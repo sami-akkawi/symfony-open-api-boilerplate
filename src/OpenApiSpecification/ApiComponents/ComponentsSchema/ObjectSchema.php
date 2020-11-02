@@ -50,8 +50,15 @@ final class ObjectSchema extends Schema
 
     public function setName(string $name): self
     {
-        $this->name = SchemaName::fromString($name);
-        return $this;
+        return new self(
+            $this->properties,
+            $this->isRequired,
+            SchemaName::fromString($name),
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->isDeprecated
+        );
     }
 
     public static function generateEmpty(): self
@@ -71,14 +78,28 @@ final class ObjectSchema extends Schema
 
     public function require(): self
     {
-        $this->isRequired = SchemaIsRequired::generateTrue();
-        return $this;
+        return new self(
+            $this->properties,
+            SchemaIsRequired::generateTrue(),
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->isDeprecated
+        );
     }
 
     public function unRequire(): self
     {
-        $this->isRequired = SchemaIsRequired::generateFalse();
-        return $this;
+        return new self(
+            $this->properties,
+            SchemaIsRequired::generateFalse(),
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->isDeprecated
+        );
     }
 
     public function requireOnly(array $fieldNames): self
@@ -91,8 +112,15 @@ final class ObjectSchema extends Schema
             }
         }
 
-        $this->properties = $this->properties->unRequire($fieldsToUnRequire);
-        return $this;
+        return new self(
+            $this->properties->unRequire($fieldsToUnRequire),
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            $this->isDeprecated
+        );
     }
 
     public function getProperties(): ComponentsSchemas
@@ -112,8 +140,15 @@ final class ObjectSchema extends Schema
 
     public function setDescription(string $description): self
     {
-        $this->description = SchemaDescription::fromString($description);
-        return $this;
+        return new self(
+            $this->properties,
+            $this->isRequired,
+            $this->name,
+            SchemaDescription::fromString($description),
+            $this->isNullable,
+            $this->example,
+            $this->isDeprecated
+        );
     }
 
     public function setExample(ComponentsExample $example): self
@@ -123,8 +158,15 @@ final class ObjectSchema extends Schema
             throw $exception;
         }
 
-        $this->example = $example;
-        return $this;
+        return new self(
+            $this->properties,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $example,
+            $this->isDeprecated
+        );
     }
 
     public function isValueValid($object): array
@@ -212,14 +254,28 @@ final class ObjectSchema extends Schema
 
     public function makeNullable(): self
     {
-        $this->isNullable = SchemaIsNullable::generateTrue();
-        return $this;
+        return new self(
+            $this->properties,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            SchemaIsNullable::generateTrue(),
+            $this->example,
+            $this->isDeprecated
+        );
     }
 
     public function deprecate(): self
     {
-        $this->isDeprecated = SchemaIsDeprecated::generateTrue();
-        return $this;
+        return new self(
+            $this->properties,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->isNullable,
+            $this->example,
+            SchemaIsDeprecated::generateTrue()
+        );
     }
 
     private function getRequiredProperties(): array

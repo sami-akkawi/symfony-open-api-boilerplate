@@ -49,38 +49,92 @@ final class NumberSchema extends PrimitiveSchema
 
     public function setName(string $name): self
     {
-        $this->name = SchemaName::fromString($name);
-        return $this;
+        return new self(
+            $this->type,
+            $this->isRequired,
+            SchemaName::fromString($name),
+            $this->description,
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
     public function setFormat(string $format): self
     {
-        $this->type = $this->type->setFormat($format);
-        return $this;
+        return new self(
+            $this->type->setFormat($format),
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
     public function require(): self
     {
-        $this->isRequired = SchemaIsRequired::generateTrue();
-        return $this;
+        return new self(
+            $this->type,
+            SchemaIsRequired::generateTrue(),
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
     public function unRequire(): self
     {
-        $this->isRequired = SchemaIsRequired::generateFalse();
-        return $this;
+        return new self(
+            $this->type,
+            SchemaIsRequired::generateFalse(),
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
     public function deprecate(): self
     {
-        $this->isDeprecated = SchemaIsDeprecated::generateTrue();
-        return $this;
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            $this->isNullable,
+            SchemaIsDeprecated::generateTrue()
+        );
     }
 
     public function setDescription(string $description): self
     {
-        $this->description = SchemaDescription::fromString($description);
-        return $this;
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            SchemaDescription::fromString($description),
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
     public function setExample(ComponentsExample $example): self
@@ -90,43 +144,62 @@ final class NumberSchema extends PrimitiveSchema
             throw $exception;
         }
 
-        $this->example = $example;
-        return $this;
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $example,
+            $this->minimum,
+            $this->maximum,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
-    private function areValueSettingsValid(?SchemaMinimum $minimum, ?SchemaMaximum $maximum): bool
+    public function setMinimum(float $minimum): self
     {
-        if (!$minimum || !$maximum) {
-            return true;
-        }
-
-        return $minimum->toFloat() <= $maximum->toFloat();
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            SchemaMinimum::fromFloat($minimum),
+            $this->maximum,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
-    public function setMinimum(int $minimum): self
+    public function setMaximum(float $maximum): self
     {
-        $minimum = SchemaMinimum::fromInt($minimum);
-        if (!$this->areValueSettingsValid($minimum, $this->maximum)) {
-            throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
-        }
-        $this->minimum = $minimum;
-        return $this;
-    }
-
-    public function setMaximum(int $maximum): self
-    {
-        $maximum = SchemaMaximum::fromInt($maximum);
-        if (!$this->areValueSettingsValid($this->minimum, $maximum)) {
-            throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
-        }
-        $this->maximum = $maximum;
-        return $this;
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->minimum,
+            SchemaMaximum::fromFloat($maximum),
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
     public function makeNullable(): self
     {
-        $this->isNullable = SchemaIsNullable::generateTrue();
-        return $this;
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->minimum,
+            $this->maximum,
+            SchemaIsNullable::generateTrue(),
+            $this->isDeprecated
+        );
     }
 
     public static function generate(): self

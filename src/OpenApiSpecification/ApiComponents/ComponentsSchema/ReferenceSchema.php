@@ -46,8 +46,7 @@ final class ReferenceSchema extends ComponentsSchema
 
     public function setName(string $name): self
     {
-        $this->name = SchemaName::fromString($name);
-        return $this;
+        return new self($this->reference, $this->isRequired, $this->schema, SchemaName::fromString($name));
     }
 
     public static function generate(string $objectName, Schema $schema): self
@@ -57,14 +56,12 @@ final class ReferenceSchema extends ComponentsSchema
 
     public function require(): self
     {
-        $this->isRequired = SchemaIsRequired::generateTrue();
-        return $this;
+        return new self($this->reference, SchemaIsRequired::generateTrue(), $this->schema, $this->name);
     }
 
     public function unRequire(): self
     {
-        $this->isRequired = SchemaIsRequired::generateFalse();
-        return $this;
+        return new self($this->reference, SchemaIsRequired::generateFalse(), $this->schema, $this->name);
     }
 
     public function deprecate(): self
