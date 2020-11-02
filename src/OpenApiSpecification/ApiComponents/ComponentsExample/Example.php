@@ -28,20 +28,17 @@ final class Example extends ComponentsExample
 
     public function setName(string $name): self
     {
-        $this->name = ExampleName::fromString($name);
-        return $this;
+        return new self($this->value, ExampleName::fromString($name), $this->summary, $this->description);
     }
 
     public function setSummary(string $summary): self
     {
-        $this->summary = ExampleSummary::fromString($summary);
-        return $this;
+        return new self($this->value, $this->name, ExampleSummary::fromString($summary), $this->description);
     }
 
     public function setDescription(string $description): self
     {
-        $this->description = ExampleDescription::fromString($description);
-        return $this;
+        return new self($this->value, $this->name, $this->summary, ExampleDescription::fromString($description));
     }
 
     public function toExample(): Example

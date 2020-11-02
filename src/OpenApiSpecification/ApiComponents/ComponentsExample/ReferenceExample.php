@@ -28,8 +28,7 @@ final class ReferenceExample extends ComponentsExample
 
     public function setName(string $name): self
     {
-        $this->name = ExampleName::fromString($name);
-        return $this;
+        return new self($this->reference, $this->example, ExampleName::fromString($name));
     }
 
     public function toExample(): Example
