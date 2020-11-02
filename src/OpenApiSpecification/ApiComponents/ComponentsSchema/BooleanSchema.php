@@ -35,8 +35,15 @@ final class BooleanSchema extends PrimitiveSchema
 
     public function setName(string $name): self
     {
-        $this->name = SchemaName::fromString($name);
-        return $this;
+        return new self(
+            $this->type,
+            $this->isRequired,
+            SchemaName::fromString($name),
+            $this->description,
+            $this->example,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
     public static function generate(): self
@@ -46,32 +53,67 @@ final class BooleanSchema extends PrimitiveSchema
 
     public function setDescription(string $description): self
     {
-        $this->description = SchemaDescription::fromString($description);
-        return $this;
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            SchemaDescription::fromString($description),
+            $this->example,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
     public function makeNullable(): self
     {
-        $this->isNullable = SchemaIsNullable::generateTrue();
-        return $this;
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            SchemaIsNullable::generateTrue(),
+            $this->isDeprecated
+        );
     }
 
     public function require(): self
     {
-        $this->isRequired = SchemaIsRequired::generateTrue();
-        return $this;
+        return new self(
+            $this->type,
+            SchemaIsRequired::generateTrue(),
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
     public function unRequire(): self
     {
-        $this->isRequired = SchemaIsRequired::generateFalse();
-        return $this;
+        return new self(
+            $this->type,
+            SchemaIsRequired::generateFalse(),
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
     public function deprecate(): self
     {
-        $this->isDeprecated = SchemaIsDeprecated::generateTrue();
-        return $this;
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $this->example,
+            $this->isNullable,
+            SchemaIsDeprecated::generateTrue()
+        );
     }
 
     public function setExample(ComponentsExample $example): self
@@ -81,8 +123,15 @@ final class BooleanSchema extends PrimitiveSchema
             throw $exception;
         }
 
-        $this->example = $example;
-        return $this;
+        return new self(
+            $this->type,
+            $this->isRequired,
+            $this->name,
+            $this->description,
+            $example,
+            $this->isNullable,
+            $this->isDeprecated
+        );
     }
 
     public function isValueValid($value): array

@@ -157,15 +157,29 @@ final class IntegerSchema extends PrimitiveSchema
         );
     }
 
+    private function areValueSettingsValid(?SchemaMinimum $minimum, ?SchemaMaximum $maximum): bool
+    {
+        if (!$minimum || !$maximum) {
+            return true;
+        }
+
+        return $minimum->toInt() <= $maximum->toInt();
+    }
+
     public function setMinimum(int $minimum): self
     {
+        $minimum = SchemaMinimum::fromInt($minimum);
+        if (!$this->areValueSettingsValid($minimum, $this->maximum)) {
+            throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
+        }
+
         return new self(
             $this->type,
             $this->isRequired,
             $this->name,
             $this->description,
             $this->example,
-            SchemaMinimum::fromInt($minimum),
+            $minimum,
             $this->maximum,
             $this->isNullable,
             $this->isDeprecated
@@ -174,6 +188,11 @@ final class IntegerSchema extends PrimitiveSchema
 
     public function setMaximum(int $maximum): self
     {
+        $maximum = SchemaMaximum::fromInt($maximum);
+        if (!$this->areValueSettingsValid($this->minimum, $maximum)) {
+            throw SpecificationException::generateMinimumShouldBeLessThanMaximum();
+        }
+
         return new self(
             $this->type,
             $this->isRequired,
@@ -181,7 +200,7 @@ final class IntegerSchema extends PrimitiveSchema
             $this->description,
             $this->example,
             $this->minimum,
-            SchemaMaximum::fromInt($maximum),
+            $maximum,
             $this->isNullable,
             $this->isDeprecated
         );

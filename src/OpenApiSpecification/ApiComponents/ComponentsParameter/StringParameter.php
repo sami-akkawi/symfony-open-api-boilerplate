@@ -27,6 +27,22 @@ final class StringParameter extends Parameter
         );
     }
 
+    public static function generateUuidInPath(string $name): self
+    {
+        return self::generateUuid($name, ParameterLocation::generatePath());
+    }
+
+    private static function generateUuid(string $name, ParameterLocation $location): self
+    {
+        return new self(
+            ParameterName::fromString($name),
+            $location,
+            StringSchema::generateUuid(),
+            $location->isInPath() ? ParameterIsRequired::generateTrue() : ParameterIsRequired::generateFalse(),
+            ParameterIsDeprecated::generateFalse()
+        );
+    }
+
     public function styleAsMatrix(): self
     {
         if (!$this->location->isInPath()) {
@@ -314,10 +330,14 @@ final class StringParameter extends Parameter
         if (!$example->hasName()) {
             throw SpecificationException::generateMustHaveKeyInComponents();
         }
-
         $examples = $this->examples;
         if (!$examples) {
             $examples = ComponentsExamples::generate();
+        }
+
+        if ($this->example) {
+            $examples = $examples->addExample($this->example, $this->example->getName()->toString());
+            $this->example = null;
         }
 
         return new self(
