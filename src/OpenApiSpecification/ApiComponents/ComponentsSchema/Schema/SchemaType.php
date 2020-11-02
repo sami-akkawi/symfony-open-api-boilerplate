@@ -88,14 +88,12 @@ final class SchemaType
 
     public function setEnum(array $enum): self
     {
-        $this->enum = $enum;
-        return $this;
+        return new self($this->type, $this->format, $enum);
     }
 
     public function setFormat(string $format): self
     {
-        $this->format = $format;
-        return $this;
+        return new self($this->type, $format, $this->enum);
     }
 
     public function isStringValueValid(string $value): ?Message
