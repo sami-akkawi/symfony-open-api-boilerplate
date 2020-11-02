@@ -27,17 +27,6 @@ final class StringParameter extends Parameter
         );
     }
 
-    private static function generateUuid(string $name, ParameterLocation $location): self
-    {
-        return new self(
-            ParameterName::fromString($name),
-            $location,
-            StringSchema::generateUuid(),
-            $location->isInPath() ? ParameterIsRequired::generateTrue() : ParameterIsRequired::generateFalse(),
-            ParameterIsDeprecated::generateFalse()
-        );
-    }
-
     public function styleAsMatrix(): self
     {
         if (!$this->location->isInPath()) {
@@ -47,8 +36,18 @@ final class StringParameter extends Parameter
             );
         }
 
-        $this->style = ParameterStyle::generateMatrix();
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            ParameterStyle::generateMatrix(),
+            $this->example,
+            $this->examples
+        );
     }
 
     public function styleAsLabel(): self
@@ -60,8 +59,18 @@ final class StringParameter extends Parameter
             );
         }
 
-        $this->style = ParameterStyle::generateLabel();
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            ParameterStyle::generateLabel(),
+            $this->example,
+            $this->examples
+        );
     }
 
     public function styleAsForm(): self
@@ -73,8 +82,18 @@ final class StringParameter extends Parameter
             );
         }
 
-        $this->style = ParameterStyle::generateForm();
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            ParameterStyle::generateForm(),
+            $this->example,
+            $this->examples
+        );
     }
 
     public function styleAsSimple(): self
@@ -129,71 +148,165 @@ final class StringParameter extends Parameter
         return self::generate($name, ParameterLocation::generatePath());
     }
 
-    public static function generateUuidInPath(string $name): self
-    {
-        return self::generateUuid($name, ParameterLocation::generatePath());
-    }
-
     public function setFormat(string $format): self
     {
-        $this->schema = $this->schema->setFormat($format);
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema->setFormat($format),
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
     }
 
     /** @param string[] $options */
     public function setOptions(array $options): self
     {
-        $this->schema = $this->schema->setOptions($options);
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema->setOptions($options),
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
     }
 
     public function makeNullable(): self
     {
-        $this->schema = $this->schema->makeNullable();
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema->makeNullable(),
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
     }
 
     public function require(): self
     {
-        $this->isRequired = ParameterIsRequired::generateTrue();
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            ParameterIsRequired::generateTrue(),
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
     }
 
     public function deprecate(): self
     {
-        $this->isDeprecated = ParameterIsDeprecated::generateTrue();
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            ParameterIsDeprecated::generateTrue(),
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
     }
 
     public function setDescription(string $description): self
     {
-        $this->description = ParameterDescription::fromString($description);
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            ParameterDescription::fromString($description),
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
     }
 
     public function setKey(string $key): self
     {
-        $this->key = ParameterKey::fromString($key);
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            ParameterKey::fromString($key),
+            $this->style,
+            $this->example,
+            $this->examples
+        );
     }
 
     public function setMinimumLength(int $minLength): self
     {
-        $this->schema = $this->schema->setMinimumLength($minLength);
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema->setMinimumLength($minLength),
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
     }
 
     public function setMaximumLength(int $maxLength): self
     {
-        $this->schema = $this->schema->setMaximumLength($maxLength);
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema->setMaximumLength($maxLength),
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $this->example,
+            $this->examples
+        );
     }
 
     public function setExample(ComponentsExample $example): self
     {
-        $this->example = $example;
-        $this->examples = null;
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            $example,
+            null
+        );
     }
 
     public function addExample(ComponentsExample $example): self
@@ -206,13 +319,19 @@ final class StringParameter extends Parameter
         if (!$examples) {
             $examples = ComponentsExamples::generate();
         }
-        if ($this->example) {
-            $examples = ComponentsExamples::generate()->addExample($this->example, $this->example->getName()->toString());
-            $this->example = null;
-        }
-        $this->examples = $examples->addExample($example, $example->getName()->toString());
 
-        return $this;
+        return new self(
+            $this->name,
+            $this->location,
+            $this->schema,
+            $this->isRequired,
+            $this->isDeprecated,
+            $this->description,
+            $this->key,
+            $this->style,
+            null,
+            $examples
+        );
     }
 
     public function getRouteRequirements(): ?string
