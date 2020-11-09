@@ -8,14 +8,13 @@ use Exception;
 
 final class JsonToXmlConverter
 {
+    private const XML_VERSION = '1.0';
+    private const XML_ENCODING = 'UTF-8';
     private static ?DOMDocument $xml = null;
-    private static string $encoding = 'UTF-8';
 
-    private static function initialize(string $version = '1.0', string $encoding = 'UTF-8', bool $formatOutput = true): DOMDocument
-    {
-        self::$xml = new DOMDocument($version, $encoding);
-        self::$xml->formatOutput = $formatOutput;
-        self::$encoding = $encoding;
+    private static function initialize(): DOMDocument {
+        self::$xml = new DOMDocument(self::XML_VERSION, self::XML_ENCODING);
+        self::$xml->formatOutput = true;
         return self::$xml;
     }
 
@@ -67,15 +66,15 @@ final class JsonToXmlConverter
         return self::$xml;
     }
 
-    private static function castToString(string $string): string
+    private static function castToString($value): string
     {
-        if ($string === true) {
-            return 'true';
+        if (is_null($value)) {
+            return 'null';
         }
-        if ($string === false) {
-            return 'false';
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
         }
-        return $string;
+        return (string)$value;
     }
 
     private static function isValidTagName(string $tag): bool
