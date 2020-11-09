@@ -363,8 +363,15 @@ final class ArraySchema extends Schema
             $array = explode(',', $value);
         }
 
-        foreach ($array as $entry) {
-            $castedArray[] = $this->itemType->getValueFromCastedString(json_encode($entry));
+        $keys = array_keys($array);
+        $arrayIsAssociative = array_keys($keys) !== $keys;
+
+        if ($arrayIsAssociative) {
+            $castedArray[] = $this->itemType->getValueFromCastedString(json_encode($array));
+        } else {
+            foreach ($array as $entry) {
+                $castedArray[] = $this->itemType->getValueFromCastedString(json_encode($entry));
+            }
         }
 
         return $castedArray;
