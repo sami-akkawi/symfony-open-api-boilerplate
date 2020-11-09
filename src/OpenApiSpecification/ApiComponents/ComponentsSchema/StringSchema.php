@@ -317,7 +317,7 @@ final class StringSchema extends PrimitiveSchema
         return is_null($decodedString) ? $value : (string)$decodedString;
     }
 
-    public function isValueValid($value): array
+    public function isValueValid($value, array $keysToIgnore = []): array
     {
         if ($this->isNullable->toBool() && is_null($value)) {
             return [];

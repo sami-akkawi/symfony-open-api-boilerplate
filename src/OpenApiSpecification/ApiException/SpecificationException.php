@@ -121,11 +121,6 @@ final class SpecificationException extends LogicException
         return new self("Cannot add a request body to a list of request bodies if it has no name.");
     }
 
-    public static function generateObjectSchemaNeedsProperties(string $schemaName): self
-    {
-        return new self("$schemaName of type object needs properties.");
-    }
-
     public static function generateInvalidApiKeyLocation(string $invalidLocation): self
     {
         return self::generate("Invalid Api Key Location: $invalidLocation. Please choose one of: " . implode(', ', ApiKeyLocation::getLocations()) . '.');

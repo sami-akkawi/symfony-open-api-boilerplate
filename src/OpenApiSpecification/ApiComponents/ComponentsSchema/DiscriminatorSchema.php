@@ -218,34 +218,34 @@ final class DiscriminatorSchema extends Schema
         return null;
     }
 
-    public function isValueValid($value): array
+    public function isValueValid($value, array $keysToIgnore = []): array
     {
         if ($this->isNullable->toBool() && is_null($value)) {
             return [];
         }
 
         if ($this->type->isAllOf()) {
-            return $this->isValueValidForAllOf($value);
+            return $this->isValueValidForAllOf($value, $keysToIgnore);
         } elseif ($this->type->isAnyOf()) {
-            return $this->isValueValidForAnyOf($value);
+            return $this->isValueValidForAnyOf($value, $keysToIgnore);
         } elseif ($this->type->isOneOf()) {
-            return $this->isValueValidForOneOf($value);
+            return $this->isValueValidForOneOf($value, $keysToIgnore);
         }
 
         throw new LogicException("Missing Value Validation for Discriminator Object of type " . $this->type->toString());
     }
 
-    private function isValueValidForAllOf($value): array
+    private function isValueValidForAllOf($value, array $keysToIgnore = []): array
     {
-        return ObjectSchema::generate($this->schemas)->isValueValid($value);
+        return ObjectSchema::generate($this->schemas)->isValueValid($value, $keysToIgnore);
     }
 
-    private function isValueValidForOneOf($value): array
+    private function isValueValidForOneOf($value, array $keysToIgnore = []): array
     {
         $errors = [];
         foreach ($this->schemas->getSchemaNames() as $name) {
             $schema = $this->schemas->findSchemaByName($name);
-            $errors[$name] = $schema->isValueValid($value);
+            $errors[$name] = $schema->isValueValid($value, $keysToIgnore);
         }
 
         $numberOfValid = 0;
@@ -274,9 +274,9 @@ final class DiscriminatorSchema extends Schema
         return [$errorMessage];
     }
 
-    private function isValueValidForAnyOf($value): array
+    private function isValueValidForAnyOf($value, array $keysToIgnore = []): array
     {
-        return $this->getAsObjectSchema()->isValueValid($value);
+        return $this->getAsObjectSchema()->isValueValid($value, $keysToIgnore);
     }
 
     public function getAsObjectSchema(): ?ObjectSchema

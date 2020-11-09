@@ -77,7 +77,7 @@ abstract class ComponentsSchema
 
     abstract public function setExample(ComponentsExample $example);
 
-    abstract public function isValueValid($value): array;
+    abstract public function isValueValid($value, array $keysToIgnore = []): array;
 
     public function validateValue($value): ?SpecificationException
     {

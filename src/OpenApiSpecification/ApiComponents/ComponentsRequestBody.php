@@ -23,7 +23,7 @@ abstract class ComponentsRequestBody
 
     abstract public function getDefinedMimeTypes(): array;
 
-    abstract public function isValueValidByMimeType(string $mimeType, $value): array;
+    abstract public function isValueValidByMimeType(string $mimeType, $value, array $keysToIgnore): array;
 
     abstract public function toRequestBody(): RequestBody;
 

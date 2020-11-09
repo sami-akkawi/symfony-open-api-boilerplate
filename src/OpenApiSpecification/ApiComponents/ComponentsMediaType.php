@@ -45,9 +45,9 @@ final class ComponentsMediaType
         return $this->schema->toSchema();
     }
 
-    public function isValueValid($value): array
+    public function isValueValid($value, array $keysToIgnore = []): array
     {
-        return $this->schema->isValueValid($value);
+        return $this->schema->isValueValid($value, $keysToIgnore);
     }
 
     public function addExample(ComponentsExample $example): self

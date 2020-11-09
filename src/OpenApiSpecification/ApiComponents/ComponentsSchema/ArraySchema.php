@@ -99,7 +99,7 @@ final class ArraySchema extends Schema
         return new self($itemType, SchemaIsRequired::generateFalse());
     }
 
-    public function isValueValid($value): array
+    public function isValueValid($value, array $keysToIgnore = []): array
     {
         $errors = [];
         if ($this->isNullable->toBool() && is_null($value)) {
@@ -119,7 +119,7 @@ final class ArraySchema extends Schema
                 $lengthErrorMessage;
         }
         foreach ($value as $item) {
-            $subErrors = $this->itemType->isValueValid($item);
+            $subErrors = $this->itemType->isValueValid($item, $keysToIgnore);
             if ($subErrors) {
                 $errors[] = $subErrors;
             }

@@ -28,8 +28,11 @@ final class FormatValidator
         return $this->errors;
     }
 
-    public function getAndValidateParametersRequest(Request $request, AbstractEndpoint $endpoint): array
-    {
+    public function getAndValidateParametersRequest(
+        Request $request,
+        AbstractEndpoint $endpoint,
+        RequestContentType $requestContentType
+    ): array {
         $this->errors = [];
 
         $pathParams = $request->attributes->get('_route_params');
@@ -37,7 +40,7 @@ final class FormatValidator
         $requestBody = [];
         $requestBodySchema = $endpoint::getRequestBody();
         if ($requestBodySchema) {
-            $requestBody = $this->getRequestBody($requestBodySchema, $request);
+            $requestBody = $this->getRequestBody($requestBodySchema, $request, $requestContentType);
         }
         $endpointParameters = $endpoint::getParameters();
         $queryParams = $this->getQueryParameters($endpointParameters, $request);
@@ -132,19 +135,28 @@ final class FormatValidator
 
     }
 
-    private function getRequestBody(ComponentsRequestBody $requestBodySchema, Request $request): array
-    {
-        $requestContentType = $request->headers->get('content-type');
+    private function getRequestBody(
+        ComponentsRequestBody $requestBodySchema,
+        Request $request,
+        RequestContentType $requestContentType
+    ): array {
         $schemaContentTypes = $requestBodySchema->getDefinedMimeTypes();
-
-        $isXml = $requestContentType === 'application/xml';
-        $isJson = $requestContentType === 'application/json';
+        if (!in_array($requestContentType->toString(), $schemaContentTypes, true)) {
+            $message = Message::generateError(
+                'mime_not_supported_for_request_body',
+                "{$requestContentType->toString()} not supported in request body",
+                ['%submittedMimeType%' => $requestContentType->toString()]
+            );
+            $this->errors[] = $message;
+            return [];
+        }
 
         $requestBody = [];
 
-        if ($isXml) {
-            $doc = @simplexml_load_string($request->getContent());
-            if ($doc === false) {
+        if ($requestContentType->isXml()) {
+            try {
+                $requestContent = XmlToJsonConvertor::convert($request->getContent());
+            } catch (\Throwable $throwable) {
                 $message = Message::generateError(
                     'invalid_xml',
                     "The XML request is invalid, please validate your data."
@@ -152,10 +164,10 @@ final class FormatValidator
                 $this->errors[] = $message;
                 return [];
             }
-            $requestBody = json_decode(json_encode($doc), true);
+            $requestBody = json_decode($requestContent, true);
         }
 
-        if ($isJson) {
+        if ($requestContentType->isJson()) {
             $requestBody = json_decode($request->getContent(), true);
             if ($requestBody === null) {
                 $message = Message::generateError(
@@ -167,35 +179,26 @@ final class FormatValidator
             }
         }
 
-        if (!in_array($requestContentType, $schemaContentTypes)) {
-            $message = Message::generateError(
-                'mime_not_supported_for_request_body',
-                "$requestContentType not supported in request body",
-                ['%submittedMimeType%' => $requestContentType]
-            );
-            $this->errors[] = $message;
-            return $requestBody;
+        if ($requestContentType->isForm()) {
+            $requestBody = $request->request->all();
         }
 
-        if ($isJson) {
-            $this->errors = $requestBodySchema->isValueValidByMimeType($requestContentType, $requestBody);
-            return $requestBody;
+        if ($requestContentType->isForm() || $requestContentType->isXml()) {
+            $schema = $requestBodySchema->toRequestBody()->getSchemaByMimeType($requestContentType->toString());
+            $requestBody = $schema->getValueFromCastedString(json_encode($requestBody));
         }
 
-        if ($isXml) {
-            $schema = $requestBodySchema->toRequestBody()->getSchemaByMimeType('application/xml');
-            $cleanRequestBody = $schema->getValueFromCastedString(json_encode($requestBody));
-
-            $this->errors = $requestBodySchema->isValueValidByMimeType($requestContentType, $cleanRequestBody);
-
-            return $cleanRequestBody;
+        $keysToIgnore = [];
+        foreach ($request->files->keys() as $key) {
+            $keysToIgnore[] = is_array($request->files->get($key)) ? "{$key}[]" : $key;
         }
 
-        throw new \LogicException("Missing Handling of Request of Content Type $requestContentType");
+        $this->errors = $requestBodySchema->isValueValidByMimeType($requestContentType->toString(), $requestBody, $keysToIgnore);
+        return $requestBody;
     }
 
 
-    public function validateResponse(Response $response, AbstractEndpoint $endpoint): void
+    public function validateResponse(Response $response, AbstractEndpoint $endpoint, bool $responseIsXml): void
     {
         $this->errors = [];
 
@@ -214,8 +217,9 @@ final class FormatValidator
         }
 
         $responseContentType = $response->headers->get('content-type');
+
         $schemaContentTypes = $endpointResponse->getDefinedMimeTypes();
-        if (!in_array($responseContentType, $schemaContentTypes)) {
+        if (!in_array($responseContentType, $schemaContentTypes, true)) {
             $method = strtoupper($endpoint::getOperationName()->toString());
             $partialPath = $endpoint::getPartialPath()->toString();
             $message = Message::generateError(
@@ -231,6 +235,16 @@ final class FormatValidator
             return;
         }
 
-        $this->errors = $endpointResponse->isValueValidByMimeType($responseContentType, json_decode($response->getContent(), true));
+        $content = $response->getContent();
+
+        if ($responseIsXml) {
+            $content = XmlToJsonConvertor::convert($content);
+            $schema = $endpointResponse->toResponseSchema()->getSchemaByMimeType(ResponseContentType::APPLICATION_XML);
+            $content = $schema->getValueFromCastedString($content);
+        } else {
+            $content = json_decode($content, true);
+        }
+
+        $this->errors = $endpointResponse->isValueValidByMimeType($responseContentType, $content);
     }
 }

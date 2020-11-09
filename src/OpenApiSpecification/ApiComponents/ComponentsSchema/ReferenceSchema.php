@@ -34,14 +34,14 @@ final class ReferenceSchema extends ComponentsSchema
         $this->isNullable = SchemaIsNullable::generateFalse();
     }
 
-    public function isValueValid($value): array
+    public function isValueValid($value, array $keysToIgnore = []): array
     {
-        return $this->schema->isValueValid($value);
+        return $this->schema->isValueValid($value, $keysToIgnore);
     }
 
     public function makeNullable()
     {
-        throw SpecificationException::generateReferenceSiblingsAreIgnored();
+        return $this->schema->makeNullable();
     }
 
     public function setName(string $name): self

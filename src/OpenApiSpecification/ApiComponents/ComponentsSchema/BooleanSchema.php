@@ -134,7 +134,7 @@ final class BooleanSchema extends PrimitiveSchema
         );
     }
 
-    public function isValueValid($value): array
+    public function isValueValid($value, array $keysToIgnore = []): array
     {
         if (is_bool($value)) {
             return [];

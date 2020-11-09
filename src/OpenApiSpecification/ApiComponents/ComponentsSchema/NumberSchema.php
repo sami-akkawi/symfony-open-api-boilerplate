@@ -261,7 +261,7 @@ final class NumberSchema extends PrimitiveSchema
         return null;
     }
 
-    public function isValueValid($value): array
+    public function isValueValid($value, array $keysToIgnore = []): array
     {
         $errors = [];
         if ($this->isNullable->toBool() && is_null($value)) {

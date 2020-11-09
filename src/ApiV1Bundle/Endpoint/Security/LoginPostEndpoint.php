@@ -3,6 +3,11 @@
 namespace App\ApiV1Bundle\Endpoint\Security;
 
 use App\ApiV1Bundle\Endpoint\AbstractPostEndpoint;
+use App\ApiV1Bundle\Helpers\ApiV1Request;
+use App\ApiV1Bundle\Response\AbstractResponse;
+use App\ApiV1Bundle\Response\OkResponse;
+use App\ApiV1Bundle\Schema\OkResponseSchema;
+use App\ApiV1Bundle\Schema\UserSchema;
 use App\ApiV1Bundle\Tag\Security;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody\RequestBody;
@@ -14,13 +19,12 @@ use App\OpenApiSpecification\ApiComponents\ComponentsSchema\StringSchema;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
 use App\OpenApiSpecification\ApiPath\PathOperation\OperationTags;
 use App\OpenApiSpecification\ApiPath\PathPartialUrl;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 
 final class LoginPostEndpoint extends AbstractPostEndpoint
 {
 
-    protected function subHandle(array $pathParams, array $requestBody, array $queryParams, array $headerParams, array $cookieParams): Response
+    protected function subHandle(ApiV1Request $request): AbstractResponse
     {
         $data = [
             'id' => Uuid::v4()->toRfc4122(),
@@ -28,7 +32,7 @@ final class LoginPostEndpoint extends AbstractPostEndpoint
             'username' => 'mockUsername'
         ];
 
-        return new Response(json_encode($data));
+        return OkResponse::generate($data);
     }
 
     public static function getPartialPath(): PathPartialUrl
@@ -57,11 +61,8 @@ final class LoginPostEndpoint extends AbstractPostEndpoint
     {
         return ComponentsResponses::generate()->addResponse(
             ResponseSchema::generateOk(
-                ObjectSchema::generateDataSchema(
-                    ComponentsSchemas::generate()
-                    ->addSchema(StringSchema::generate()->setName('id')->setFormat(SchemaType::STRING_UUID_FORMAT))
-                    ->addSchema(StringSchema::generate()->setName('email')->setFormat(SchemaType::STRING_EMAIL_FORMAT))
-                    ->addSchema(StringSchema::generate()->setName('username'))
+                OkResponseSchema::getCustom(
+                    UserSchema::getReferenceSchema()
                 )
             )
         );

@@ -63,6 +63,19 @@ final class ComponentsSchemas
         return false;
     }
 
+    private function hasDataSchema(): bool
+    {
+        return $this->hasSchema(SchemaName::fromString('data'));
+    }
+
+    public function addDataSchema(ComponentsSchema $schema): self
+    {
+        if ($this->hasDataSchema()) {
+            throw SpecificationException::generateDuplicateDefinitionException('data');
+        }
+        return new self(array_merge($this->schemas, [$schema->setName('data')->require()]));
+    }
+
     public function addSchema(ComponentsSchema $schema): self
     {
         if (!$schema->hasName()) {

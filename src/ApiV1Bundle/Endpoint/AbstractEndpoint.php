@@ -3,9 +3,12 @@
 namespace App\ApiV1Bundle\Endpoint;
 
 use App\ApiV1Bundle\Helpers\ApiDependencies;
+use App\ApiV1Bundle\Helpers\ApiV1Request;
 use App\ApiV1Bundle\Helpers\FormatValidator;
-use App\ApiV1Bundle\Helpers\JsonToXmlConverter;
+use App\ApiV1Bundle\Helpers\RequestContentType;
+use App\ApiV1Bundle\Helpers\ResponseContentType;
 use App\ApiV1Bundle\Response\AbstractErrorResponse;
+use App\ApiV1Bundle\Response\AbstractResponse;
 use App\ApiV1Bundle\Response\CorruptDataResponse;
 use App\ApiV1Bundle\Response\UnprocessableEntityResponse;
 use App\Message\FieldMessage;
@@ -38,21 +41,16 @@ abstract class AbstractEndpoint
 
     public function handle(Request $request): Response
     {
-        $contentType = $request->headers->get('content-type');
-        if (empty($contentType)) {
-            $contentType = 'application/json';
-        }
+        $requestContentType = new RequestContentType($request->headers->get('content-type'));
+        $responseContentType = new ResponseContentType($request->headers->get('accept'));
 
         $headers = [
-            'accept' => $request->headers->get('accept'),
-            'content-type' => $contentType,
-            'origin' => $request->headers->get('origin')
+            'origin' => $request->headers->get('origin'),
+            'content-type' => $responseContentType->mustBeXml() ? ResponseContentType::APPLICATION_XML : ResponseContentType::APPLICATION_JSON
         ];
 
-        $isXml = $headers['content-type'] === 'application/xml';
-
         [$pathParams, $requestBody, $queryParams, $headerParams, $cookieParams] =
-            $this->validator->getAndValidateParametersRequest($request, $this);
+            $this->validator->getAndValidateParametersRequest($request, $this, $requestContentType);
 
         // todo: if endpoint needs authentication, check authentication
         //  return NotAuthenticatedResponse (401 Unauthorized)
@@ -62,12 +60,14 @@ abstract class AbstractEndpoint
         if ($this->validator->hasErrors()) {
             $errorResponse = UnprocessableEntityResponse::generate();
             $errorResponse = $this->addErrorsMessagesToResponse($errorResponse);
-            $response = $isXml ? $errorResponse->toXmlResponse() : $errorResponse->toJsonResponse();
+            $response = $responseContentType->mustBeXml() ? $errorResponse->toXmlResponse() : $errorResponse->toJsonResponse();
             $response->headers->add($headers);
             return $response;
         }
 
-        $endpointResponse = $this->subHandle($pathParams, $requestBody, $queryParams, $headerParams, $cookieParams);
+        $endpointResponse = $this->subHandle(
+            new ApiV1Request($request, $pathParams, $requestBody, $queryParams, $headerParams, $cookieParams)
+        );
 
         // endpointResponse should return a response with http code:
         //  OkResponse (200 Ok)
@@ -76,26 +76,19 @@ abstract class AbstractEndpoint
         //  BadRequestResponse (400 Bad Request) (For Input Validation Errors)
         //  NotFoundResponse (404 Bad Request) (For e.g. query by id)
 
-        $endpointResponse->headers->add($headers);
+        $response = $responseContentType->mustBeXml() ? $endpointResponse->toXmlResponse() : $endpointResponse->toJsonResponse();
+        $response->headers->add($headers);
 
-        $this->validator->validateResponse($endpointResponse, $this);
+        $this->validator->validateResponse($response, $this, $responseContentType->mustBeXml());
         if ($this->validator->hasErrors()) {
             $errorResponse = CorruptDataResponse::generate();
             $errorResponse = $this->addErrorsMessagesToResponse($errorResponse);
-            $response = $isXml ? $errorResponse->toXmlResponse() : $errorResponse->toJsonResponse();
+            $response = $responseContentType->mustBeXml() ? $errorResponse->toXmlResponse() : $errorResponse->toJsonResponse();
             $response->headers->add($headers);
             return $response;
         }
 
-        if ($isXml) {
-            return new Response(
-                JsonToXmlConverter::convert($endpointResponse->getContent()),
-                $endpointResponse->getStatusCode(),
-                $endpointResponse->headers->all()
-            );
-        }
-
-        return $endpointResponse;
+        return $response;
     }
 
     private function addErrorsMessagesToResponse(AbstractErrorResponse $errorResponse): AbstractErrorResponse
@@ -110,13 +103,7 @@ abstract class AbstractEndpoint
         return $errorResponse;
     }
 
-    abstract protected function subHandle(
-        array $pathParams,
-        array $requestBody,
-        array $queryParams,
-        array $headerParams,
-        array $cookieParams
-    ): Response;
+    abstract protected function subHandle(ApiV1Request $request): AbstractResponse;
 
     abstract public static function getTags(): OperationTags;
 

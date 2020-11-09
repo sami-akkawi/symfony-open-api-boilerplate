@@ -12,7 +12,6 @@ use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaIsRequi
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaName;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchema\Schema\SchemaType;
 use App\OpenApiSpecification\ApiComponents\ComponentsSchemas;
-use App\OpenApiSpecification\ApiException\SpecificationException;
 
 final class ObjectSchema extends Schema
 {
@@ -30,9 +29,6 @@ final class ObjectSchema extends Schema
         ?ComponentsExample $example = null,
         ?SchemaIsDeprecated $isDeprecated = null
     ) {
-        if (!$properties->isDefined()) {
-            throw SpecificationException::generateObjectSchemaNeedsProperties($name ? $name->toString() : 'no_name');
-        }
         $this->name = $name;
         $this->isRequired = $isRequired;
         $this->isDeprecated = $isDeprecated ?? SchemaIsDeprecated::generateFalse();
@@ -169,7 +165,7 @@ final class ObjectSchema extends Schema
         );
     }
 
-    public function isValueValid($object): array
+    public function isValueValid($object, array $keysToIgnore = []): array
     {
         if ($this->isNullable->toBool() && is_null($object)) {
             return [];
@@ -191,6 +187,9 @@ final class ObjectSchema extends Schema
         $errors = [];
         $requiredSchemaNames = $this->properties->getRequiredSchemaNames();
         foreach ($requiredSchemaNames as $name) {
+            if (in_array($name, $keysToIgnore)) {
+                continue;
+            }
             if (!in_array($name, array_keys($object))) {
                 $errors[] = FieldMessage::generate(
                     [$name],
@@ -205,7 +204,7 @@ final class ObjectSchema extends Schema
                 continue;
             }
             $schema = $this->properties->findSchemaByName($name);
-            $subErrors = $schema->isValueValid($object[$name]);
+            $subErrors = $schema->isValueValid($object[$name], $keysToIgnore);
             if ($subErrors) {
                 foreach ($subErrors as $error) {
                     if ($error instanceof FieldMessage) {
@@ -236,7 +235,7 @@ final class ObjectSchema extends Schema
             if ($schema->isRequired()) {
                 continue;
             }
-            $subErrors = $schema->isValueValid($object[$key]);
+            $subErrors = $schema->isValueValid($object[$key], $keysToIgnore);
             if ($subErrors) {
                 foreach ($subErrors as $error) {
                     if ($error instanceof FieldMessage) {

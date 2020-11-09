@@ -192,7 +192,7 @@ final class ResponseSchema extends ComponentsResponse
             return [$message];
         }
 
-        return $mediaType->isValueValid($value);
+        return $mediaType->isValueValid($value, []);
     }
 
     public function getDescription(): ResponseDescription

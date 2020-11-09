@@ -3,6 +3,7 @@
 namespace App\ApiV1Bundle\Response;
 
 use App\ApiV1Bundle\Helpers\JsonToXmlConverter;
+use App\ApiV1Bundle\Helpers\ResponseContentType;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponse\ReferenceResponse;
 use App\OpenApiSpecification\ApiComponents\ComponentsResponse\ResponseSchema;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,12 +24,12 @@ abstract class AbstractResponse
 
     public function toJsonResponse(): Response
     {
-        return new Response(json_encode($this->toArray(), JSON_PRETTY_PRINT), (int)self::getHttpCode());
+        return new Response(json_encode($this->toArray(), JSON_PRETTY_PRINT), (int)self::getHttpCode(), ['content-type' => ResponseContentType::APPLICATION_JSON]);
     }
 
     public function toXmlResponse(): Response
     {
-        return new Response(JsonToXmlConverter::convert(json_encode($this->toArray())), (int)self::getHttpCode());
+        return new Response(JsonToXmlConverter::convert(json_encode($this->toArray())), (int)self::getHttpCode(), ['content-type' => ResponseContentType::APPLICATION_XML]);
     }
 
     private static function getHttpCode(): string

@@ -46,7 +46,7 @@ final class MapSchema extends Schema
         return new self(SchemaAdditionalProperty::fromReferenceSchema($schema), SchemaIsRequired::generateFalse());
     }
 
-    public function isValueValid($values): array
+    public function isValueValid($values, array $keysToIgnore = []): array
     {
         $errors = [];
         if ($this->isNullable->toBool() && is_null($values)) {
@@ -60,7 +60,7 @@ final class MapSchema extends Schema
         }
 
         foreach (array_values($values) as $value) {
-            $subErrors = $this->additionalProperty->getSchema()->isValueValid($value);
+            $subErrors = $this->additionalProperty->getSchema()->isValueValid($value, $keysToIgnore);
             if ($subErrors) {
                 if (!$this->name) {
                     $errors = array_merge($errors, $subErrors);

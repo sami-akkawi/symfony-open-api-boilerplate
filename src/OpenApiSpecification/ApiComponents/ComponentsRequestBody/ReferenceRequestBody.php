@@ -31,9 +31,9 @@ final class ReferenceRequestBody extends ComponentsRequestBody
         return $this->requestBody->getDefinedMimeTypes();
     }
 
-    public function isValueValidByMimeType(string $mimeType, $value): array
+    public function isValueValidByMimeType(string $mimeType, $value, array $keysToIgnore): array
     {
-        return $this->requestBody->isValueValidByMimeType($mimeType, $value);
+        return $this->requestBody->isValueValidByMimeType($mimeType, $value, $keysToIgnore);
     }
 
     public function setName(string $name): self

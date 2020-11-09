@@ -23,8 +23,8 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    App\ApiV1Bundle\:
-        resource: '../src/ApiV1Bundle'
+    App\ApiV1Bundle\Endpoint\:
+        resource: '../src/ApiV1Bundle/Endpoint'
         tags: ['controller.service_arguments']
 
     # add more service definitions when explicit configuration is needed

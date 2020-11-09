@@ -53,7 +53,7 @@ final class RequestBody extends ComponentsRequestBody
         return new self($this->content->addMediaType($mediaType), $this->isRequired, $this->description, $this->name);
     }
 
-    public function isValueValidByMimeType(string $mimeType, $value): array
+    public function isValueValidByMimeType(string $mimeType, $value, array $keysToIgnore): array
     {
         $mediaType = $this->content->getByMimeType($mimeType);
         if (!$mimeType) {
@@ -68,7 +68,7 @@ final class RequestBody extends ComponentsRequestBody
             return [$message];
         }
 
-        return $mediaType->isValueValid($value);
+        return $mediaType->isValueValid($value, $keysToIgnore);
     }
 
     public function getSchemaByMimeType(string $mimeType): ?Schema
