@@ -1,23 +1,23 @@
 api-landing-page:
-  path: /
+  path:     /                             # Content-Type: text/html; charset=UTF-8
   defaults: { _controller: 'App\Controller\ApiController:handle' }
 
 api-v1-docs:
-  path:       /v1/
-  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController:showDocs' }
+  path:     /v1/                          # Content-Type: text/html; charset=UTF-8
+  defaults: { _controller: 'App\ApiV1Bundle\SpecificationController:showDocs' }
 
 api-v1-pretty-json:
-  path:       /v1/specs.json
-  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController:showReadableJsonSpecs' }
+  path:     /v1/specs.json                # Content-Type: application/json; charset=UTF-8
+  defaults: { _controller: 'App\ApiV1Bundle\SpecificationController:showReadableJsonSpecs' }
 
 api-v1-json-docs:
-  path:       /v1/specifications.json
-  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController::showJson' }
+  path:     /v1/specifications.json       # Content-Type: application/json; charset=UTF-8
+  defaults: { _controller: 'App\ApiV1Bundle\SpecificationController::showJson' }
 
 api-v1-pretty-yaml:
-  path:       /v1/specs.yaml
-  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController:showReadableYamlSpecs' }
+  path:     /v1/specs.yaml                # Content-Type: application/yaml; charset=UTF-8
+  defaults: { _controller: 'App\ApiV1Bundle\SpecificationController:showReadableYamlSpecs' }
 
 api-v1-yaml-docs:
-  path:       /v1/specifications.yaml
-  defaults:   { _controller: 'App\ApiV1Bundle\SpecificationController::showYaml' }
+  path:     /v1/specifications.yaml       # Content-Type: application/yaml; charset=UTF-8
+  defaults: { _controller: 'App\ApiV1Bundle\SpecificationController::showYaml' }
