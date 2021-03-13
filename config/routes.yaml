@@ -1,14 +1,14 @@
 api-landing-page:
   path:     /                             # Content-Type: text/html; charset=UTF-8
-  defaults: { _controller: 'App\Controller\ApiController:handle' }
+  defaults: { _controller: 'App\Controller\ApiController::handle' }
 
 api-v1-docs:
   path:     /v1/                          # Content-Type: text/html; charset=UTF-8
-  defaults: { _controller: 'App\ApiV1Bundle\SpecificationController:showDocs' }
+  defaults: { _controller: 'App\ApiV1Bundle\SpecificationController::showDocs' }
 
 api-v1-pretty-json:
   path:     /v1/specs.json                # Content-Type: application/json; charset=UTF-8
-  defaults: { _controller: 'App\ApiV1Bundle\SpecificationController:showReadableJsonSpecs' }
+  defaults: { _controller: 'App\ApiV1Bundle\SpecificationController::showReadableJsonSpecs' }
 
 api-v1-json-docs:
   path:     /v1/specifications.json       # Content-Type: application/json; charset=UTF-8
@@ -16,7 +16,7 @@ api-v1-json-docs:
 
 api-v1-pretty-yaml:
   path:     /v1/specs.yaml                # Content-Type: application/yaml; charset=UTF-8
-  defaults: { _controller: 'App\ApiV1Bundle\SpecificationController:showReadableYamlSpecs' }
+  defaults: { _controller: 'App\ApiV1Bundle\SpecificationController::showReadableYamlSpecs' }
 
 api-v1-yaml-docs:
   path:     /v1/specifications.yaml       # Content-Type: application/yaml; charset=UTF-8

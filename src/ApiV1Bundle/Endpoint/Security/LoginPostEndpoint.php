@@ -23,8 +23,7 @@ use Symfony\Component\Uid\Uuid;
 
 final class LoginPostEndpoint extends AbstractPostEndpoint
 {
-
-    protected function subHandle(ApiV1Request $request): AbstractResponse
+    public function handle(ApiV1Request $request): AbstractResponse
     {
         $data = [
             'id' => Uuid::v4()->toRfc4122(),

@@ -2,14 +2,14 @@
 
 namespace App\ApiV1Bundle\Helpers;
 
-use App\ApiV1Bundle\Endpoint\AbstractEndpoint;
+use App\ApiV1Bundle\Endpoint\EndpointInterface;
 use App\Message\Message;
 use App\OpenApiSpecification\ApiComponents\ComponentsParameters;
 use App\OpenApiSpecification\ApiComponents\ComponentsRequestBody;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class FormatValidator
+final class Validator
 {
     private array $errors;
 
@@ -30,7 +30,7 @@ final class FormatValidator
 
     public function getAndValidateParametersRequest(
         Request $request,
-        AbstractEndpoint $endpoint,
+        EndpointInterface $endpoint,
         RequestContentType $requestContentType
     ): array {
         $this->errors = [];
@@ -198,7 +198,7 @@ final class FormatValidator
     }
 
 
-    public function validateResponse(Response $response, AbstractEndpoint $endpoint, bool $responseIsXml): void
+    public function validateResponse(Response $response, EndpointInterface $endpoint): void
     {
         $this->errors = [];
 
@@ -235,15 +235,7 @@ final class FormatValidator
             return;
         }
 
-        $content = $response->getContent();
-
-        if ($responseIsXml) {
-            $content = XmlToJsonConvertor::convert($content);
-            $schema = $endpointResponse->toResponseSchema()->getSchemaByMimeType(ResponseContentType::APPLICATION_XML);
-            $content = $schema->getValueFromCastedString($content);
-        } else {
-            $content = json_decode($content, true);
-        }
+        $content = json_decode($response->getContent(), true);
 
         $this->errors = $endpointResponse->isValueValidByMimeType($responseContentType, $content);
     }

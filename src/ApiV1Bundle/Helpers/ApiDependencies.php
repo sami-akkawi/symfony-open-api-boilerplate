@@ -4,14 +4,14 @@ namespace App\ApiV1Bundle\Helpers;
 
 final class ApiDependencies
 {
-    private FormatValidator $formatValidator;
+    private Validator $formatValidator;
 
-    public function __construct(FormatValidator $formatValidator)
+    public function __construct(Validator $formatValidator)
     {
         $this->formatValidator = $formatValidator;
     }
 
-    public function getFormatValidator(): FormatValidator
+    public function getFormatValidator(): Validator
     {
         return $this->formatValidator;
     }

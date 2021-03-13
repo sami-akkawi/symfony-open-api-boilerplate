@@ -4,5 +4,6 @@ services:
     public: true
 
   App\ApiV1Bundle\SpecificationController:
+  App\ApiV1Bundle\RequestHandler:
   App\ApiV1Bundle\Helpers\ApiDependencies:
-  App\ApiV1Bundle\Helpers\FormatValidator:
+  App\ApiV1Bundle\Helpers\Validator:

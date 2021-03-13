@@ -33,6 +33,9 @@ services:
     App\AppRouter:
         tags: ['routing.loader']
 
+    App\EventSubscriber\RequestSubscriber:
+        tags: [ kernel.controller ]
+
 imports:
     # Packages #
     - { resource: '../src/ApiV1Bundle/services.yml' }

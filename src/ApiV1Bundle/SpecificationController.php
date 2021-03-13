@@ -114,6 +114,7 @@ final class SpecificationController extends AbstractController
             if (
                 !$file->isFile()
                 || is_int(strpos($file->getBaseName(), 'Abstract'))
+                || is_int(strpos($file->getBaseName(), 'Interface'))
             ) {
                 continue;
             }
