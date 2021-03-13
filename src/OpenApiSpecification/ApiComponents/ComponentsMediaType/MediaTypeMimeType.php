@@ -37,9 +37,14 @@ final class MediaTypeMimeType
         return new self(self::JSON);
     }
 
-    public static function generateXml(): self
+    public static function generateUrlEncoded(): self
     {
-        return new self(self::XML);
+        return new self(self::URL_ENCODED);
+    }
+
+    public static function generateFormData(): self
+    {
+        return new self(self::FORM_DATA);
     }
 
     public function toString(): string

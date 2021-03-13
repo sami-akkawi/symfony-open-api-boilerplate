@@ -44,8 +44,10 @@ final class RequestBody extends ComponentsRequestBody
     public static function generate(ComponentsSchema $schema): self
     {
         return new self(ComponentsMediaTypes::generate()
+            ->addMediaType(ComponentsMediaType::generateMultipartFormData($schema))
             ->addMediaType(ComponentsMediaType::generateJson($schema))
-            ->addMediaType(ComponentsMediaType::generateXml($schema)));
+            ->addMediaType(ComponentsMediaType::generateUrlEncoded($schema))
+        );
     }
 
     public function addMediaType(ComponentsMediaType $mediaType): self

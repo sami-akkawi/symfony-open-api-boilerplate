@@ -20,15 +20,15 @@ final class RequestHandler
 {
     protected Validator $validator;
 
-    public function __construct(ApiDependencies $dependencies)
+    public function __construct(Validator $validator)
     {
-        $this->validator = $dependencies->getFormatValidator();
+        $this->validator = $validator;
     }
 
     public function handle(SymfonyRequest $request, EndpointInterface $endpoint): SymfonyResponse
     {
         $appResponse = $this->getAppResponse($request, $endpoint);
-        return $this->getSymfonyResponse($endpoint, $appResponse);
+        return $this->getSymfonyResponse($request, $endpoint, $appResponse);
     }
 
     private function getAppResponse(SymfonyRequest $request, EndpointInterface $endpoint): AbstractResponse
@@ -74,12 +74,25 @@ final class RequestHandler
     }
 
     private function getSymfonyResponse(
+        SymfonyRequest $request,
         EndpointInterface $endpoint,
         AbstractResponse $appResponse
     ): SymfonyResponse {
+        // todo: if response is binary
+        //  return a httpResponse
+
         $response = $appResponse->toJsonResponse();
 
         $this->validator->validateResponse($response, $endpoint);
+        if ($this->validator->hasErrors()) {
+            $errorResponse = CorruptDataResponse::generate();
+            $errorResponse = $this->addErrorsMessagesToResponse($errorResponse);
+            $response = $errorResponse->toJsonResponse();
+        }
+
+        $requestAcceptTypes = new ResponseContentType($request->headers->get('accept'));
+
+        $this->validator->validateResponseContentType($response, $requestAcceptTypes);
         if ($this->validator->hasErrors()) {
             $errorResponse = CorruptDataResponse::generate();
             $errorResponse = $this->addErrorsMessagesToResponse($errorResponse);

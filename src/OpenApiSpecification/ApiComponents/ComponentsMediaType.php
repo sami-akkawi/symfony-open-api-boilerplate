@@ -35,9 +35,14 @@ final class ComponentsMediaType
         return new self(MediaTypeMimeType::generateJson(), $schema);
     }
 
-    public static function generateXml(ComponentsSchema $schema): self
+    public static function generateUrlEncoded(ComponentsSchema $schema): self
     {
-        return new self(MediaTypeMimeType::generateXml(), $schema);
+        return new self(MediaTypeMimeType::generateUrlEncoded(), $schema);
+    }
+
+    public static function generateMultipartFormData(ComponentsSchema $schema): self
+    {
+        return new self(MediaTypeMimeType::generateFormData(), $schema);
     }
 
     public function getSchema(): Schema

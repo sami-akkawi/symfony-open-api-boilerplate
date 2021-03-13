@@ -50,8 +50,7 @@ final class ResponseSchema extends ComponentsResponse
             $code,
             $description,
             ComponentsMediaTypes::generate()
-                ->addMediaType(ComponentsMediaType::generateJson($schema))
-                ->addMediaType(ComponentsMediaType::generateXml($schema)),
+                ->addMediaType(ComponentsMediaType::generateJson($schema)),
             ComponentsLinks::generate()
         );
     }

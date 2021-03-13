@@ -153,18 +153,8 @@ final class Validator
 
         $requestBody = [];
 
-        if ($requestContentType->isXml()) {
-            try {
-                $requestContent = XmlToJsonConvertor::convert($request->getContent());
-            } catch (\Throwable $throwable) {
-                $message = Message::generateError(
-                    'invalid_xml',
-                    "The XML request is invalid, please validate your data."
-                );
-                $this->errors[] = $message;
-                return [];
-            }
-            $requestBody = json_decode($requestContent, true);
+        if ($requestContentType->isForm()) {
+            $requestBody = $request->request->all();
         }
 
         if ($requestContentType->isJson()) {
@@ -180,10 +170,6 @@ final class Validator
         }
 
         if ($requestContentType->isForm()) {
-            $requestBody = $request->request->all();
-        }
-
-        if ($requestContentType->isForm() || $requestContentType->isXml()) {
             $schema = $requestBodySchema->toRequestBody()->getSchemaByMimeType($requestContentType->toString());
             $requestBody = $schema->getValueFromCastedString(json_encode($requestBody));
         }
@@ -238,5 +224,32 @@ final class Validator
         $content = json_decode($response->getContent(), true);
 
         $this->errors = $endpointResponse->isValueValidByMimeType($responseContentType, $content);
+    }
+
+    public function validateResponseContentType(Response $response, ResponseContentType $acceptTypes): void
+    {
+        $this->errors = [];
+        $responseContentType = $response->headers->get('content-type');
+
+        if ($this->isContentTypeValid($responseContentType, $acceptTypes->toArray())) {
+            return;
+        }
+
+        $this->errors[] = Message::generateError(
+            'content_type_not_accepted',
+            "$responseContentType in not accepted by request agent",
+            [
+                '%responseContentType%' => $responseContentType
+            ]
+        );
+    }
+
+    private function isContentTypeValid(string $contentType, array $acceptableContentTypes): bool
+    {
+        return (
+            in_array('*/*', $acceptableContentTypes)
+            || in_array($contentType, $acceptableContentTypes)
+            || in_array(explode('/', $contentType)[0] . '/*', $acceptableContentTypes)
+        );
     }
 }
