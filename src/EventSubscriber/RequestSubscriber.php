@@ -29,11 +29,12 @@ final class RequestSubscriber implements EventSubscriberInterface
         }
 
         $controllerClassname = explode('::', $request->attributes->get('_controller'))[0];
-        $controllerClass = $this->container->get($controllerClassname);
 
-        if (!$controllerClass) {
+        if (!$this->container->has($controllerClassname)) {
             return;
         }
+
+        $controllerClass = $this->container->get($controllerClassname);
 
         if ($controllerClass instanceof ApiV1Endpoint) {
             $response = $this->apiV1RequestHandler->handle($request, $controllerClass);
