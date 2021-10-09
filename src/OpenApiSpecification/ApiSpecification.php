@@ -4,6 +4,7 @@ namespace App\OpenApiSpecification;
 
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Yaml\Yaml;
 
 final class ApiSpecification
 {
@@ -111,6 +112,6 @@ final class ApiSpecification
 
     public function toYaml(): string
     {
-        return yaml_emit($this->toOpenApiSpecification(), YAML_UTF8_ENCODING);
+        return Yaml::dump($this->toOpenApiSpecification(), 15);
     }
 }

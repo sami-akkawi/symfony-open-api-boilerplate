@@ -9,12 +9,11 @@
         }
     ],
     "require": {
-        "php": "^7.4.2",
+        "php": "^8.0",
         "ext-ctype": "*",
         "ext-dom": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "ext-yaml": "*",
         "ext-simplexml": "*",
         "symfony/asset": "5.*",
         "symfony/console": "5.*",
