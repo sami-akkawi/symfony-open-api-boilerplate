@@ -14,10 +14,10 @@ final class RequestContentType
     public function __construct(?string $requestContentType)
     {
         $requestContentType = $requestContentType ?? 'empty';
-        $isJsonRequest = strpos($requestContentType, self::APPLICATION_JSON) !== false;
-        $isXmlRequest  = strpos($requestContentType, self::APPLICATION_XML) !== false;
-        $isMultipartFormRequest = strpos($requestContentType, self::FORM_MULTIPART) !== false;
-        $isUrlencodedFormRequest = strpos($requestContentType, self::FORM_URLENCODED) !== false;
+        $isJsonRequest = str_contains($requestContentType, self::APPLICATION_JSON);
+        $isXmlRequest  = str_contains($requestContentType, self::APPLICATION_XML);
+        $isMultipartFormRequest = str_contains($requestContentType, self::FORM_MULTIPART);
+        $isUrlencodedFormRequest = str_contains($requestContentType, self::FORM_URLENCODED);
 
         if ($isJsonRequest) {
             $this->requestContentType = self::APPLICATION_JSON;
